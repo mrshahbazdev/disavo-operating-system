@@ -304,6 +304,7 @@
                             <span class="text-xs text-blue-400 font-semibold group-hover:translate-x-0.5 transition">&rarr;</span>
                         </div>
                         <h4 class="text-sm font-bold text-white mt-1 group-hover:text-blue-400 transition">Unternehmensentwicklung</h4>
+                        <span class="text-xs font-semibold text-blue-400 block mt-0.5">Company Development (Enterprise &amp; Scaling)</span>
                         <p class="text-xs text-slate-400 mt-1.5">Strategic enterprise growth, corporate scaling, and organizational structuring.</p>
                     </div>
 
@@ -316,6 +317,7 @@
                             <span class="text-xs text-blue-400 font-semibold group-hover:translate-x-0.5 transition">&rarr;</span>
                         </div>
                         <h4 class="text-sm font-bold text-white mt-1 group-hover:text-blue-400 transition">Markenaufbau</h4>
+                        <span class="text-xs font-semibold text-blue-400 block mt-0.5">Brand Building (Positioning &amp; Authority)</span>
                         <p class="text-xs text-slate-400 mt-1.5">Brand equity, positioning, market authority, and competitive differentiation.</p>
                     </div>
 
@@ -328,6 +330,7 @@
                             <span class="text-xs text-blue-400 font-semibold group-hover:translate-x-0.5 transition">&rarr;</span>
                         </div>
                         <h4 class="text-sm font-bold text-white mt-1 group-hover:text-blue-400 transition">Nachfolge</h4>
+                        <span class="text-xs font-semibold text-blue-400 block mt-0.5">Succession (Generational Handover)</span>
                         <p class="text-xs text-slate-400 mt-1.5">Succession planning, generational handover, and continuity governance.</p>
                     </div>
 
@@ -340,6 +343,7 @@
                             <span class="text-xs text-blue-400 font-semibold group-hover:translate-x-0.5 transition">&rarr;</span>
                         </div>
                         <h4 class="text-sm font-bold text-white mt-1 group-hover:text-blue-400 transition">Unternehmerentwicklung</h4>
+                        <span class="text-xs font-semibold text-purple-400 block mt-0.5">Entrepreneur Development (Founder &amp; Leadership)</span>
                         <p class="text-xs text-slate-400 mt-1.5">Leadership delegation, executive capacity, and founder role transition.</p>
                     </div>
 
@@ -352,6 +356,7 @@
                             <span class="text-xs text-blue-400 font-semibold group-hover:translate-x-0.5 transition">&rarr;</span>
                         </div>
                         <h4 class="text-sm font-bold text-white mt-1 group-hover:text-blue-400 transition">Beteiligungsmanagement</h4>
+                        <span class="text-xs font-semibold text-blue-400 block mt-0.5">Investment Management (Portfolio Steering)</span>
                         <p class="text-xs text-slate-400 mt-1.5">Holding portfolio governance, equity steering, and group-level synergies.</p>
                     </div>
 
@@ -364,6 +369,7 @@
                             <span class="text-xs text-blue-400 font-semibold group-hover:translate-x-0.5 transition">&rarr;</span>
                         </div>
                         <h4 class="text-sm font-bold text-white mt-1 group-hover:text-blue-400 transition">Kapitalallokation</h4>
+                        <span class="text-xs font-semibold text-blue-400 block mt-0.5">Capital Allocation (Reinvestment &amp; Liquidity)</span>
                         <p class="text-xs text-slate-400 mt-1.5">Capital distribution, reinvestment strategy, liquidity, and yield optimization.</p>
                     </div>
                 </div>

@@ -300,6 +300,16 @@
                         $latestKpi = $module->kpis->first();
                         $latestReading = $latestKpi?->latestReading();
                         $firstPrinciple = $module->governing_principles?->first();
+
+                        $moduleSubtitles = [
+                            'unternehmensentwicklung' => 'Company Development (Enterprise & Scaling)',
+                            'markenaufbau'            => 'Brand Building (Positioning & Authority)',
+                            'nachfolge'               => 'Succession (Generational Handover)',
+                            'unternehmerentwicklung'  => 'Entrepreneur Development (Founder & Leadership)',
+                            'beteiligungsmanagement'  => 'Investment Management (Portfolio Steering)',
+                            'kapitalallokation'       => 'Capital Allocation (Reinvestment & Liquidity)',
+                        ];
+                        $subtitle = $moduleSubtitles[$module->slug] ?? null;
                     @endphp
                     <div class="p-6 rounded-2xl bg-dark-surface border border-dark-border hover:border-blue-500/60 hover:bg-[#162032] transition duration-200 shadow-md flex flex-col justify-between group">
                         <div>
@@ -317,6 +327,11 @@
                             <h3 class="text-lg font-bold text-white mt-3 group-hover:text-blue-400 transition leading-snug">
                                 {{ $module->name }}
                             </h3>
+                            @if ($subtitle)
+                                <span class="text-xs font-semibold text-blue-400 block mt-0.5">
+                                    {{ $subtitle }}
+                                </span>
+                            @endif
                             <p class="text-xs text-slate-300 mt-2 leading-relaxed line-clamp-2">
                                 {{ $module->description ?? 'Core operational pillar of Disavo Holding corporate development.' }}
                             </p>
@@ -974,8 +989,17 @@
             const module = MODULES_DATA.find(m => m.id === moduleId);
             if (!module) return;
 
+            const subtitles = {
+                'unternehmensentwicklung': 'Company Development (Enterprise & Scaling)',
+                'markenaufbau': 'Brand Building (Positioning & Authority)',
+                'nachfolge': 'Succession (Generational Handover)',
+                'unternehmerentwicklung': 'Entrepreneur Development (Founder & Leadership)',
+                'beteiligungsmanagement': 'Investment Management (Portfolio Steering)',
+                'kapitalallokation': 'Capital Allocation (Reinvestment & Liquidity)',
+            };
+
             document.getElementById('mModalTitle').innerText = module.name;
-            document.getElementById('mModalSlug').innerText = module.slug;
+            document.getElementById('mModalSlug').innerText = `${module.slug} • ${subtitles[module.slug] || ''}`;
             document.getElementById('mModalDescription').innerText = module.description || 'Primary structural pillar of Disavo Holding corporate development.';
 
             // Setup shortcut audit button inside modal
