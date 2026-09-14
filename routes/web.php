@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::post('actions/review/{review}/close', [DashboardActionController::class, 'closeReview'])->name('actions.review.close');
     Route::post('actions/review/create', [DashboardActionController::class, 'createReview'])->name('actions.review.create');
     Route::post('actions/user/create', [DashboardActionController::class, 'addUser'])->name('actions.user.create');
+    Route::post('actions/module/create', [DashboardActionController::class, 'createModule'])->name('actions.module.create');
 });
 
 

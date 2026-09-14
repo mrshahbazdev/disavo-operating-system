@@ -7,7 +7,9 @@ use App\Domains\Graph\Enums\RelationType;
 use App\Domains\Knowledge\Models\Principle;
 use App\Domains\Tenancy\Context\TenantContext;
 use App\Domains\Tenancy\Models\Tenant;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ModuleHierarchyTest extends TestCase
@@ -25,6 +27,12 @@ class ModuleHierarchyTest extends TestCase
             ['name' => 'Disavo Holding GmbH']
         );
         TenantContext::setTenant($this->tenant);
+    }
+
+    protected function tearDown(): void
+    {
+        TenantContext::clear();
+        parent::tearDown();
     }
 
     public function test_the_six_canonical_modules_exist(): void
@@ -93,5 +101,33 @@ class ModuleHierarchyTest extends TestCase
         $governedModules = $principle->related(RelationType::Governs);
         $this->assertCount(1, $governedModules);
         $this->assertEquals($nachfolge->id, $governedModules->first()->id);
+    }
+
+    public function test_authenticated_user_can_create_new_module_with_zielzustand(): void
+    {
+        $user = User::firstOrCreate(
+            ['email' => 'module_creator@disavo.de'],
+            ['name' => 'Module Architect', 'password' => Hash::make('secret123')]
+        );
+
+        $response = $this->actingAs($user)->post('/actions/module/create', [
+            'name'         => 'Digitale Transformation & IT',
+            'description'  => 'Strategische Steuerung digitaler Werkzeuge und KI-Architekturen.',
+            'target_title' => 'Skalierbare Cloud- & KI-Infrastruktur',
+            'target_score' => 88.5,
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('modules', [
+            'name' => 'Digitale Transformation & IT',
+            'slug' => 'digitale-transformation-it',
+        ]);
+
+        $this->assertDatabaseHas('goals', [
+            'title'        => 'Skalierbare Cloud- & KI-Infrastruktur',
+            'target_score' => 88.5,
+        ]);
     }
 }

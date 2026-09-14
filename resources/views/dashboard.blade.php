@@ -170,6 +170,14 @@
                         <span>👥</span>
                         <span>Add Team Member</span>
                     </button>
+
+                    <button 
+                        onclick="openModuleCreateModal()"
+                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/20 hover:shadow-blue-500/30 transition flex items-center justify-center space-x-2"
+                    >
+                        <span>🧩</span>
+                        <span>Modul entwickeln</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -778,11 +786,20 @@
         <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-blue-400 uppercase">Framework-Detailansicht</span>
+                    <span class="text-xs font-mono font-bold text-blue-400 uppercase">Framework-Detailansicht &amp; Entwicklung</span>
                     <h2 class="text-2xl font-bold text-white mt-1">AMF — Allocore Module Framework</h2>
-                    <p class="text-xs text-slate-300 mt-1">Hierarchische Modulstruktur, versionierte Zielzustände &amp; Reifegrad-Messung</p>
+                    <p class="text-xs text-slate-300 mt-1">Organisationsarchitektur: Bestehende Säulen steuern &amp; neue Module methodisch entwickeln</p>
                 </div>
-                <button onclick="closeModal('amfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+                <div class="flex items-center space-x-2">
+                    <button 
+                        onclick="closeModal('amfModal'); openModuleCreateModal();" 
+                        class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center space-x-1.5"
+                    >
+                        <span>+</span>
+                        <span>Neues Modul entwickeln</span>
+                    </button>
+                    <button onclick="closeModal('amfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+                </div>
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6 text-sm">
@@ -790,24 +807,93 @@
                 <div class="p-4 rounded-xl bg-blue-950/40 border border-blue-500/40 space-y-2">
                     <div class="flex items-center space-x-2 text-xs font-mono font-bold text-blue-400 uppercase">
                         <span>ℹ️</span>
-                        <span>Was ist das AMF (Allocore Module Framework)?</span>
+                        <span>Wofür dient das AMF (Allocore Module Framework)?</span>
                     </div>
                     <p class="text-xs text-slate-200 leading-relaxed">
-                        Das <strong class="text-white">AMF</strong> ist der operative Organisationsbauplan der Holding. Es unterteilt das Gesamtunternehmen in <strong class="text-white">6 kanonische Geschäftsbereiche (Säulen)</strong>, um systematische Entwicklung messbar und steuerbar zu machen:
+                        Das <strong class="text-white">AMF</strong> dient als methodischer Rahmen, um die Organisation in messbare Säulen zu unterteilen, Reifegrade zu steuern und fundiert zu entscheiden, <strong class="text-blue-300">wann neue Module entwickelt werden müssen</strong>:
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-[11px] text-slate-300">
                         <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
-                            <span class="text-blue-400 font-bold block mb-0.5">1. Zielzustand</span>
-                            Strategisch definierter Soll-Zustand (z. B. 90% Skalierbarkeit).
+                            <span class="text-blue-400 font-bold block mb-0.5">1. Zielzustand definieren</span>
+                            Jedes Modul hat einen klaren Soll-Reifegrad (z. B. 90% Skalierbarkeit).
                         </div>
                         <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
-                            <span class="text-emerald-400 font-bold block mb-0.5">2. Audit &amp; Reifegrad</span>
-                            Regelmäßige Fragebögen (1–5) messen den aktuellen Reifegrad.
+                            <span class="text-emerald-400 font-bold block mb-0.5">2. Reifegrad auditieren</span>
+                            Regelmäßige Audits (1–5 Punkte) erfassen das tatsächliche Ist-Delta.
                         </div>
                         <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
-                            <span class="text-purple-400 font-bold block mb-0.5">3. KPIs &amp; Werkzeuge</span>
-                            Empirische Messwerte und praxiserprobte Arbeitsvorlagen.
+                            <span class="text-purple-400 font-bold block mb-0.5">3. Neue Module entwickeln</span>
+                            Bei dauerhaftem Handlungsbedarf neue eigenständige Säulen anlegen.
                         </div>
+                    </div>
+                </div>
+
+                <!-- Modul-Entscheidungsmatrix (Decision Framework) -->
+                <div class="p-5 rounded-2xl bg-[#0f172a] border border-blue-500/30 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">🧭</span>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">AMF-Entscheidungsmatrix: Neues Modul nötig?</h4>
+                                <span class="text-[11px] text-slate-400">Methodische Bedarfsprüfung vor der Erstellung neuer Unternehmensbereiche</span>
+                            </div>
+                        </div>
+                        <span id="decisionCountBadge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-slate-800 text-slate-300 border border-dark-border">
+                            0 / 4 Kriterien erfüllt
+                        </span>
+                    </div>
+
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Ein AMF-Modul ist kein temporäres Projekt, sondern eine dauerhafte organisatorische Säule. Prüfen Sie die 4 Kriterien:
+                    </p>
+
+                    <div class="space-y-2 text-xs">
+                        <label class="flex items-start space-x-3 p-2.5 rounded-xl bg-dark-card border border-dark-border/80 hover:border-blue-500/40 cursor-pointer transition">
+                            <input type="checkbox" class="amf-criteria mt-0.5 rounded bg-dark-surface border-dark-border text-blue-600 focus:ring-0" onchange="evaluateAmfCriteria()">
+                            <div>
+                                <strong class="text-white block font-medium">1. Dauerhafte Führungs- &amp; Steuerungsaufgabe</strong>
+                                <span class="text-slate-400">Handelt es sich um eine langfristige Kernkompetenz des Unternehmens und nicht um ein befristetes Einzelprojekt?</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-start space-x-3 p-2.5 rounded-xl bg-dark-card border border-dark-border/80 hover:border-blue-500/40 cursor-pointer transition">
+                            <input type="checkbox" class="amf-criteria mt-0.5 rounded bg-dark-surface border-dark-border text-blue-600 focus:ring-0" onchange="evaluateAmfCriteria()">
+                            <div>
+                                <strong class="text-white block font-medium">2. Eindeutiger Zielzustand &amp; Reifegrad messbar</strong>
+                                <span class="text-slate-400">Kann ein quantifizierbarer Zielzustand (Zielzustand mit Reifegrad-Audits 0–100 %) formuliert werden?</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-start space-x-3 p-2.5 rounded-xl bg-dark-card border border-dark-border/80 hover:border-blue-500/40 cursor-pointer transition">
+                            <input type="checkbox" class="amf-criteria mt-0.5 rounded bg-dark-surface border-dark-border text-blue-600 focus:ring-0" onchange="evaluateAmfCriteria()">
+                            <div>
+                                <strong class="text-white block font-medium">3. Eigene Governance, KPIs &amp; Werkzeuge erforderlich</strong>
+                                <span class="text-slate-400">Werden dedizierte Kennzahlen (KPIs), Leitprinzipien und Standard Operating Procedures (SOPs) benötigt?</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-start space-x-3 p-2.5 rounded-xl bg-dark-card border border-dark-border/80 hover:border-blue-500/40 cursor-pointer transition">
+                            <input type="checkbox" class="amf-criteria mt-0.5 rounded bg-dark-surface border-dark-border text-blue-600 focus:ring-0" onchange="evaluateAmfCriteria()">
+                            <div>
+                                <strong class="text-white block font-medium">4. Empirischer Handlungsbedarf im ALF belegt</strong>
+                                <span class="text-slate-400">Liegen wiederkehrende Beobachtungen (Observations) oder Review-Defizite (ARF) vor, die eine Lücke belegen?</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Dynamic Decision Recommendation -->
+                    <div id="amfDecisionBox" class="p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div class="text-slate-300">
+                            <span class="font-bold text-amber-400" id="amfDecisionTitle">Empfehlung: Kriterien prüfen</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5" id="amfDecisionText">Wählen Sie oben die zutreffenden Kriterien aus, um eine methodische Empfehlung zu erhalten.</p>
+                        </div>
+                        <button 
+                            id="amfDecisionBtn"
+                            onclick="closeModal('amfModal'); openModuleCreateModal();" 
+                            class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm whitespace-nowrap"
+                        >
+                            + Neues Modul jetzt entwickeln
+                        </button>
                     </div>
                 </div>
 
@@ -1024,6 +1110,114 @@
         </div>
     </div>
 
+    <!-- 8. MODULE CREATE MODAL (Develop New AMF Module) -->
+    <div id="moduleCreateModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div>
+                    <span class="text-xs font-mono font-bold text-blue-400 uppercase">AMF Modulentwicklung</span>
+                    <h2 class="text-xl font-bold text-white mt-1">🧩 Neues Modul im AMF entwickeln</h2>
+                    <p class="text-xs text-slate-300 mt-1">Definieren Sie eine neue strategische Säule für Ihre Holding-Organisationsarchitektur.</p>
+                </div>
+                <button onclick="closeModal('moduleCreateModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <form method="POST" action="{{ route('actions.module.create') }}" class="p-6 overflow-y-auto space-y-4 text-sm">
+                @csrf
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                        Modulname <span class="text-rose-400">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        required 
+                        placeholder="z. B. Digitale Transformation &amp; IT, Kundenerlebnis &amp; Service, Supply Chain" 
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                        Strategische Ausrichtung &amp; Zweck <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea 
+                        name="description" 
+                        rows="2" 
+                        required 
+                        placeholder="Welche dauerhafte Steuerungs- und Führungsaufgabe deckt dieses Modul ab?" 
+                        class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                    ></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Übergeordnetes Modul (Hierarchie)
+                        </label>
+                        <select 
+                            name="parent_id" 
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                        >
+                            <option value="">-- Eigenständige Hauptsäule (Root) --</option>
+                            @foreach ($modules as $pMod)
+                                <option value="{{ $pMod->id }}">Untergeordnet zu: {{ $pMod->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Ziel-Reifegrad (Soll in %)
+                        </label>
+                        <input 
+                            type="number" 
+                            name="target_score" 
+                            min="1" 
+                            max="100" 
+                            value="85" 
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none font-mono"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                        Initialer Zielzustand (Strategischer Soll-Zustand)
+                    </label>
+                    <input 
+                        type="text" 
+                        name="target_title" 
+                        placeholder="z. B. Skalierbare und automatisierte Kernprozesse etabliert" 
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                    >
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-blue-950/30 border border-blue-500/30 text-xs text-slate-300">
+                    <strong class="text-blue-400 font-bold block mb-1">💡 AMF-Governance-Hinweis:</strong>
+                    Nach dem Anlegen wird das Modul sofort in das Dashboard integriert. Sie können danach unmittelbar Reifegrad-Audits durchführen, KPIs verknüpfen und Leitprinzipien hinterlegen.
+                </div>
+
+                <div class="pt-3 border-t border-dark-border flex justify-end space-x-3">
+                    <button 
+                        type="button" 
+                        onclick="closeModal('moduleCreateModal')" 
+                        class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition"
+                    >
+                        Abbrechen
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition shadow-md shadow-blue-600/20"
+                    >
+                        ✓ Modul im AMF anlegen &amp; aktivieren
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- CLIENT-SIDE JAVASCRIPT FOR INTERACTIVITY -->
     <script>
         const MODULES_DATA = @json($modules);
@@ -1031,6 +1225,45 @@
 
         function openUserModal() {
             openModal('userModal');
+        }
+
+        function openModuleCreateModal() {
+            openModal('moduleCreateModal');
+        }
+
+        function evaluateAmfCriteria() {
+            const checkboxes = document.querySelectorAll('.amf-criteria');
+            let count = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) count++;
+            });
+
+            const badge = document.getElementById('decisionCountBadge');
+            const title = document.getElementById('amfDecisionTitle');
+            const text = document.getElementById('amfDecisionText');
+            const btn = document.getElementById('amfDecisionBtn');
+
+            if (badge) badge.innerText = `${count} / 4 Kriterien erfüllt`;
+
+            if (count === 4) {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                title.className = 'font-bold text-emerald-400';
+                title.innerText = '✓ Stark empfohlen: Eigenständiges Modul entwickeln';
+                text.innerText = 'Alle 4 Kriterien sind erfüllt! Der Bereich besitzt strategische Eigenständigkeit, messbaren Zielzustand und Governance-Bedarf.';
+                btn.className = 'px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 whitespace-nowrap animate-pulse';
+            } else if (count >= 2) {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30';
+                title.className = 'font-bold text-blue-400';
+                title.innerText = 'ℹ️ Mögliches Modul oder Sub-Modul prüfen';
+                text.innerText = 'Mehrere Kriterien sprechen für eine strukturierte Erfassung. Prüfen Sie, ob es als Untermodul eines bestehenden Bereichs genügt.';
+                btn.className = 'px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm whitespace-nowrap';
+            } else {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-slate-800 text-slate-300 border border-dark-border';
+                title.className = 'font-bold text-amber-400';
+                title.innerText = '⚠️ Kein eigenes Modul empfohlen';
+                text.innerText = 'Bei weniger als 2 Kriterien sollte die Aufgabe als operatives Werkzeug (Tool) oder Initiative in ein bestehendes Modul integriert werden.';
+                btn.className = 'px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-slate-300 font-bold text-xs transition border border-dark-border whitespace-nowrap';
+            }
         }
 
         function openModuleModal(moduleId) {
