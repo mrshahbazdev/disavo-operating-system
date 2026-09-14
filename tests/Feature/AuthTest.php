@@ -67,8 +67,9 @@ class AuthTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get('/dashboard');
         $response->assertStatus(200);
-        $response->assertSee('Organizational Intelligence Portal');
+        $response->assertSee('Disavo Operating System');
         $response->assertSee($this->user->name);
+
     }
 
     public function test_unauthenticated_user_is_redirected_to_login(): void
