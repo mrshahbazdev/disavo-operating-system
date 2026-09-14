@@ -118,6 +118,26 @@
             </div>
         @endif
 
+        @if (session('info'))
+            <div class="p-4 rounded-xl bg-blue-950/80 border-2 border-blue-500 text-blue-100 flex items-center justify-between shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <span class="w-7 h-7 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center text-sm">ℹ</span>
+                    <span class="text-sm font-semibold">{{ session('info') }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-blue-400 hover:text-blue-200 font-bold text-sm px-2">✕</button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="p-4 rounded-xl bg-rose-950/80 border-2 border-rose-500 text-rose-100 flex items-center justify-between shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 font-bold flex items-center justify-center text-sm">⚠️</span>
+                    <span class="text-sm font-semibold">{{ session('error') }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-rose-400 hover:text-rose-200 font-bold text-sm px-2">✕</button>
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="p-4 rounded-xl bg-rose-950/80 border-2 border-rose-500 text-rose-100 flex items-start justify-between shadow-xl">
                 <div class="flex items-start space-x-3">
@@ -1391,9 +1411,9 @@
 
                                 @if ($review->status !== 'closed')
                                     <div class="mt-4 pt-3 border-t border-dark-border flex justify-end">
-                                        <form method="POST" action="{{ route('actions.review.close', $review->id) }}">
+                                        <form method="POST" action="{{ route('actions.review.close', $review->id) }}" onsubmit="const btn = this.querySelector('button[type=submit]'); if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Wird abgeschlossen...'; }">
                                             @csrf
-                                            <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm">
+                                            <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
                                                 ✓ Review abschließen &amp; Regelkreis auslösen
                                             </button>
                                         </form>

@@ -137,13 +137,27 @@ class DashboardActionController extends Controller
     ): RedirectResponse {
         $user = $request->user();
 
+        if ($review->status === Review::STATUS_CLOSED) {
+            return redirect()->route('dashboard')->with(
+                'info',
+                "Review '{$review->title}' ist bereits abgeschlossen."
+            );
+        }
+
         $learningPayload = [
             'title'     => 'Learning from ' . $review->title,
             'summary'   => $review->summary ?? 'Key takeaways from closed review period ' . $review->period,
             'rationale' => 'Automated feedback loop closure from ARF review ' . $review->id,
         ];
 
-        $action->handle($review, $user, $learningPayload);
+        try {
+            $action->handle($review, $user, $learningPayload);
+        } catch (\LogicException $e) {
+            return redirect()->route('dashboard')->with(
+                'info',
+                "Review '{$review->title}' ist bereits abgeschlossen."
+            );
+        }
 
         return redirect()->route('dashboard')->with(
             'success',

@@ -190,4 +190,24 @@ class ReviewLoopTest extends TestCase
                 && $item->status === 'identified';
         }));
     }
+
+    public function test_closing_already_closed_review_gracefully_redirects_with_info_message(): void
+    {
+        $review = Review::create([
+            'tenant_id'   => $this->tenant->id,
+            'title'       => 'Q1 Governance Review',
+            'period'      => 'Q1-2026',
+            'review_date' => now()->toDateString(),
+            'status'      => Review::STATUS_CLOSED,
+            'summary'     => 'Already completed review.',
+            'created_by'  => $this->user->id,
+            'closed_at'   => now(),
+            'closed_by'   => $this->user->id,
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('actions.review.close', $review->id));
+
+        $response->assertRedirect(route('dashboard'));
+        $response->assertSessionHas('info');
+    }
 }
