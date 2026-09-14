@@ -558,7 +558,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="text-xs font-mono uppercase text-emerald-400 font-bold">3. Key Performance Indicators (Metrics)</h4>
-                        <button onclick="openKpiModal()" class="text-xs font-bold text-emerald-400 hover:underline">+ Record KPI Reading</button>
+                        <button onclick="closeModal('moduleModal'); openKpiModal();" class="text-xs font-bold text-emerald-400 hover:underline">+ Record KPI Reading</button>
                     </div>
                     <div id="mModalKpis" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                 </div>
@@ -778,7 +778,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="text-xs font-mono uppercase text-purple-400 font-bold">Aktive Prinzipien ({{ $principlesCount }})</h4>
-                        <button onclick="openCaptureModal()" class="text-xs font-bold text-purple-400 hover:underline">+ Neue Beobachtung</button>
+                        <button onclick="closeModal('alfModal'); openCaptureModal();" class="text-xs font-bold text-purple-400 hover:underline">+ Neue Beobachtung</button>
                     </div>
                     <div class="space-y-3">
                         @forelse ($principles as $principle)
@@ -1261,7 +1261,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-3">
                         <h4 class="text-xs font-mono uppercase text-slate-300 font-bold">Erfasste strategische Reviews ({{ $reviews->count() }})</h4>
-                        <button onclick="openReviewCreateModal()" class="text-xs font-bold text-emerald-400 hover:underline">+ Neues Review ansetzen</button>
+                        <button onclick="closeModal('arfModal'); openReviewCreateModal();" class="text-xs font-bold text-emerald-400 hover:underline">+ Neues Review ansetzen</button>
                     </div>
 
                     <div class="space-y-3">
@@ -2020,20 +2020,43 @@
         function openAmfModal() { openModal('amfModal'); }
         function openArfModal() { openModal('arfModal'); }
 
+        const ALL_SYSTEM_MODALS = [
+            'moduleModal', 'captureModal', 'auditModal', 'kpiModal',
+            'reviewCreateModal', 'alfModal', 'amfModal', 'arfModal',
+            'userModal', 'moduleCreateModal', 'profileModal'
+        ];
+
+        let highestModalZ = 50;
+
         function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            highestModalZ += 10;
+            modal.style.zIndex = highestModalZ;
+            modal.classList.remove('hidden');
             document.body.classList.add('modal-open');
         }
 
         function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-            document.body.classList.remove('modal-open');
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.classList.add('hidden');
+
+            const hasOtherOpenModals = ALL_SYSTEM_MODALS.some(id => {
+                const el = document.getElementById(id);
+                return el && !el.classList.contains('hidden');
+            });
+
+            if (!hasOtherOpenModals) {
+                document.body.classList.remove('modal-open');
+                highestModalZ = 50;
+            }
         }
 
         window.onclick = function(event) {
-            ['moduleModal', 'captureModal', 'auditModal', 'kpiModal', 'reviewCreateModal', 'alfModal', 'amfModal', 'arfModal'].forEach(id => {
+            ALL_SYSTEM_MODALS.forEach(id => {
                 const modal = document.getElementById(id);
-                if (event.target === modal) {
+                if (modal && event.target === modal) {
                     closeModal(id);
                 }
             });
@@ -2041,7 +2064,7 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
-                ['moduleModal', 'captureModal', 'auditModal', 'kpiModal', 'reviewCreateModal', 'alfModal', 'amfModal', 'arfModal'].forEach(id => closeModal(id));
+                ALL_SYSTEM_MODALS.forEach(id => closeModal(id));
             }
         });
     </script>
