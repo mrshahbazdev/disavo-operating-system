@@ -402,8 +402,8 @@
         <div>
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <h2 class="text-lg font-bold text-white tracking-tight">Core System Engines (ALF / AMF / ARF)</h2>
-                    <p class="text-xs text-slate-400">Click any engine card to inspect live data, cognitive trails, audit templates, and loop closure.</p>
+                    <h2 class="text-lg font-bold text-white tracking-tight">Zentrale System-Engines (ALF / AMF / ARF)</h2>
+                    <p class="text-xs text-slate-300">Klicken Sie auf eine Engine-Karte, um Live-Daten, kognitive Pfade, Audit-Vorlagen und die Regelkreis-Schließung (Loop Closure) einzusehen.</p>
                 </div>
             </div>
 
@@ -411,72 +411,72 @@
                 <!-- ALF Engine Card -->
                 <div 
                     onclick="openAlfModal()"
-                    class="p-6 rounded-2xl bg-dark-surface border border-dark-border hover:border-blue-500 hover:bg-dark-hover transition duration-200 cursor-pointer group flex flex-col justify-between"
+                    class="p-6 rounded-2xl bg-dark-surface border border-dark-border hover:border-blue-500 hover:bg-dark-hover transition duration-200 cursor-pointer group flex flex-col justify-between shadow-md"
                 >
                     <div>
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono font-bold text-blue-400 uppercase">ALF Engine</span>
+                            <span class="text-xs font-mono font-bold text-blue-400 uppercase">ALF-ENGINE</span>
                             <span class="text-xs text-blue-400 font-semibold group-hover:translate-x-1 transition">&rarr;</span>
                         </div>
-                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-blue-400 transition">Cognitive Traceability</h3>
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                            Decisions are verified backwards to empirical Observations. Principles update non-destructively through versioned Supersedes relationships.
+                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-blue-400 transition">Kognitive Nachvollziehbarkeit</h3>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                            Entscheidungen werden rückwirkend auf empirische Beobachtungen zurückgeführt. Prinzipien aktualisieren sich zerstörungsfrei über versionierte Supersedes-Relationen.
                         </p>
-                        <div class="mt-4 flex items-center space-x-2 text-[11px] font-mono text-slate-300">
-                            <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20">{{ $principles->count() }} Principles</span>
-                            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">{{ $learnings->count() }} Learnings</span>
+                        <div class="mt-4 flex items-center space-x-2 text-[11px] font-mono text-slate-200">
+                            <span class="px-2.5 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-medium">{{ $principles->count() }} Prinzipien</span>
+                            <span class="px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium">{{ $learnings->count() }} Erkenntnisse</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-dark-border text-xs text-blue-400 font-medium">
-                        Click to view Principles &amp; Cognitive Trail &rarr;
+                    <div class="mt-4 pt-3 border-t border-dark-border text-xs text-blue-400 font-semibold group-hover:text-blue-300 transition">
+                        Prinzipien &amp; kognitiven Pfad einsehen &rarr;
                     </div>
                 </div>
 
                 <!-- AMF Engine Card -->
                 <div 
                     onclick="openAmfModal()"
-                    class="p-6 rounded-2xl bg-dark-surface border border-dark-border hover:border-purple-500 hover:bg-dark-hover transition duration-200 cursor-pointer group flex flex-col justify-between"
+                    class="p-6 rounded-2xl bg-dark-surface border border-dark-border hover:border-purple-500 hover:bg-dark-hover transition duration-200 cursor-pointer group flex flex-col justify-between shadow-md"
                 >
                     <div>
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono font-bold text-purple-400 uppercase">AMF Engine</span>
+                            <span class="text-xs font-mono font-bold text-purple-400 uppercase">AMF-ENGINE</span>
                             <span class="text-xs text-purple-400 font-semibold group-hover:translate-x-1 transition">&rarr;</span>
                         </div>
-                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-purple-400 transition">Audit &amp; Maturity Delta</h3>
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                            Audit questions use database-configured weights to evaluate actual maturity against target state (Zielzustand).
+                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-purple-400 transition">Audit &amp; Reifegrad-Delta</h3>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                            Audit-Fragen nutzen datenbankbasierte Gewichtungen, um den tatsächlichen Reifegrad gegenüber dem definierten Zielzustand zu ermitteln.
                         </p>
-                        <div class="mt-4 flex items-center space-x-2 text-[11px] font-mono text-slate-300">
-                            <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">{{ $auditTemplates->count() }} Audit Templates</span>
-                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-dark-border">{{ count($modules) }} Modules</span>
+                        <div class="mt-4 flex items-center space-x-2 text-[11px] font-mono text-slate-200">
+                            <span class="px-2.5 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-medium">{{ $auditTemplates->count() }} Audit-Vorlagen</span>
+                            <span class="px-2.5 py-0.5 rounded bg-slate-800 text-slate-200 border border-dark-border font-medium">{{ count($modules) }} Module</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-dark-border text-xs text-purple-400 font-medium">
-                        Click to view Audit Scoring &amp; Schema &rarr;
+                    <div class="mt-4 pt-3 border-t border-dark-border text-xs text-purple-400 font-semibold group-hover:text-purple-300 transition">
+                        Audit-Bewertung &amp; Schema einsehen &rarr;
                     </div>
                 </div>
 
                 <!-- ARF Engine Card -->
                 <div 
                     onclick="openArfModal()"
-                    class="p-6 rounded-2xl bg-dark-surface border border-dark-border hover:border-emerald-500 hover:bg-dark-hover transition duration-200 cursor-pointer group flex flex-col justify-between"
+                    class="p-6 rounded-2xl bg-dark-surface border border-dark-border hover:border-emerald-500 hover:bg-dark-hover transition duration-200 cursor-pointer group flex flex-col justify-between shadow-md"
                 >
                     <div>
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono font-bold text-emerald-400 uppercase">ARF Engine</span>
+                            <span class="text-xs font-mono font-bold text-emerald-400 uppercase">ARF-ENGINE</span>
                             <span class="text-xs text-emerald-400 font-semibold group-hover:translate-x-1 transition">&rarr;</span>
                         </div>
-                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-emerald-400 transition">Loop Closure</h3>
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                            Closing a Review triggers SpawnLearningFromReview, creating a Draft Learning in ALF to ensure continuous organizational evolution.
+                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-emerald-400 transition">Regelkreis-Schließung (Loop Closure)</h3>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                            Das Abschließen eines Reviews führt <code class="font-mono text-emerald-300">SpawnLearningFromReview</code> aus und erzeugt automatisch eine neue Erkenntnis (Learning) in ALF für kontinuierliche Evolution.
                         </p>
-                        <div class="mt-4 flex items-center space-x-2 text-[11px] font-mono text-slate-300">
-                            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">{{ $reviews->count() }} Reviews</span>
-                            <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20">Auto-Spawning Active</span>
+                        <div class="mt-4 flex items-center space-x-2 text-[11px] font-mono text-slate-200">
+                            <span class="px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium">{{ $reviews->count() }} Reviews</span>
+                            <span class="px-2.5 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-medium">Auto-Generierung aktiv</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-dark-border text-xs text-emerald-400 font-medium">
-                        Click to inspect Reviews &amp; Loop Closure &rarr;
+                    <div class="mt-4 pt-3 border-t border-dark-border text-xs text-emerald-400 font-semibold group-hover:text-emerald-300 transition">
+                        Reviews &amp; Regelkreis einsehen &rarr;
                     </div>
                 </div>
             </div>
@@ -735,9 +735,9 @@
         <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-purple-400 uppercase">Framework Deep-Dive</span>
+                    <span class="text-xs font-mono font-bold text-purple-400 uppercase">Framework-Detailansicht</span>
                     <h2 class="text-2xl font-bold text-white mt-1">ALF — Allgemeiner Lernrahmen</h2>
-                    <p class="text-xs text-slate-300 mt-1">Cognitive Traceability: Observations &rarr; Insights &rarr; Learnings &rarr; Principles</p>
+                    <p class="text-xs text-slate-300 mt-1">Kognitive Nachvollziehbarkeit: Beobachtungen &rarr; Erkenntnisse &rarr; Learnings &rarr; Prinzipien</p>
                 </div>
                 <button onclick="closeModal('alfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
             </div>
@@ -745,8 +745,8 @@
             <div class="p-6 overflow-y-auto space-y-6 text-sm">
                 <div>
                     <div class="flex items-center justify-between mb-2">
-                        <h4 class="text-xs font-mono uppercase text-purple-400 font-bold">Active Principles ({{ $principlesCount }})</h4>
-                        <button onclick="openCaptureModal()" class="text-xs font-bold text-purple-400 hover:underline">+ New Observation</button>
+                        <h4 class="text-xs font-mono uppercase text-purple-400 font-bold">Aktive Prinzipien ({{ $principlesCount }})</h4>
+                        <button onclick="openCaptureModal()" class="text-xs font-bold text-purple-400 hover:underline">+ Neue Beobachtung</button>
                     </div>
                     <div class="space-y-3">
                         @forelse ($principles as $principle)
@@ -761,14 +761,14 @@
                                 @endif
                             </div>
                         @empty
-                            <p class="text-xs text-slate-500">No principles found.</p>
+                            <p class="text-xs text-slate-500">Keine Prinzipien erfasst.</p>
                         @endforelse
                     </div>
                 </div>
             </div>
 
             <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end">
-                <button onclick="closeModal('alfModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition">Close</button>
+                <button onclick="closeModal('alfModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition">Schließen</button>
             </div>
         </div>
     </div>
@@ -778,16 +778,16 @@
         <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-blue-400 uppercase">Framework Deep-Dive</span>
+                    <span class="text-xs font-mono font-bold text-blue-400 uppercase">Framework-Detailansicht</span>
                     <h2 class="text-2xl font-bold text-white mt-1">AMF — Allocore Module Framework</h2>
-                    <p class="text-xs text-slate-300 mt-1">Adjacency Tree Hierarchy, Versioned Goals &amp; Reifegrad Scoring</p>
+                    <p class="text-xs text-slate-300 mt-1">Hierarchische Modulstruktur, versionierte Zielzustände &amp; Reifegrad-Messung</p>
                 </div>
                 <button onclick="closeModal('amfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6 text-sm">
                 <div>
-                    <h4 class="text-xs font-mono uppercase text-blue-400 font-bold mb-3">The Six Canonical Pillars</h4>
+                    <h4 class="text-xs font-mono uppercase text-blue-400 font-bold mb-3">Die sechs kanonischen Säulen</h4>
                     <div class="space-y-3">
                         @foreach ($modules as $mod)
                             <div class="p-4 rounded-xl bg-dark-card border border-dark-border flex items-center justify-between">
@@ -799,7 +799,7 @@
                                     <p class="text-xs text-slate-300 mt-1">{{ $mod->description }}</p>
                                 </div>
                                 <button onclick="closeModal('amfModal'); openModuleModal({{ $mod->id }})" class="px-3 py-1.5 rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-xs transition">
-                                    Inspect &rarr;
+                                    Inspizieren &rarr;
                                 </button>
                             </div>
                         @endforeach
@@ -808,7 +808,7 @@
             </div>
 
             <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end">
-                <button onclick="closeModal('amfModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition">Close</button>
+                <button onclick="closeModal('amfModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition">Schließen</button>
             </div>
         </div>
     </div>
@@ -818,9 +818,9 @@
         <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-400 uppercase">Framework Deep-Dive</span>
+                    <span class="text-xs font-mono font-bold text-emerald-400 uppercase">Framework-Detailansicht</span>
                     <h2 class="text-2xl font-bold text-white mt-1">ARF — Allocore Review Framework</h2>
-                    <p class="text-xs text-slate-300 mt-1">Strategic Review Cadence &amp; Automated Loop Closure (Review &rarr; Learning)</p>
+                    <p class="text-xs text-slate-300 mt-1">Strategische Review-Zyklen &amp; automatisierte Regelkreis-Schließung (Review &rarr; Learning)</p>
                 </div>
                 <button onclick="closeModal('arfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
             </div>
@@ -828,20 +828,20 @@
             <div class="p-6 overflow-y-auto space-y-6 text-sm">
                 <!-- Loop Closure Explanation Banner -->
                 <div class="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40">
-                    <h4 class="text-xs font-mono font-bold text-emerald-400 uppercase mb-1">Automated Loop Closure Rule:</h4>
+                    <h4 class="text-xs font-mono font-bold text-emerald-400 uppercase mb-1">Automatisierte Regelkreis-Schließung:</h4>
                     <p class="text-xs text-slate-200 mt-1">
-                        When an executive marks a Strategic Review as <strong class="text-white font-bold">Closed</strong>, DOS executes <code class="font-mono text-emerald-300">CloseReview</code> &rarr; <code class="font-mono text-emerald-300">SpawnLearningFromReview</code>.
+                        Sobald ein Review als <strong class="text-white font-bold">Closed</strong> markiert wird, führt DOS <code class="font-mono text-emerald-300">CloseReview</code> &rarr; <code class="font-mono text-emerald-300">SpawnLearningFromReview</code> aus.
                     </p>
                     <p class="text-xs text-slate-400 mt-1">
-                        This automatically creates a new <code class="text-slate-200">Draft</code> Learning in ALF linked by a <code class="font-mono text-emerald-300">Review -(generates)-&gt; Learning</code> graph edge.
+                        Dies erzeugt automatisch eine neue Entwurfs-Erkenntnis (<code class="text-slate-200">Draft Learning</code>) in ALF, verknüpft über die Kante <code class="font-mono text-emerald-300">Review -(generates)-&gt; Learning</code>.
                     </p>
                 </div>
 
                 <!-- Reviews List -->
                 <div>
                     <div class="flex items-center justify-between mb-3">
-                        <h4 class="text-xs font-mono uppercase text-slate-300 font-bold">Recorded Strategic Reviews ({{ $reviews->count() }})</h4>
-                        <button onclick="openReviewCreateModal()" class="text-xs font-bold text-emerald-400 hover:underline">+ Schedule New Review</button>
+                        <h4 class="text-xs font-mono uppercase text-slate-300 font-bold">Erfasste strategische Reviews ({{ $reviews->count() }})</h4>
+                        <button onclick="openReviewCreateModal()" class="text-xs font-bold text-emerald-400 hover:underline">+ Neues Review ansetzen</button>
                     </div>
 
                     <div class="space-y-3">
@@ -850,7 +850,7 @@
                                 <div class="flex items-start justify-between">
                                     <div>
                                         <h5 class="font-bold text-white text-base">{{ $review->title }}</h5>
-                                        <span class="text-xs text-slate-400 font-mono">Period: {{ $review->period }} • Date: {{ $review->review_date?->format('Y-m-d') }}</span>
+                                        <span class="text-xs text-slate-400 font-mono">Periode: {{ $review->period }} • Datum: {{ $review->review_date?->format('d.m.Y') }}</span>
                                     </div>
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase {{ $review->status === 'closed' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30' }}">
                                         {{ $review->status }}
@@ -863,21 +863,21 @@
                                         <form method="POST" action="{{ route('actions.review.close', $review->id) }}">
                                             @csrf
                                             <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm">
-                                                ✓ Close Review &amp; Trigger Loop
+                                                ✓ Review abschließen &amp; Regelkreis auslösen
                                             </button>
                                         </form>
                                     </div>
                                 @endif
                             </div>
                         @empty
-                            <p class="text-xs text-slate-500">No reviews recorded.</p>
+                            <p class="text-xs text-slate-500">Keine Reviews erfasst.</p>
                         @endforelse
                     </div>
                 </div>
             </div>
 
             <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end">
-                <button onclick="closeModal('arfModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition">Close</button>
+                <button onclick="closeModal('arfModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition">Schließen</button>
             </div>
         </div>
     </div>
