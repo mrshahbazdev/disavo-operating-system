@@ -579,8 +579,9 @@
 
             // Goal
             const goalContainer = document.getElementById('mModalGoal');
-            if (module.goals && module.goals.length > 0) {
-                const goal = module.goals[0];
+            const goals = module.goals || [];
+            if (goals.length > 0) {
+                const goal = goals[0];
                 goalContainer.innerHTML = `
                     <div class="flex items-center justify-between">
                         <span class="font-bold text-white">${goal.title || 'Maturity Target'}</span>
@@ -594,8 +595,9 @@
 
             // Governing Principles
             const principlesContainer = document.getElementById('mModalPrinciples');
-            if (module.governing_principles && module.governing_principles.length > 0) {
-                principlesContainer.innerHTML = module.governing_principles.map(p => `
+            const principles = module.governing_principles || module.governingPrinciples || [];
+            if (principles.length > 0) {
+                principlesContainer.innerHTML = principles.map(p => `
                     <div class="p-3 rounded-lg bg-[#090b10] border border-dark-border">
                         <div class="flex items-center justify-between">
                             <span class="font-semibold text-white text-xs">${p.title}</span>
@@ -610,8 +612,9 @@
 
             // KPIs
             const kpisContainer = document.getElementById('mModalKpis');
-            if (module.kpis && module.kpis.length > 0) {
-                kpisContainer.innerHTML = module.kpis.map(k => `
+            const kpis = module.kpis || [];
+            if (kpis.length > 0) {
+                kpisContainer.innerHTML = kpis.map(k => `
                     <div class="p-3 rounded-lg bg-[#090b10] border border-dark-border">
                         <div class="flex items-center justify-between">
                             <span class="font-semibold text-white text-xs">${k.name}</span>
@@ -626,8 +629,9 @@
 
             // Tools
             const toolsContainer = document.getElementById('mModalTools');
-            if (module.tools && module.tools.length > 0) {
-                toolsContainer.innerHTML = module.tools.map(t => `
+            const tools = module.tools || [];
+            if (tools.length > 0) {
+                toolsContainer.innerHTML = tools.map(t => `
                     <div class="p-3 rounded-lg bg-[#090b10] border border-dark-border">
                         <div class="flex items-center justify-between">
                             <span class="font-semibold text-white text-xs">${t.name}</span>
@@ -642,8 +646,9 @@
 
             // Audits
             const auditsContainer = document.getElementById('mModalAudits');
-            if (module.audit_runs && module.audit_runs.length > 0) {
-                auditsContainer.innerHTML = module.audit_runs.map(a => `
+            const audits = module.audit_runs || module.auditRuns || [];
+            if (audits.length > 0) {
+                auditsContainer.innerHTML = audits.map(a => `
                     <div class="p-2.5 rounded-lg bg-[#090b10] border border-dark-border flex items-center justify-between text-xs">
                         <div>
                             <span class="text-white font-medium">${a.template ? a.template.name : 'Module Audit'}</span>
