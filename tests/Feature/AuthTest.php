@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Domains\Tenancy\Context\TenantContext;
 use App\Domains\Tenancy\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -32,6 +33,13 @@ class AuthTest extends TestCase
         );
 
         $this->user->tenants()->syncWithoutDetaching([$this->tenant->id => ['role' => 'Owner']]);
+        TenantContext::setTenant($this->tenant);
+    }
+
+    protected function tearDown(): void
+    {
+        TenantContext::clear();
+        parent::tearDown();
     }
 
     public function test_login_page_renders_successfully(): void
@@ -83,5 +91,42 @@ class AuthTest extends TestCase
         $response = $this->actingAs($this->user)->post('/logout');
         $response->assertRedirect('/login');
         $this->assertGuest();
+    }
+
+    public function test_register_page_renders_successfully(): void
+    {
+        $response = $this->get('/register');
+        $response->assertStatus(200);
+        $response->assertSee('Create User Account');
+    }
+
+    public function test_new_user_can_register_and_create_organization(): void
+    {
+        $response = $this->post('/register', [
+            'name'                  => 'New Entrepreneur',
+            'email'                 => 'entrepreneur@example.com',
+            'password'              => 'password123',
+            'password_confirmation' => 'password123',
+            'organization_name'     => 'Alpine Ventures AG',
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $this->assertDatabaseHas('users', ['email' => 'entrepreneur@example.com']);
+        $this->assertDatabaseHas('tenants', ['name' => 'Alpine Ventures AG']);
+        $this->assertAuthenticated();
+    }
+
+    public function test_authenticated_user_can_add_team_member(): void
+    {
+        $response = $this->actingAs($this->user)->post('/actions/user/create', [
+            'name'     => 'New Team Member',
+            'email'    => 'teammate@disavo.de',
+            'password' => 'secret123',
+            'role'     => 'steward',
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('users', ['email' => 'teammate@disavo.de']);
     }
 }

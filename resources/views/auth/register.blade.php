@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign In — Disavo Operating System</title>
+    <title>Create Account — Disavo Operating System</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,8 +55,8 @@
             </div>
         </a>
 
-        <a href="/" class="text-xs text-slate-400 hover:text-white transition flex items-center space-x-1">
-            <span>&larr; Back to Portal</span>
+        <a href="{{ route('login') }}" class="text-xs text-slate-300 hover:text-white transition flex items-center space-x-1">
+            <span>Already have an account? <strong class="text-blue-400 underline ml-1">Sign In</strong></span>
         </a>
     </header>
 
@@ -69,90 +69,112 @@
                 
                 <div class="mb-6">
                     <div class="inline-block px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 text-[11px] font-semibold mb-3">
-                        DISAVO HOLDING GMBH
+                        NEW ORGANIZATIONAL ACCOUNT
                     </div>
-                    <h1 class="text-2xl font-bold text-white tracking-tight">System Sign In</h1>
-                    <p class="text-xs text-slate-400 mt-1">Authenticate to access organizational knowledge graph & modules.</p>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">Create User Account</h1>
+                    <p class="text-xs text-slate-300 mt-1">Register a new user and initialize your organizational operating workspace.</p>
                 </div>
 
                 @if ($errors->any())
                     <div class="mb-5 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
-                        {{ $errors->first() }}
+                        <ul class="list-disc list-inside space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
+                <form method="POST" action="{{ route('register.post') }}" class="space-y-4">
                     @csrf
 
                     <div>
+                        <label for="name" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                            Full Name <span class="text-rose-400">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            id="name" 
+                            required 
+                            autofocus
+                            value="{{ old('name') }}"
+                            placeholder="e.g. John Doe"
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-[#090b10] border border-dark-border text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                        >
+                    </div>
+
+                    <div>
                         <label for="email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                            Work Email
+                            Work Email <span class="text-rose-400">*</span>
                         </label>
                         <input 
                             type="email" 
                             name="email" 
                             id="email" 
                             required 
-                            autofocus
-                            value="{{ old('email', 'owner@disavo.de') }}"
-                            placeholder="name@disavo.de"
+                            value="{{ old('email') }}"
+                            placeholder="name@company.com"
                             class="w-full px-3.5 py-2.5 rounded-xl bg-[#090b10] border border-dark-border text-white text-sm focus:outline-none focus:border-blue-500 transition"
                         >
                     </div>
 
                     <div>
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label for="password" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                                Password
-                            </label>
-                        </div>
+                        <label for="organization_name" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                            Organization / Holding Name
+                        </label>
+                        <input 
+                            type="text" 
+                            name="organization_name" 
+                            id="organization_name" 
+                            value="{{ old('organization_name') }}"
+                            placeholder="e.g. Acme Holding GmbH (optional)"
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-[#090b10] border border-dark-border text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                            Password <span class="text-rose-400">*</span>
+                        </label>
                         <input 
                             type="password" 
                             name="password" 
                             id="password" 
                             required 
-                            value="secret123"
-                            placeholder="••••••••••••"
+                            placeholder="Minimum 8 characters"
                             class="w-full px-3.5 py-2.5 rounded-xl bg-[#090b10] border border-dark-border text-white text-sm focus:outline-none focus:border-blue-500 transition font-mono"
                         >
                     </div>
 
-                    <div class="flex items-center justify-between pt-1">
-                        <label class="flex items-center space-x-2 text-xs text-slate-400 cursor-pointer">
-                            <input type="checkbox" name="remember" class="rounded bg-[#090b10] border-dark-border text-blue-600 focus:ring-0">
-                            <span>Keep me signed in</span>
+                    <div>
+                        <label for="password_confirmation" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                            Confirm Password <span class="text-rose-400">*</span>
                         </label>
+                        <input 
+                            type="password" 
+                            name="password_confirmation" 
+                            id="password_confirmation" 
+                            required 
+                            placeholder="Re-type password"
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-[#090b10] border border-dark-border text-white text-sm focus:outline-none focus:border-blue-500 transition font-mono"
+                        >
                     </div>
 
                     <button 
                         type="submit" 
-                        class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition shadow-lg shadow-blue-600/20 mt-2"
+                        class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition shadow-lg shadow-blue-600/20 mt-3"
                     >
-                        Sign In to DOS
+                        Create Account & Start &rarr;
                     </button>
 
                     <div class="text-center pt-2">
-                        <span class="text-xs text-slate-400">Don't have an account?</span>
-                        <a href="{{ route('register') }}" class="text-xs font-semibold text-blue-400 hover:text-blue-300 ml-1 underline underline-offset-2">
-                            Create Account / Organization &rarr;
+                        <span class="text-xs text-slate-400">Already registered?</span>
+                        <a href="{{ route('login') }}" class="text-xs font-semibold text-blue-400 hover:text-blue-300 ml-1 underline underline-offset-2">
+                            Sign In to existing account
                         </a>
                     </div>
                 </form>
-
-                <!-- Demo Credentials Helper -->
-                <div class="mt-6 pt-5 border-t border-dark-border">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Default Accounts (Seed Pack):</span>
-                    <div class="space-y-1.5 text-xs font-mono text-slate-300">
-                        <div class="flex justify-between items-center p-2 rounded-lg bg-[#090b10] border border-dark-border/60">
-                            <span>owner@disavo.de</span>
-                            <span class="text-blue-400 text-[11px]">Owner / secret123</span>
-                        </div>
-                        <div class="flex justify-between items-center p-2 rounded-lg bg-[#090b10] border border-dark-border/60">
-                            <span>steward@disavo.de</span>
-                            <span class="text-slate-400 text-[11px]">Steward / secret123</span>
-                        </div>
-                    </div>
-                </div>
 
             </div>
 

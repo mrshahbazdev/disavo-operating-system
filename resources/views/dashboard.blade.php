@@ -73,7 +73,14 @@
                     </div>
                 </div>
 
-                <!-- Quick Action Button in Header -->
+                <!-- Quick Action Buttons in Header -->
+                <button 
+                    onclick="openUserModal()"
+                    class="px-3 py-1.5 rounded-lg bg-[#1a2333] hover:bg-[#223049] border border-blue-500/40 text-blue-300 font-semibold text-xs transition shadow-sm flex items-center space-x-1.5"
+                >
+                    <span>👥 Add User</span>
+                </button>
+
                 <button 
                     onclick="openCaptureModal()"
                     class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm flex items-center space-x-1.5"
@@ -154,6 +161,14 @@
                     >
                         <span>🔄</span>
                         <span>New Review</span>
+                    </button>
+
+                    <button 
+                        onclick="openUserModal()"
+                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/20 hover:shadow-indigo-500/30 transition flex items-center justify-center space-x-2"
+                    >
+                        <span>👥</span>
+                        <span>Add Team Member</span>
                     </button>
                 </div>
             </div>
@@ -852,10 +867,108 @@
         </div>
     </div>
 
+    <!-- 7. ADD USER / TEAM MEMBER MODAL -->
+    <div id="userModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center text-base">
+                        👥
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white tracking-tight">Add Team Member / New User</h3>
+                        <p class="text-xs text-slate-300">Create user account &amp; assign access role to {{ $tenant->name ?? 'Organization' }}</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('userModal')" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+            </div>
+
+            <form method="POST" action="{{ route('actions.user.create') }}" class="p-6 space-y-4">
+                @csrf
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Full Name <span class="text-rose-400">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        required 
+                        placeholder="e.g. Sarah Connor"
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:outline-none focus:border-indigo-500 transition"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Email Address <span class="text-rose-400">*</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        required 
+                        placeholder="sarah@disavo.de"
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:outline-none focus:border-indigo-500 transition"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Password <span class="text-rose-400">*</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        required 
+                        value="secret123"
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:outline-none focus:border-indigo-500 transition font-mono"
+                    >
+                    <span class="text-[11px] text-slate-400 mt-1 block">Pre-filled default: <code class="font-mono text-indigo-300">secret123</code> (minimum 8 characters).</span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Organizational Role <span class="text-rose-400">*</span>
+                    </label>
+                    <select 
+                        name="role" 
+                        required 
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:outline-none focus:border-indigo-500 transition"
+                    >
+                        <option value="steward" selected>Steward — Knowledge Steward &amp; Audit Conductor</option>
+                        <option value="contributor">Contributor — Operational Feedback &amp; Capture Contributor</option>
+                        <option value="owner">Owner — Full Strategic Governance &amp; Administration</option>
+                        <option value="observer">Observer — Read-Only Governance Visibility</option>
+                    </select>
+                </div>
+
+                <div class="pt-2 border-t border-dark-border flex justify-end space-x-3">
+                    <button 
+                        type="button" 
+                        onclick="closeModal('userModal')" 
+                        class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition shadow-md shadow-indigo-600/20"
+                    >
+                        ✓ Create User &amp; Assign Role
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- CLIENT-SIDE JAVASCRIPT FOR INTERACTIVITY -->
     <script>
         const MODULES_DATA = @json($modules);
         const AUDIT_TEMPLATES_DATA = @json($auditTemplates);
+
+        function openUserModal() {
+            openModal('userModal');
+        }
 
         function openModuleModal(moduleId) {
             const module = MODULES_DATA.find(m => m.id === moduleId);

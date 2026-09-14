@@ -60,8 +60,11 @@
                         Open Dashboard &rarr;
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="px-4 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition">
+                    <a href="{{ route('login') }}" class="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition">
                         Sign In
+                    </a>
+                    <a href="{{ route('register') }}" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
+                        Create Account
                     </a>
                 @endauth
             </div>
@@ -167,6 +170,13 @@
                                     >
                                         Sign In to Portal
                                     </button>
+
+                                    <div class="text-center pt-2">
+                                        <span class="text-xs text-slate-400">Need a new account?</span>
+                                        <a href="{{ route('register') }}" class="text-xs font-semibold text-blue-400 hover:text-blue-300 ml-1 underline underline-offset-2">
+                                            Register Organization &rarr;
+                                        </a>
+                                    </div>
                                 </form>
 
                                 <div class="mt-4 pt-4 border-t border-dark-border text-[11px] text-slate-400 flex items-center justify-between">

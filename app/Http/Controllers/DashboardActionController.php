@@ -17,9 +17,12 @@ use App\Domains\Knowledge\States\Learning\Draft;
 use App\Domains\Review\Actions\CloseReview;
 use App\Domains\Review\Models\Review;
 use App\Domains\Tenancy\Context\TenantContext;
+use App\Domains\Tenancy\Models\Membership;
 use App\Domains\Tenancy\Models\Tenant;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DashboardActionController extends Controller
 {
@@ -171,6 +174,42 @@ class DashboardActionController extends Controller
         return redirect()->route('dashboard')->with(
             'success',
             "✓ New Strategic Review '{$validated['title']}' created for period {$validated['period']}."
+        );
+    }
+
+    /**
+     * 5. Add User / Team Member: Allows creating or adding a user to the current organization/tenant.
+     */
+    public function addUser(Request $request): RedirectResponse
+    {
+        $tenant = TenantContext::getTenant() ?? Tenant::first();
+
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
+            'role'     => 'required|string|in:owner,steward,contributor,observer',
+        ]);
+
+        $user = User::firstOrCreate(
+            ['email' => $validated['email']],
+            [
+                'name'     => $validated['name'],
+                'password' => Hash::make($validated['password']),
+            ]
+        );
+
+        if ($tenant) {
+            Membership::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'user_id' => $user->id],
+                ['role' => $validated['role']]
+            );
+        }
+
+        $roleLabel = ucfirst($validated['role']);
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ User '{$user->name}' ({$user->email}) added successfully with role '{$roleLabel}' to {$tenant->name}."
         );
     }
 }
