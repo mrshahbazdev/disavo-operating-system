@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Domains\Development\Actions\RecordKpiReading;
 use App\Domains\Development\Actions\RunAudit;
 use App\Domains\Development\Actions\ScoreAudit;
+use App\Domains\Development\Models\AuditQuestion;
 use App\Domains\Development\Models\AuditTemplate;
 use App\Domains\Development\Models\Goal;
 use App\Domains\Development\Models\Kpi;
@@ -17,6 +18,7 @@ use App\Domains\Knowledge\Models\Question;
 use App\Domains\Knowledge\States\Learning\Draft;
 use App\Domains\Review\Actions\CloseReview;
 use App\Domains\Review\Models\Review;
+use App\Domains\Review\Models\ReviewItem;
 use App\Domains\Tenancy\Context\TenantContext;
 use App\Domains\Tenancy\Models\Membership;
 use App\Domains\Tenancy\Models\Tenant;
@@ -150,20 +152,25 @@ class DashboardActionController extends Controller
     }
 
     /**
-     * 5. Create Review: Create a new strategic review period.
+     * 5. Create Review: Create a new strategic review period with associated audit questions.
      */
     public function createReview(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title'       => 'required|string|max:255',
-            'period'      => 'required|string|max:50',
-            'review_date' => 'required|date',
-            'summary'     => 'required|string',
+            'title'                   => 'required|string|max:255',
+            'period'                  => 'required|string|max:50',
+            'review_date'             => 'required|date',
+            'summary'                 => 'required|string',
+            'questions'               => 'nullable|array',
+            'questions.*'             => 'nullable|string|max:500',
+            'question_modules'        => 'nullable|array',
+            'existing_question_ids'   => 'nullable|array',
+            'existing_question_ids.*' => 'nullable|integer|exists:audit_questions,id',
         ]);
 
         $tenant = TenantContext::getTenant() ?? Tenant::first();
 
-        Review::create([
+        $review = Review::create([
             'tenant_id'   => $tenant->id,
             'title'       => $validated['title'],
             'period'      => $validated['period'],
@@ -173,9 +180,54 @@ class DashboardActionController extends Controller
             'created_by'  => $request->user()->id,
         ]);
 
+        $itemsCount = 0;
+
+        // 1. Process custom entered audit questions
+        if (!empty($validated['questions'])) {
+            foreach ($validated['questions'] as $index => $qText) {
+                $qText = trim((string) $qText);
+                if ($qText === '') {
+                    continue;
+                }
+
+                $moduleId = !empty($validated['question_modules'][$index])
+                    ? (int) $validated['question_modules'][$index]
+                    : null;
+
+                ReviewItem::create([
+                    'review_id' => $review->id,
+                    'module_id' => $moduleId,
+                    'topic'     => $qText,
+                    'status'    => 'identified',
+                    'notes'     => 'Im Review eingereichte Audit-Frage',
+                ]);
+                $itemsCount++;
+            }
+        }
+
+        // 2. Process selected existing audit questions
+        if (!empty($validated['existing_question_ids'])) {
+            $existingQuestions = AuditQuestion::with('template')
+                ->whereIn('id', $validated['existing_question_ids'])
+                ->get();
+
+            foreach ($existingQuestions as $eq) {
+                ReviewItem::create([
+                    'review_id' => $review->id,
+                    'module_id' => $eq->template?->module_id,
+                    'topic'     => $eq->question_text,
+                    'status'    => 'identified',
+                    'notes'     => $eq->guidance ? "Guidance: {$eq->guidance}" : 'Bestehende Modul-Audit-Frage',
+                ]);
+                $itemsCount++;
+            }
+        }
+
+        $itemsMsg = $itemsCount > 0 ? " mit {$itemsCount} zugeordneten Audit-Fragen" : '';
+
         return redirect()->route('dashboard')->with(
             'success',
-            "✓ New Strategic Review '{$validated['title']}' created for period {$validated['period']}."
+            "✓ Strategisches Review '{$validated['title']}' für Periode {$validated['period']}{$itemsMsg} erfolgreich angelegt."
         );
     }
 

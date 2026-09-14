@@ -125,4 +125,69 @@ class ReviewLoopTest extends TestCase
         $this->assertCount(1, $governedModules);
         $this->assertEquals($this->module->id, $governedModules->first()->id);
     }
+
+    public function test_can_create_strategic_review_with_custom_and_existing_audit_questions(): void
+    {
+        $template = \App\Domains\Development\Models\AuditTemplate::firstOrCreate(
+            ['module_id' => $this->module->id, 'tenant_id' => $this->tenant->id],
+            ['name' => 'Test Audit Template', 'description' => 'For testing']
+        );
+
+        $existingQ = \App\Domains\Development\Models\AuditQuestion::create([
+            'tenant_id'         => $this->tenant->id,
+            'audit_template_id' => $template->id,
+            'question_text'     => 'Kanonische Audit-Frage zur Nachfolge?',
+            'weight'            => 1.0,
+            'order'             => 1,
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('actions.review.create'), [
+            'title'                 => 'Q3-2026 Strategy Review',
+            'period'                => 'Q3-2026',
+            'review_date'           => now()->toDateString(),
+            'summary'               => 'Testing review creation with audit questions.',
+            'questions'             => [
+                'Wie transparent ist die Mitarbeiterkommunikation?',
+                'Sind Notfall-Vollmachten vorhanden?',
+            ],
+            'question_modules'      => [
+                $this->module->id,
+                null,
+            ],
+            'existing_question_ids' => [
+                $existingQ->id,
+            ],
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $response->assertSessionHas('success');
+
+        $createdReview = Review::where('title', 'Q3-2026 Strategy Review')->first();
+        $this->assertNotNull($createdReview);
+        $this->assertEquals(Review::STATUS_OPEN, $createdReview->status);
+
+        $items = $createdReview->items;
+        $this->assertCount(3, $items);
+
+        // Verify first custom question
+        $this->assertTrue($items->contains(function ($item) {
+            return $item->topic === 'Wie transparent ist die Mitarbeiterkommunikation?'
+                && $item->module_id === $this->module->id
+                && $item->status === 'identified';
+        }));
+
+        // Verify second custom question (without module)
+        $this->assertTrue($items->contains(function ($item) {
+            return $item->topic === 'Sind Notfall-Vollmachten vorhanden?'
+                && $item->module_id === null
+                && $item->status === 'identified';
+        }));
+
+        // Verify existing question
+        $this->assertTrue($items->contains(function ($item) {
+            return $item->topic === 'Kanonische Audit-Frage zur Nachfolge?'
+                && $item->module_id === $this->module->id
+                && $item->status === 'identified';
+        }));
+    }
 }

@@ -719,43 +719,120 @@
 
     <!-- 5. SCHEDULE REVIEW MODAL -->
     <div id="reviewCreateModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-lg w-full flex flex-col overflow-hidden shadow-2xl">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
                     <span class="text-xs font-mono font-bold text-amber-400 uppercase">ARF Strategic Governance</span>
-                    <h2 class="text-xl font-bold text-white mt-1">🔄 Schedule Strategic Review</h2>
-                    <p class="text-xs text-slate-300 mt-1">Define review period for holding and portfolio assessments.</p>
+                    <h2 class="text-xl font-bold text-white mt-1">🔄 Schedule Strategic Review &amp; Audit Questions</h2>
+                    <p class="text-xs text-slate-300 mt-1">Review-Zyklus ansetzen und relevante Audit-Fragen &amp; Untersuchungsschwerpunkte zuordnen.</p>
                 </div>
                 <button onclick="closeModal('reviewCreateModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
             </div>
 
-            <form method="POST" action="{{ route('actions.review.create') }}" class="p-6 space-y-4">
+            <form method="POST" action="{{ route('actions.review.create') }}" class="flex flex-col flex-1 overflow-hidden">
                 @csrf
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Review Title</label>
-                    <input type="text" name="title" required placeholder="e.g. Q2-2026 Holding Governance Review" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
+                <div class="p-6 overflow-y-auto space-y-5 flex-1">
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Period</label>
-                        <input type="text" name="period" required placeholder="Q2-2026" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Review Title</label>
+                        <input type="text" name="title" required placeholder="e.g. Q2-2026 Holding Governance Review" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
                     </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Period</label>
+                            <input type="text" name="period" required placeholder="Q2-2026" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Review Date</label>
+                            <input type="date" name="review_date" required value="{{ date('Y-m-d') }}" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Review Date</label>
-                        <input type="date" name="review_date" required value="{{ date('Y-m-d') }}" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Executive Summary / Agenda</label>
+                        <textarea name="summary" rows="2" required placeholder="Focus areas, key risks, and development targets to review..." class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- AUDIT QUESTIONS SECTION -->
+                    <div class="pt-4 border-t border-dark-border space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-sm font-bold text-white flex items-center space-x-2">
+                                    <span>📋</span>
+                                    <span>Audit-Fragen für dieses Review einreichen</span>
+                                </h4>
+                                <p class="text-xs text-slate-400 mt-0.5">Erfassen Sie konkrete Fragen, die im Review geprüft werden sollen (Review-Items).</p>
+                            </div>
+                            <button type="button" onclick="addReviewQuestionRow()" class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center space-x-1">
+                                <span>+</span>
+                                <span>Frage hinzufügen</span>
+                            </button>
+                        </div>
+
+                        <!-- Dynamic custom question rows container -->
+                        <div id="reviewQuestionsContainer" class="space-y-3">
+                            <div class="review-question-row p-3.5 rounded-xl bg-dark-card border border-dark-border space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-mono text-amber-400 font-semibold row-number">Audit-Frage 01</span>
+                                    <button type="button" onclick="removeReviewQuestionRow(this)" class="text-xs text-slate-500 hover:text-rose-400 transition" title="Frage entfernen">✕</button>
+                                </div>
+                                <div>
+                                    <input type="text" name="questions[]" placeholder="z.B. Wie transparent ist die Nachfolge-Kommunikation für Führungskräfte?" class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <label class="text-[11px] text-slate-400 whitespace-nowrap">Modul-Zuordnung:</label>
+                                    <select name="question_modules[]" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                                        <option value="">(Keine / Übergreifend)</option>
+                                        @foreach ($modules as $mod)
+                                            <option value="{{ $mod->id }}">{{ $mod->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pre-existing Audit Questions Picker from canonical templates -->
+                        @if ($auditTemplates->isNotEmpty())
+                            <details class="group bg-dark-card/60 border border-dark-border rounded-xl overflow-hidden">
+                                <summary class="p-3.5 text-xs font-bold text-slate-300 hover:text-white cursor-pointer select-none flex items-center justify-between transition">
+                                    <span class="flex items-center space-x-2">
+                                        <span class="text-amber-400">⚡</span>
+                                        <span>Bestehende Modul-Audit-Fragen übernehmen (Optional)</span>
+                                    </span>
+                                    <span class="text-slate-500 group-open:rotate-180 transition-transform">▼</span>
+                                </summary>
+                                <div class="p-4 pt-1 border-t border-dark-border/60 space-y-4 max-h-60 overflow-y-auto text-xs">
+                                    <p class="text-[11px] text-slate-400">Wählen Sie Fragen aus den kanonischen Modul-Audits aus, um sie in dieses Review einzubinden:</p>
+                                    @foreach ($auditTemplates as $tmpl)
+                                        @if ($tmpl->questions && $tmpl->questions->isNotEmpty())
+                                            <div class="space-y-1.5">
+                                                <div class="flex items-center space-x-2">
+                                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                                        {{ $tmpl->module?->name ?? 'Modul' }}
+                                                    </span>
+                                                    <span class="text-[11px] font-semibold text-slate-300">{{ $tmpl->name }}</span>
+                                                </div>
+                                                <div class="space-y-1 pl-2">
+                                                    @foreach ($tmpl->questions as $tq)
+                                                        <label class="flex items-start space-x-2 p-1.5 rounded-lg hover:bg-dark-surface cursor-pointer text-slate-300 hover:text-white transition">
+                                                            <input type="checkbox" name="existing_question_ids[]" value="{{ $tq->id }}" class="mt-0.5 rounded bg-dark-surface border-dark-border text-amber-500 focus:ring-0">
+                                                            <span class="leading-tight">{{ $tq->question_text }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </details>
+                        @endif
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Executive Summary / Agenda</label>
-                    <textarea name="summary" rows="3" required placeholder="Focus areas, key risks, and development targets to review..." class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none"></textarea>
-                </div>
-
-                <div class="pt-3 border-t border-dark-border flex justify-end space-x-3">
+                <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end space-x-3">
                     <button type="button" onclick="closeModal('reviewCreateModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">Cancel</button>
                     <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white transition shadow-md shadow-amber-600/20">
-                        Create Review
+                        Create Review &amp; Save Questions
                     </button>
                 </div>
             </form>
@@ -1277,6 +1354,40 @@
                                     </span>
                                 </div>
                                 <p class="text-xs text-slate-200 mt-2">{{ $review->summary }}</p>
+
+                                @if ($review->items && $review->items->isNotEmpty())
+                                    <div class="mt-3 pt-3 border-t border-dark-border/60">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-[11px] font-mono text-amber-400 font-bold uppercase">Zugeordnete Audit-Fragen &amp; Untersuchungsschwerpunkte ({{ $review->items->count() }}):</span>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            @foreach ($review->items as $item)
+                                                <div class="p-2.5 rounded-lg bg-dark-surface/80 border border-dark-border/80 flex items-start justify-between gap-2 text-xs">
+                                                    <div class="space-y-0.5">
+                                                        <div class="flex items-center space-x-2">
+                                                            @if ($item->module)
+                                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
+                                                                    {{ $item->module->name }}
+                                                                </span>
+                                                            @else
+                                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-700 text-slate-300 font-semibold">
+                                                                    Übergreifend
+                                                                </span>
+                                                            @endif
+                                                            <span class="text-white font-medium">{{ $item->topic }}</span>
+                                                        </div>
+                                                        @if ($item->notes)
+                                                            <p class="text-[11px] text-slate-400 italic pl-1">{{ $item->notes }}</p>
+                                                        @endif
+                                                    </div>
+                                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">
+                                                        {{ $item->status }}
+                                                    </span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
 
                                 @if ($review->status !== 'closed')
                                     <div class="mt-4 pt-3 border-t border-dark-border flex justify-end">
@@ -2013,9 +2124,60 @@
             `).join('');
         }
 
+        function addReviewQuestionRow() {
+            const container = document.getElementById('reviewQuestionsContainer');
+            if (!container) return;
+            const rows = container.querySelectorAll('.review-question-row');
+            const nextIdx = rows.length + 1;
+            const numStr = nextIdx < 10 ? `0${nextIdx}` : `${nextIdx}`;
+
+            const row = document.createElement('div');
+            row.className = 'review-question-row p-3.5 rounded-xl bg-dark-card border border-dark-border space-y-2';
+            row.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-mono text-amber-400 font-semibold row-number">Audit-Frage ${numStr}</span>
+                    <button type="button" onclick="removeReviewQuestionRow(this)" class="text-xs text-slate-500 hover:text-rose-400 transition" title="Frage entfernen">✕</button>
+                </div>
+                <div>
+                    <input type="text" name="questions[]" placeholder="z.B. Untersuchungsschwerpunkt oder Kontrollfrage eingeben..." class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label class="text-[11px] text-slate-400 whitespace-nowrap">Modul-Zuordnung:</label>
+                    <select name="question_modules[]" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                        <option value="">(Keine / Übergreifend)</option>
+                        ${MODULES_DATA.map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeReviewQuestionRow(btn) {
+            const container = document.getElementById('reviewQuestionsContainer');
+            if (!container) return;
+            const rows = container.querySelectorAll('.review-question-row');
+            if (rows.length <= 1) {
+                const input = rows[0].querySelector('input[name="questions[]"]');
+                if (input) input.value = '';
+                return;
+            }
+            btn.closest('.review-question-row').remove();
+            const remaining = container.querySelectorAll('.review-question-row');
+            remaining.forEach((r, i) => {
+                const badge = r.querySelector('.row-number');
+                if (badge) {
+                    const idxStr = (i + 1) < 10 ? `0${i + 1}` : `${i + 1}`;
+                    badge.textContent = `Audit-Frage ${idxStr}`;
+                }
+            });
+        }
+
         function openCaptureModal() { openModal('captureModal'); }
         function openKpiModal() { openModal('kpiModal'); }
-        function openReviewCreateModal() { openModal('reviewCreateModal'); }
+        function openReviewCreateModal() { 
+            closeModal('arfModal');
+            openModal('reviewCreateModal'); 
+        }
         function openAlfModal() { openModal('alfModal'); }
         function openAmfModal() { openModal('amfModal'); }
         function openArfModal() { openModal('arfModal'); }

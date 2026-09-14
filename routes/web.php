@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
         $learnings = rescue(fn () => \App\Domains\Knowledge\Models\Learning::withoutGlobalScopes()->get(), collect());
         $observations = rescue(fn () => \App\Domains\Knowledge\Models\Observation::withoutGlobalScopes()->get(), collect());
         $reviews = rescue(fn () => \App\Domains\Review\Models\Review::withoutGlobalScopes()->with(['items.module', 'improvements'])->get(), collect());
-        $auditTemplates = rescue(fn () => \App\Domains\Development\Models\AuditTemplate::withoutGlobalScopes()->with('questions')->get(), collect());
+        $auditTemplates = rescue(fn () => \App\Domains\Development\Models\AuditTemplate::withoutGlobalScopes()->with(['questions', 'module'])->get(), collect());
         $edges = rescue(fn () => KnowledgeEdge::withoutGlobalScopes()->active()->get(), collect());
 
         $modules = rescue(function () use ($principles, $edges) {
