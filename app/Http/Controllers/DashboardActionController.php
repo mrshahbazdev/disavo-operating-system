@@ -12,6 +12,7 @@ use App\Domains\Development\Models\AuditTemplate;
 use App\Domains\Development\Models\Goal;
 use App\Domains\Development\Models\Kpi;
 use App\Domains\Development\Models\Module;
+use App\Domains\Development\Models\Tool;
 use App\Domains\Knowledge\Models\Learning;
 use App\Domains\Knowledge\Models\Observation;
 use App\Domains\Knowledge\Models\Question;
@@ -298,6 +299,16 @@ class DashboardActionController extends Controller
             'development_object'   => 'nullable|string|max:255',
             'allocore_level'       => 'nullable|string|max:255',
             'amf_version'          => 'nullable|string|max:50',
+            'audit_question'       => 'nullable|string|max:500',
+            'audit_guidance'       => 'nullable|string|max:500',
+            'kpi_name'             => 'nullable|string|max:255',
+            'kpi_target'           => 'nullable|numeric',
+            'kpi_unit'             => 'nullable|string|max:50',
+            'tool_name'            => 'nullable|string|max:255',
+            'tool_type'            => 'nullable|string|in:template,checklist,whitepaper,saas,ai_function',
+            'learning_hypothesis'  => 'nullable|string|max:500',
+            'review_cadence'       => 'nullable|string|max:50',
+            'review_focus'         => 'nullable|string|max:500',
         ]);
 
         $slug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['name']);
@@ -341,6 +352,9 @@ class DashboardActionController extends Controller
             }
         }
 
+        $createdComponents = [];
+
+        // Baustein 2: Zieldefinition (Goal)
         if (!empty($validated['target_title']) || !empty($validated['target_score'])) {
             $targetTitle = $validated['target_title'] ?: "Zielzustand für {$module->name}";
             $objText = !empty($validated['development_object']) ? " ({$validated['development_object']})" : '';
@@ -355,12 +369,100 @@ class DashboardActionController extends Controller
                 'version'      => $versionInt,
                 'created_by'   => $request->user()->id,
             ]);
+            $createdComponents[] = 'Zieldefinition';
+        }
+
+        // Baustein 4: Strukturiertes Audit (AuditTemplate & AuditQuestion)
+        if (!empty($validated['audit_question'])) {
+            $template = AuditTemplate::create([
+                'tenant_id'   => $tenant->id,
+                'module_id'   => $module->id,
+                'name'        => "Audit {$module->name}",
+                'description' => "AMF 1.1 Reifegrad-Audit für {$module->name}",
+            ]);
+
+            AuditQuestion::create([
+                'tenant_id'         => $tenant->id,
+                'audit_template_id' => $template->id,
+                'question_text'     => $validated['audit_question'],
+                'weight'            => 1.0,
+                'order'             => 1,
+                'guidance'          => $validated['audit_guidance'] ?: 'Reifegrad-Messung (1=Initiale Phase bis 5=Vollständig institutionalisiert).',
+            ]);
+            $createdComponents[] = 'Audit-Fragebogen';
+        }
+
+        // Baustein 5: KPI-System (Kpi)
+        if (!empty($validated['kpi_name'])) {
+            Kpi::create([
+                'tenant_id'    => $tenant->id,
+                'module_id'    => $module->id,
+                'name'         => $validated['kpi_name'],
+                'code'         => strtoupper(Str::slug($module->name . '-' . $validated['kpi_name'])),
+                'unit'         => $validated['kpi_unit'] ?: '%',
+                'direction'    => 'asc',
+                'target_value' => $validated['kpi_target'] ?? (float) ($validated['target_score'] ?? 85.0),
+            ]);
+            $createdComponents[] = 'KPI-Messregel';
+        }
+
+        // Baustein 6: Werkzeuge / Tools (Tool)
+        if (!empty($validated['tool_name'])) {
+            Tool::create([
+                'tenant_id'   => $tenant->id,
+                'module_id'   => $module->id,
+                'name'        => $validated['tool_name'],
+                'type'        => $validated['tool_type'] ?: Tool::TYPE_TEMPLATE,
+                'url_or_path' => '#',
+                'description' => "AMF 1.1 Befähigungswerkzeug für {$module->name}",
+            ]);
+            $createdComponents[] = 'Befähigungswerkzeug';
+        }
+
+        // Baustein 7: Learnings / ALF (Observation)
+        if (!empty($validated['learning_hypothesis'])) {
+            Observation::create([
+                'tenant_id'   => $tenant->id,
+                'title'       => "Ausgangsbeobachtung: {$module->name}",
+                'content'     => $validated['learning_hypothesis'],
+                'context'     => ['module' => $module->slug, 'framework' => 'AMF 1.1'],
+                'created_by'  => $request->user()->id,
+            ]);
+            $createdComponents[] = 'ALF-Ausgangsbeobachtung';
+        }
+
+        // Baustein 8: Review-Zyklus / ARF (Review & ReviewItem)
+        if (!empty($validated['review_focus']) || !empty($validated['review_cadence'])) {
+            $cadence = $validated['review_cadence'] ?: 'Q-Review';
+            $period = date('Y') . '-' . $cadence;
+            $focus = $validated['review_focus'] ?: "Initiales AMF 1.1 Review für {$module->name}";
+
+            $review = Review::create([
+                'tenant_id'   => $tenant->id,
+                'title'       => "Review: {$module->name} ({$cadence})",
+                'period'      => $period,
+                'review_date' => now()->addMonths(3)->toDateString(),
+                'summary'     => $focus,
+                'status'      => Review::STATUS_OPEN,
+                'created_by'  => $request->user()->id,
+            ]);
+
+            ReviewItem::create([
+                'review_id' => $review->id,
+                'module_id' => $module->id,
+                'topic'     => $validated['audit_question'] ?: "Überprüfung Zielerreichung: {$validated['name']}",
+                'status'    => 'identified',
+                'notes'     => "AMF 1.1 Initialer Review-Schwerpunkt ({$cadence})",
+            ]);
+            $createdComponents[] = 'ARF-Reviewzyklus';
         }
 
         $objFeedback = !empty($validated['development_object']) ? " (Entwicklungsobjekt: {$validated['development_object']})" : '';
+        $componentsMsg = !empty($createdComponents) ? ' inklusive: ' . implode(', ', $createdComponents) : '';
+
         return redirect()->route('dashboard')->with(
             'success',
-            "✓ Neues Modul '{$module->name}'{$objFeedback} nach AMF 1.1 Blaupause angelegt und für Reifegrad-Audits freigeschaltet."
+            "✓ Neues Modul '{$module->name}'{$objFeedback} nach AMF 1.1 Blaupause angelegt{$componentsMsg}."
         );
     }
 }

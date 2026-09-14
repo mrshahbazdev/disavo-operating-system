@@ -1529,7 +1529,7 @@
 
     <!-- 8. MODULE CREATE MODAL (AMF 1.1 — Neues Modul nach Blaupause entwickeln) -->
     <div id="moduleCreateModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
             <!-- Header -->
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
@@ -1633,6 +1633,159 @@
                             value="85" 
                             class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none font-mono"
                         >
+                    </div>
+                </div>
+
+                <!-- Baustein 4: Strukturiertes Audit -->
+                <div class="p-4 rounded-xl bg-dark-card/70 border border-dark-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-slate-300 uppercase">
+                            4. Strukturiertes Audit (Kernfragen &amp; Kriterien)
+                        </label>
+                        <span class="text-[10px] font-mono font-bold text-blue-400 uppercase">Reifegrad-Messung</span>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Initiale Audit-Kernfrage</label>
+                        <input 
+                            type="text" 
+                            name="audit_question" 
+                            placeholder="z. B. Ist die Marktpositionierung glasklar und differenziert gegenüber Wettbewerbern?" 
+                            class="w-full px-3.5 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Bewertungskriterien &amp; Leitfaden (Noten 1 bis 5)</label>
+                        <input 
+                            type="text" 
+                            name="audit_guidance" 
+                            placeholder="z. B. 1=Keine Differenzierung, 3=Teilweise Differenzierung, 5=Absolute Preissetzungsmacht &amp; Bekanntheit" 
+                            class="w-full px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-slate-300 text-xs focus:border-blue-500 focus:outline-none"
+                        >
+                    </div>
+                </div>
+
+                <!-- Baustein 5: KPI-System -->
+                <div class="p-4 rounded-xl bg-dark-card/70 border border-dark-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-slate-300 uppercase">
+                            5. KPI-System („Keine Frage ohne Messregel“)
+                        </label>
+                        <span class="text-[10px] font-mono font-bold text-emerald-400 uppercase">Metrik &amp; Trend</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="sm:col-span-1">
+                            <label class="block text-[11px] text-slate-400 mb-1">Kennzahl-Name</label>
+                            <input 
+                                type="text" 
+                                name="kpi_name" 
+                                placeholder="z. B. Preissetzungsmacht-Index" 
+                                class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">Zielwert (Soll)</label>
+                            <input 
+                                type="number" 
+                                step="0.1" 
+                                name="kpi_target" 
+                                placeholder="85.0" 
+                                class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none font-mono"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">Einheit</label>
+                            <input 
+                                type="text" 
+                                name="kpi_unit" 
+                                placeholder="Index, %, EUR" 
+                                class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none font-mono"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Baustein 6: Werkzeuge (Tools) -->
+                <div class="p-4 rounded-xl bg-dark-card/70 border border-dark-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-slate-300 uppercase">
+                            6. Werkzeuge (Tools für operative Befähigung)
+                        </label>
+                        <span class="text-[10px] font-mono font-bold text-purple-400 uppercase">Lösungsbibliothek</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] text-slate-400 mb-1">Werkzeug- / Vorlagenname</label>
+                            <input 
+                                type="text" 
+                                name="tool_name" 
+                                placeholder="z. B. Positionierungs-Playbook &amp; Brand Guidelines SOP" 
+                                class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">Werkzeug-Typ</label>
+                            <select 
+                                name="tool_type" 
+                                class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"
+                            >
+                                <option value="template">Template / Vorlage</option>
+                                <option value="checklist">Checkliste</option>
+                                <option value="whitepaper">SOP / Leitfaden</option>
+                                <option value="saas">SaaS / Software</option>
+                                <option value="ai_function">KI-Workflow</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Baustein 7: Learnings (ALF) -->
+                <div class="p-4 rounded-xl bg-dark-card/70 border border-dark-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-slate-300 uppercase">
+                            7. Learnings (ALF — Empirische Rückkopplung)
+                        </label>
+                        <span class="text-[10px] font-mono font-bold text-amber-400 uppercase">Kognitiver Pfad</span>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Ausgangsbeobachtung / Problemstellung</label>
+                        <input 
+                            type="text" 
+                            name="learning_hypothesis" 
+                            placeholder="z. B. Uneinheitliche Außendarstellung führte zu anhaltendem Preisdruck bei Neukunden." 
+                            class="w-full px-3.5 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"
+                        >
+                    </div>
+                </div>
+
+                <!-- Baustein 8: Review-Zyklus (ARF) -->
+                <div class="p-4 rounded-xl bg-dark-card/70 border border-dark-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-slate-300 uppercase">
+                            8. Review-Zyklus (ARF — Regelmäßige Überprüfung)
+                        </label>
+                        <span class="text-[10px] font-mono font-bold text-rose-400 uppercase">Regelkreis</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">Review-Rhythmus</label>
+                            <select 
+                                name="review_cadence" 
+                                class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"
+                            >
+                                <option value="Q-Review" selected>Quartalsweise (Q-Review)</option>
+                                <option value="H-Review">Halbjährlich (H-Review)</option>
+                                <option value="J-Review">Jährlich (Strategie-Audit)</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] text-slate-400 mb-1">Erster Review-Fokus / Agenda</label>
+                            <input 
+                                type="text" 
+                                name="review_focus" 
+                                placeholder="z. B. Erste Validierung der Positionierungs-Wahrnehmung bei Top-20 Kunden" 
+                                class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"
+                            >
+                        </div>
                     </div>
                 </div>
 

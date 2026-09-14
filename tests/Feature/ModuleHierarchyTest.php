@@ -167,4 +167,83 @@ class ModuleHierarchyTest extends TestCase
             'version'      => 1,
         ]);
     }
+
+    public function test_can_create_module_with_all_9_amf_1_1_standard_components(): void
+    {
+        $user = User::firstOrCreate(
+            ['email' => 'amf_full@disavo.de'],
+            ['name' => 'Full AMF Architect', 'password' => Hash::make('secret123')]
+        );
+
+        $response = $this->actingAs($user)->post('/actions/module/create', [
+            'name'                => 'Markenaufbau & Differenzierung',
+            'development_object'  => 'Marke',
+            'target_title'        => 'Glasklare Differenzierung und Preissetzungsmacht',
+            'allocore_level'      => 'Ebene 4: Einfluss',
+            'target_score'        => 85.0,
+            'audit_question'      => 'Ist die Positionierung im Zielmarkt eindeutig und differenziert?',
+            'audit_guidance'      => '1=Keine Differenzierung bis 5=Eindeutige Preissetzungsmacht',
+            'kpi_name'            => 'Preissetzungsmacht-Index',
+            'kpi_target'          => 85.0,
+            'kpi_unit'            => 'Index',
+            'tool_name'           => 'Positionierungs-Playbook & SOP',
+            'tool_type'           => 'template',
+            'learning_hypothesis' => 'Uneinheitliche Außendarstellung führt zu Preisdruck.',
+            'review_cadence'      => 'Q-Review',
+            'review_focus'        => 'Erste Validierung der Wahrnehmung bei Top-20 Kunden',
+            'amf_version'         => 'v1.0 Produktiv',
+            'description'         => 'Strategischer Aufbau von Vertrauen und Markenautorität.',
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $response->assertSessionHas('success');
+
+        $module = Module::where('name', 'Markenaufbau & Differenzierung')->firstOrFail();
+        $this->assertNotNull($module);
+
+        // Baustein 2: Goal
+        $this->assertDatabaseHas('goals', [
+            'module_id' => $module->id,
+            'title'     => 'Glasklare Differenzierung und Preissetzungsmacht',
+        ]);
+
+        // Baustein 4: AuditTemplate + Question
+        $this->assertDatabaseHas('audit_templates', [
+            'module_id' => $module->id,
+            'name'      => "Audit {$module->name}",
+        ]);
+        $this->assertDatabaseHas('audit_questions', [
+            'question_text' => 'Ist die Positionierung im Zielmarkt eindeutig und differenziert?',
+        ]);
+
+        // Baustein 5: KPI
+        $this->assertDatabaseHas('kpis', [
+            'module_id' => $module->id,
+            'name'      => 'Preissetzungsmacht-Index',
+            'unit'      => 'Index',
+        ]);
+
+        // Baustein 6: Tool
+        $this->assertDatabaseHas('tools', [
+            'module_id' => $module->id,
+            'name'      => 'Positionierungs-Playbook & SOP',
+            'type'      => 'template',
+        ]);
+
+        // Baustein 7: Observation (ALF)
+        $this->assertDatabaseHas('observations', [
+            'title'   => "Ausgangsbeobachtung: {$module->name}",
+            'content' => 'Uneinheitliche Außendarstellung führt zu Preisdruck.',
+        ]);
+
+        // Baustein 8: Review (ARF)
+        $this->assertDatabaseHas('reviews', [
+            'title'   => "Review: {$module->name} (Q-Review)",
+            'summary' => 'Erste Validierung der Wahrnehmung bei Top-20 Kunden',
+        ]);
+        $this->assertDatabaseHas('review_items', [
+            'module_id' => $module->id,
+            'topic'     => 'Ist die Positionierung im Zielmarkt eindeutig und differenziert?',
+        ]);
+    }
 }
