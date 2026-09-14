@@ -23,6 +23,7 @@ Route::post('register', [AuthController::class, 'register'])->name('register.pos
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 use App\Http\Controllers\DashboardActionController;
+use App\Http\Controllers\ProfileController;
 
 // Authenticated Executive Dashboard & Actions
 Route::middleware('auth')->group(function () {
@@ -79,6 +80,8 @@ Route::middleware('auth')->group(function () {
     Route::post('actions/review/create', [DashboardActionController::class, 'createReview'])->name('actions.review.create');
     Route::post('actions/user/create', [DashboardActionController::class, 'addUser'])->name('actions.user.create');
     Route::post('actions/module/create', [DashboardActionController::class, 'createModule'])->name('actions.module.create');
+    Route::post('actions/profile/update', [ProfileController::class, 'updateProfile'])->name('actions.profile.update');
+    Route::post('actions/profile/password', [ProfileController::class, 'updatePassword'])->name('actions.profile.password');
 });
 
 

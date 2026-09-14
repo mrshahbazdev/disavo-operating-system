@@ -62,16 +62,23 @@
             </div>
 
             <div class="flex items-center space-x-3 sm:space-x-4">
-                <!-- User Profile Badge -->
-                <div class="hidden sm:flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border">
-                    <div class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xs flex items-center justify-center font-mono">
+                <!-- User Profile & Settings Trigger -->
+                <button 
+                    onclick="openProfileModal()"
+                    title="Benutzerprofil &amp; Passwort bearbeiten"
+                    class="flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border hover:border-blue-500/60 hover:bg-dark-hover transition text-left cursor-pointer group shadow-sm"
+                >
+                    <div class="w-6 h-6 rounded-full bg-blue-500/20 group-hover:bg-blue-500/30 text-blue-400 font-bold text-xs flex items-center justify-center font-mono transition">
                         {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                     </div>
-                    <div class="text-left">
-                        <div class="text-xs font-bold text-white leading-tight">{{ auth()->user()->name }}</div>
+                    <div class="text-left hidden sm:block">
+                        <div class="text-xs font-bold text-white leading-tight flex items-center space-x-1">
+                            <span>{{ auth()->user()->name }}</span>
+                            <span class="text-[10px] text-slate-400 group-hover:text-blue-400 transition">⚙️</span>
+                        </div>
                         <div class="text-[10px] text-blue-400 font-mono leading-tight">{{ auth()->user()->email }}</div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Quick Action Buttons in Header -->
                 <button 
@@ -101,7 +108,6 @@
     <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
 
-        <!-- Flash Success Notification Toast -->
         @if (session('success'))
             <div class="p-4 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-emerald-100 flex items-center justify-between shadow-xl">
                 <div class="flex items-center space-x-3">
@@ -109,6 +115,23 @@
                     <span class="text-sm font-semibold">{{ session('success') }}</span>
                 </div>
                 <button onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-emerald-200 font-bold text-sm px-2">✕</button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="p-4 rounded-xl bg-rose-950/80 border-2 border-rose-500 text-rose-100 flex items-start justify-between shadow-xl">
+                <div class="flex items-start space-x-3">
+                    <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 font-bold flex items-center justify-center text-sm mt-0.5">⚠️</span>
+                    <div>
+                        <span class="text-sm font-bold block">Fehler bei der Anfrage:</span>
+                        <ul class="text-xs list-disc list-inside mt-1 space-y-0.5 text-rose-200">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-rose-400 hover:text-rose-200 font-bold text-sm px-2">✕</button>
             </div>
         @endif
 
@@ -1559,6 +1582,180 @@
         </div>
     </div>
 
+    <!-- 9. USER PROFILE & PASSWORD MODAL -->
+    <div id="profileModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center text-lg font-mono">
+                        👤
+                    </div>
+                    <div>
+                        <span class="text-xs font-mono font-bold text-blue-400 uppercase">Kontoeinstellungen</span>
+                        <h2 class="text-xl font-bold text-white mt-0.5">Benutzerprofil &amp; Passwort</h2>
+                        <p class="text-xs text-slate-300">Verwalten Sie Ihre persönlichen Stammdaten und Ihr Anmeldepasswort.</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('profileModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <!-- Modal Navigation Tabs -->
+            <div class="flex border-b border-dark-border bg-[#0d1322] px-6 pt-3 space-x-4">
+                <button 
+                    type="button"
+                    onclick="switchProfileTab('info')" 
+                    id="tabBtnProfileInfo"
+                    class="pb-2.5 text-xs font-bold border-b-2 border-blue-500 text-blue-400 transition"
+                >
+                    👤 Profil-Informationen
+                </button>
+                <button 
+                    type="button"
+                    onclick="switchProfileTab('password')" 
+                    id="tabBtnProfilePassword"
+                    class="pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition"
+                >
+                    🔒 Passwort ändern
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto">
+                <!-- TAB 1: Profile Information -->
+                <div id="profileTabInfo" class="space-y-4">
+                    <form method="POST" action="{{ route('actions.profile.update') }}" class="space-y-4 text-sm">
+                        @csrf
+                        
+                        <!-- Account Details Card -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border flex items-center justify-between text-xs">
+                            <div>
+                                <span class="text-slate-400 block text-[11px]">Aktuelle Organisation</span>
+                                <strong class="text-white font-semibold">{{ $tenant->name ?? 'Disavo Holding GmbH' }}</strong>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-slate-400 block text-[11px]">Rolle</span>
+                                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                    {{ ucfirst(auth()->user()->tenants()->where('tenants.id', $tenant->id ?? 0)->first()?->pivot?->role ?? 'Owner / Steward') }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Vollständiger Name <span class="text-rose-400">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="name" 
+                                required 
+                                value="{{ auth()->user()->name }}"
+                                class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                E-Mail-Adresse <span class="text-rose-400">*</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                name="email" 
+                                required 
+                                value="{{ auth()->user()->email }}"
+                                class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                            >
+                        </div>
+
+                        <div class="pt-3 border-t border-dark-border flex justify-end space-x-3">
+                            <button 
+                                type="button" 
+                                onclick="closeModal('profileModal')" 
+                                class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition"
+                            >
+                                Schließen
+                            </button>
+                            <button 
+                                type="submit" 
+                                class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition shadow-md shadow-blue-600/20"
+                            >
+                                ✓ Profil speichern
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB 2: Change Password -->
+                <div id="profileTabPassword" class="space-y-4 hidden">
+                    <form method="POST" action="{{ route('actions.profile.password') }}" class="space-y-4 text-sm">
+                        @csrf
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Aktuelles Passwort <span class="text-rose-400">*</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                name="current_password" 
+                                required 
+                                placeholder="••••••••"
+                                class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none font-mono"
+                            >
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">Geben Sie zur Bestätigung Ihr bisheriges Passwort ein.</span>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Neues Passwort <span class="text-rose-400">*</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                name="password" 
+                                required 
+                                minlength="8"
+                                placeholder="Mindestens 8 Zeichen"
+                                class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none font-mono"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Neues Passwort bestätigen <span class="text-rose-400">*</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                name="password_confirmation" 
+                                required 
+                                minlength="8"
+                                placeholder="Passwort wiederholen"
+                                class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none font-mono"
+                            >
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-amber-950/30 border border-amber-500/30 text-xs text-amber-200">
+                            <strong>Sicherheitshinweis:</strong> Nach der Änderung bleibt Ihre aktuelle Sitzung aktiv. Verwenden Sie beim nächsten Login Ihr neues Passwort.
+                        </div>
+
+                        <div class="pt-3 border-t border-dark-border flex justify-end space-x-3">
+                            <button 
+                                type="button" 
+                                onclick="closeModal('profileModal')" 
+                                class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition"
+                            >
+                                Abbrechen
+                            </button>
+                            <button 
+                                type="submit" 
+                                class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white transition shadow-md shadow-purple-600/20"
+                            >
+                                🔒 Neues Passwort festlegen
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CLIENT-SIDE JAVASCRIPT FOR INTERACTIVITY -->
     <script>
         const MODULES_DATA = @json($modules);
@@ -1566,6 +1763,32 @@
 
         function openUserModal() {
             openModal('userModal');
+        }
+
+        function openProfileModal(tab = 'info') {
+            switchProfileTab(tab);
+            openModal('profileModal');
+        }
+
+        function switchProfileTab(tab) {
+            const tabInfo = document.getElementById('profileTabInfo');
+            const tabPass = document.getElementById('profileTabPassword');
+            const btnInfo = document.getElementById('tabBtnProfileInfo');
+            const btnPass = document.getElementById('tabBtnProfilePassword');
+
+            if (!tabInfo || !tabPass) return;
+
+            if (tab === 'password') {
+                tabInfo.classList.add('hidden');
+                tabPass.classList.remove('hidden');
+                btnInfo.className = 'pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+                btnPass.className = 'pb-2.5 text-xs font-bold border-b-2 border-purple-500 text-purple-400 transition';
+            } else {
+                tabInfo.classList.remove('hidden');
+                tabPass.classList.add('hidden');
+                btnInfo.className = 'pb-2.5 text-xs font-bold border-b-2 border-blue-500 text-blue-400 transition';
+                btnPass.className = 'pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+            }
         }
 
         function openModuleCreateModal() {
