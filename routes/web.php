@@ -1,7 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
 Route::get('/', function () {
-    return view('welcome');
+    $stats = [
+        'modules'      => 6,
+        'principles'   => 12,
+        'learnings'    => 8,
+        'active_edges' => 14,
+        'reviews'      => 3,
+    ];
+
+    return view('welcome', compact('stats'));
 });
+
+
