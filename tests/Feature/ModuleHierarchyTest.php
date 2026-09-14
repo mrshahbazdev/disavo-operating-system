@@ -130,4 +130,41 @@ class ModuleHierarchyTest extends TestCase
             'target_score' => 88.5,
         ]);
     }
+
+    public function test_can_create_module_with_amf_1_1_specification(): void
+    {
+        $user = User::firstOrCreate(
+            ['email' => 'amf_lead@disavo.de'],
+            ['name' => 'AMF Framework Lead', 'password' => Hash::make('secret123')]
+        );
+
+        $response = $this->actingAs($user)->post('/actions/module/create', [
+            'name'               => 'Vertriebsarchitektur & Skalierung',
+            'development_object' => 'Vertrieb',
+            'allocore_level'     => 'Ebene 1: Umsatz',
+            'target_title'       => 'Abschlussstarke Vertriebspipeline mit 35% Conversion-Rate',
+            'target_score'       => 92.0,
+            'amf_version'        => 'v0.1 Konzept',
+            'description'        => 'Systematische Lead-Qualifizierung und Skalierung der Abschlussquoten.',
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('modules', [
+            'name' => 'Vertriebsarchitektur & Skalierung',
+            'slug' => 'vertriebsarchitektur-skalierung',
+        ]);
+
+        $module = Module::where('slug', 'vertriebsarchitektur-skalierung')->firstOrFail();
+        $this->assertStringContainsString('Objekt: Vertrieb', $module->description);
+        $this->assertStringContainsString('Ebene: Ebene 1: Umsatz', $module->description);
+
+        $this->assertDatabaseHas('goals', [
+            'module_id'    => $module->id,
+            'title'        => 'Abschlussstarke Vertriebspipeline mit 35% Conversion-Rate',
+            'target_score' => 92.0,
+            'version'      => 1,
+        ]);
+    }
 }

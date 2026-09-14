@@ -216,19 +216,22 @@ class DashboardActionController extends Controller
     }
 
     /**
-     * 6. Create / Develop New Module: Propose or develop a new operational module with initial Zielzustand.
+     * 6. Create / Develop New Module: Propose or develop a new operational module with initial Zielzustand based on AMF 1.1.
      */
     public function createModule(Request $request): RedirectResponse
     {
         $tenant = TenantContext::getTenant() ?? $request->user()?->tenants()->first() ?? Tenant::first();
 
         $validated = $request->validate([
-            'name'         => 'required|string|max:255',
-            'slug'         => 'nullable|string|max:255',
-            'description'  => 'required|string',
-            'parent_id'    => 'nullable|exists:modules,id',
-            'target_title' => 'nullable|string|max:255',
-            'target_score' => 'nullable|numeric|min:1|max:100',
+            'name'                 => 'required|string|max:255',
+            'slug'                 => 'nullable|string|max:255',
+            'description'          => 'required|string',
+            'parent_id'            => 'nullable|exists:modules,id',
+            'target_title'         => 'nullable|string|max:255',
+            'target_score'         => 'nullable|numeric|min:1|max:100',
+            'development_object'   => 'nullable|string|max:255',
+            'allocore_level'       => 'nullable|string|max:255',
+            'amf_version'          => 'nullable|string|max:50',
         ]);
 
         $slug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['name']);
@@ -238,30 +241,60 @@ class DashboardActionController extends Controller
 
         $maxOrder = Module::max('order') ?? 0;
 
+        $description = $validated['description'];
+        if (!empty($validated['development_object']) || !empty($validated['allocore_level'])) {
+            $prefixes = [];
+            if (!empty($validated['development_object'])) {
+                $prefixes[] = "Objekt: {$validated['development_object']}";
+            }
+            if (!empty($validated['allocore_level'])) {
+                $prefixes[] = "Ebene: {$validated['allocore_level']}";
+            }
+            $description = '[' . implode(' | ', $prefixes) . '] ' . $description;
+        }
+
         $module = Module::create([
             'tenant_id'   => $tenant->id,
             'name'        => $validated['name'],
             'slug'        => $slug,
-            'description' => $validated['description'],
+            'description' => $description,
             'parent_id'   => $validated['parent_id'] ?? null,
             'order'       => $maxOrder + 1,
         ]);
 
+        $versionInt = 1;
+        if (!empty($validated['amf_version'])) {
+            if (str_contains($validated['amf_version'], '0.1')) {
+                $versionInt = 1;
+            } elseif (str_contains($validated['amf_version'], '0.2')) {
+                $versionInt = 2;
+            } elseif (str_contains($validated['amf_version'], '1.0')) {
+                $versionInt = 3;
+            } elseif (str_contains($validated['amf_version'], '2.0')) {
+                $versionInt = 4;
+            }
+        }
+
         if (!empty($validated['target_title']) || !empty($validated['target_score'])) {
+            $targetTitle = $validated['target_title'] ?: "Zielzustand für {$module->name}";
+            $objText = !empty($validated['development_object']) ? " ({$validated['development_object']})" : '';
+            $goalDesc = "Messbare AMF 1.1 Zieldefinition für {$module->name}{$objText}: {$targetTitle}";
+
             Goal::create([
                 'tenant_id'    => $tenant->id,
                 'module_id'    => $module->id,
-                'title'        => $validated['target_title'] ?: "Zielzustand für {$module->name}",
-                'description'  => "Initialer strategischer Zielzustand für das neu entwickelte Modul {$module->name}.",
+                'title'        => $targetTitle,
+                'description'  => $goalDesc,
                 'target_score' => $validated['target_score'] ?: 85.0,
-                'version'      => 1,
+                'version'      => $versionInt,
                 'created_by'   => $request->user()->id,
             ]);
         }
 
+        $objFeedback = !empty($validated['development_object']) ? " (Entwicklungsobjekt: {$validated['development_object']})" : '';
         return redirect()->route('dashboard')->with(
             'success',
-            "✓ Neues Modul '{$module->name}' erfolgreich im AMF angelegt und für Reifegrad-Audits freigeschaltet."
+            "✓ Neues Modul '{$module->name}'{$objFeedback} nach AMF 1.1 Blaupause angelegt und für Reifegrad-Audits freigeschaltet."
         );
     }
 }

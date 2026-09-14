@@ -241,16 +241,16 @@
                                 </div>
                                 <span class="text-xs text-purple-400 font-semibold group-hover:translate-x-1 transition">&rarr;</span>
                             </div>
-                            <h3 class="text-base font-bold text-white group-hover:text-purple-400 transition">Allocore Module Framework</h3>
+                            <h3 class="text-base font-bold text-white group-hover:text-purple-400 transition">AMF 1.1 — Allocore Module Framework</h3>
                             <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                                Organizes corporate development into an adjacency tree across 6 canonical pillars with database-weighted audits and maturity delta scoring against target states.
+                                Die Modulfabrik von Allocore: Blaupause mit 9 Standard-Bausteinen über 5 Allocore-Ebenen (Umsatz, Gewinn, Ordnung, Einfluss, Vermächtnis). Prinzip AP-005: Ein Modul ist kein Audit, sondern ein ganzheitliches Führungssystem.
                             </p>
                             <div class="mt-4 pt-3 border-t border-dark-border/60 text-[11px] font-mono text-slate-400">
-                                Recursive tree traversal &amp; KPI time-series readings.
+                                Blaupause für Anwendungsmodule (Marke, Unternehmer, Führung, Nachfolge).
                             </div>
                         </div>
                         <div class="mt-4 pt-2 text-xs text-purple-400 font-medium">
-                            Click to inspect audit &amp; tree structure &rarr;
+                            AMF-Blaupause &amp; 9 Bausteine einsehen &rarr;
                         </div>
                     </div>
 
@@ -472,10 +472,10 @@
                 meta: 'Powered by strict Spatie model state machines and non-destructive principle supersession.'
             },
             'amf': {
-                title: 'AMF — Allocore Module Framework',
-                category: 'System Pillar 02',
-                desc: 'Organizes the 6 corporate development modules into a recursive adjacency tree with database-weighted audit templates, time-series KPI readings, and maturity gap scoring against the target Zielzustand.',
-                meta: 'Calculates exact weighted audit percentages without hardcoded logic in code.'
+                title: 'AMF 1.1 — Allocore Module Framework: Die Modulfabrik',
+                category: 'System-Blaupause & Modulfabrik',
+                desc: 'Bevor Module entstehen, definiert das AMF, wie Module aufgebaut sind: 1. Entwicklungsobjekt, 2. messbare Zieldefinition, 3. die 5 Allocore-Ebenen (Umsatz, Gewinn, Ordnung, Einfluss, Vermächtnis), 4. Audit, 5. KPI-System, 6. Werkzeuge, 7. Learnings (ALF), 8. Review-Zyklus (ARF) und 9. Versionierung. Prinzip AP-005: Ein Modul ist kein Audit.',
+                meta: 'Blaupause für alle Anwendungsmodule wie Markenaufbau, Unternehmerentwicklung, Führung, Nachfolge.'
             },
             'arf': {
                 title: 'ARF — Allocore Review Framework',

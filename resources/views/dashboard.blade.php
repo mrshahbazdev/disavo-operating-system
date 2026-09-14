@@ -202,14 +202,14 @@
                 <div class="p-4 rounded-xl bg-[#162032] border border-blue-500/20 hover:border-blue-500/40 transition">
                     <div class="flex items-center space-x-2 mb-2">
                         <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold font-mono flex items-center justify-center text-xs">1</span>
-                        <span class="font-bold text-white text-sm">AMF — Strategic Pillars</span>
+                        <span class="font-bold text-white text-sm">AMF 1.1 — Die Modulfabrik</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed">
-                        Inspect each of the <strong class="text-white">6 canonical modules</strong>. Each has a defined <strong class="text-white">Zielzustand (Goal)</strong>, live <strong class="text-white">KPIs</strong>, and <strong class="text-white">Audits</strong> with weighted questions.
+                        Definiert, <strong class="text-white">wie Module entstehen</strong>. Jedes Modul folgt einer 9-teiligen Blaupause über die <strong class="text-white">5 Allocore-Ebenen</strong> (Umsatz, Gewinn, Ordnung, Einfluss, Vermächtnis).
                     </p>
                     <div class="mt-3 pt-3 border-t border-dark-border flex items-center justify-between text-[11px]">
-                        <span class="text-slate-400">Action:</span>
-                        <button onclick="openAuditModal()" class="text-blue-400 hover:text-blue-300 font-semibold underline">Run Module Audit &rarr;</button>
+                        <span class="text-slate-400">Aktion:</span>
+                        <button onclick="openAmfModal()" class="text-blue-400 hover:text-blue-300 font-semibold underline">Blaupause &amp; 9 Bausteine &rarr;</button>
                     </div>
                 </div>
 
@@ -447,20 +447,21 @@
                 >
                     <div>
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono font-bold text-purple-400 uppercase">AMF-ENGINE</span>
+                            <span class="text-xs font-mono font-bold text-purple-400 uppercase">AMF 1.1 — DIE MODULFABRIK</span>
                             <span class="text-xs text-purple-400 font-semibold group-hover:translate-x-1 transition">&rarr;</span>
                         </div>
-                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-purple-400 transition">Audit &amp; Reifegrad-Delta</h3>
+                        <h3 class="text-base font-bold text-white mt-1 group-hover:text-purple-400 transition">Allocore Module Framework 1.1</h3>
                         <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-                            Audit-Fragen nutzen datenbankbasierte Gewichtungen, um den tatsächlichen Reifegrad gegenüber dem definierten Zielzustand zu ermitteln.
+                            Bevor Module entwickelt werden, definiert das AMF, wie Module entstehen. Es ist die standardisierte Blaupause aus 9 Bausteinen über 5 Allocore-Ebenen (Umsatz bis Vermächtnis).
                         </p>
-                        <div class="mt-4 flex items-center space-x-2 text-[11px] font-mono text-slate-200">
-                            <span class="px-2.5 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-medium">{{ $auditTemplates->count() }} Audit-Vorlagen</span>
-                            <span class="px-2.5 py-0.5 rounded bg-slate-800 text-slate-200 border border-dark-border font-medium">{{ count($modules) }} Module</span>
+                        <div class="mt-4 flex flex-wrap gap-1.5 text-[11px] font-mono text-slate-200">
+                            <span class="px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-medium">9 Bausteine</span>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-medium">5 Ebenen</span>
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium">AP-005 konform</span>
                         </div>
                     </div>
                     <div class="mt-4 pt-3 border-t border-dark-border text-xs text-purple-400 font-semibold group-hover:text-purple-300 transition">
-                        Audit-Bewertung &amp; Schema einsehen &rarr;
+                        AMF 1.1 Blaupause &amp; Modulfabrik einsehen &rarr;
                     </div>
                 </div>
 
@@ -781,14 +782,23 @@
         </div>
     </div>
 
-    <!-- 7. AMF INSPECTION MODAL -->
+    <!-- 7. AMF INSPECTION MODAL (AMF 1.1 — Die Modulfabrik) -->
     <div id="amfModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
+            <!-- Modal Header -->
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-blue-400 uppercase">Framework-Detailansicht &amp; Entwicklung</span>
-                    <h2 class="text-2xl font-bold text-white mt-1">AMF — Allocore Module Framework</h2>
-                    <p class="text-xs text-slate-300 mt-1">Organisationsarchitektur: Bestehende Säulen steuern &amp; neue Module methodisch entwickeln</p>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
+                            Allocore Module Framework 1.1
+                        </span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-purple-400 font-semibold">Die Modulfabrik &amp; Standard-Blaupause</span>
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-white mt-1.5">AMF 1.1 — Die Modulfabrik</h2>
+                    <p class="text-xs text-slate-300 mt-1 max-w-2xl">
+                        „Bevor wir Module entwickeln, müssen wir definieren, wie Module entstehen. Das AMF ist die Blaupause für alle zukünftigen Allocore-Module.“
+                    </p>
                 </div>
                 <div class="flex items-center space-x-2">
                     <button 
@@ -802,29 +812,275 @@
                 </div>
             </div>
 
+            <!-- Modal Body (Scrollable) -->
             <div class="p-6 overflow-y-auto space-y-6 text-sm">
-                <!-- AMF Operational Guide Banner -->
-                <div class="p-4 rounded-xl bg-blue-950/40 border border-blue-500/40 space-y-2">
-                    <div class="flex items-center space-x-2 text-xs font-mono font-bold text-blue-400 uppercase">
-                        <span>ℹ️</span>
-                        <span>Wofür dient das AMF (Allocore Module Framework)?</span>
+
+                <!-- AMF Purpose & Meta-Factory Banner -->
+                <div class="p-5 rounded-2xl bg-[#0d1527] border border-blue-500/40 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-base">🏭</span>
+                            <div>
+                                <h3 class="text-sm font-bold text-white">Strategische Einordnung: Das AMF ist kein weiteres Modul</h3>
+                                <p class="text-[11px] text-blue-300">Es ist die Modulfabrik — alle Anwendungsmodule sind Instanzen dieser Blaupause.</p>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-500/15 text-blue-300 border border-blue-500/30">
+                            AMF 1.1 Standard
+                        </span>
                     </div>
                     <p class="text-xs text-slate-200 leading-relaxed">
-                        Das <strong class="text-white">AMF</strong> dient als methodischer Rahmen, um die Organisation in messbare Säulen zu unterteilen, Reifegrade zu steuern und fundiert zu entscheiden, <strong class="text-blue-300">wann neue Module entwickelt werden müssen</strong>:
+                        Module wie <strong class="text-white">Markenaufbau</strong>, <strong class="text-white">Unternehmerentwicklung</strong>, <strong class="text-white">Führung</strong>, <strong class="text-white">Vertrieb</strong> oder <strong class="text-white">Nachfolge</strong> sind <em>Anwendungen</em> dieses Frameworks. Das AMF stellt sicher, dass:
                     </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-[11px] text-slate-300">
-                        <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
-                            <span class="text-blue-400 font-bold block mb-0.5">1. Zielzustand definieren</span>
-                            Jedes Modul hat einen klaren Soll-Reifegrad (z. B. 90% Skalierbarkeit).
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] text-center">
+                        <div class="p-2 rounded-lg bg-dark-surface border border-dark-border text-slate-300">
+                            <span class="text-blue-400 font-bold block">1. Konsistenz</span>
+                            Alle Module gleich aufgebaut
                         </div>
-                        <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
-                            <span class="text-emerald-400 font-bold block mb-0.5">2. Reifegrad auditieren</span>
-                            Regelmäßige Audits (1–5 Punkte) erfassen das tatsächliche Ist-Delta.
+                        <div class="p-2 rounded-lg bg-dark-surface border border-dark-border text-slate-300">
+                            <span class="text-purple-400 font-bold block">2. Reusability</span>
+                            Learnings wiederverwendbar
                         </div>
-                        <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
-                            <span class="text-purple-400 font-bold block mb-0.5">3. Neue Module entwickeln</span>
-                            Bei dauerhaftem Handlungsbedarf neue eigenständige Säulen anlegen.
+                        <div class="p-2 rounded-lg bg-dark-surface border border-dark-border text-slate-300">
+                            <span class="text-emerald-400 font-bold block">3. Vergleich</span>
+                            Audits methodisch vergleichbar
                         </div>
+                        <div class="p-2 rounded-lg bg-dark-surface border border-dark-border text-slate-300">
+                            <span class="text-amber-400 font-bold block">4. Kontrolle</span>
+                            Reviews strukturiert möglich
+                        </div>
+                        <div class="p-2 rounded-lg bg-dark-surface border border-dark-border text-slate-300">
+                            <span class="text-rose-400 font-bold block">5. Skalierung</span>
+                            Neue Module skalierbar entstehen
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Principle AP-005 Callout -->
+                <div class="p-4 rounded-xl bg-gradient-to-r from-purple-950/40 via-dark-card to-blue-950/40 border border-purple-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase">
+                                Kernprinzip AP-005
+                            </span>
+                            <span class="text-xs font-bold text-white">„Ein Modul ist kein Audit.“</span>
+                        </div>
+                        <p class="text-xs text-slate-300 mt-1">
+                            Ein vollständiges Modul besteht immer aus sechs Elementen: <strong class="text-white">Audit, Messregeln, KPIs, Werkzeugen, Learnings und Reviews</strong>.
+                        </p>
+                    </div>
+                    <div class="flex items-center space-x-1 font-mono text-[11px] text-purple-300 bg-dark-surface/80 px-3 py-1.5 rounded-lg border border-purple-500/30 whitespace-nowrap">
+                        <span>Audit + KPI + Tools + ALF + ARF</span>
+                    </div>
+                </div>
+
+                <!-- The 5 Allocore Levels -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-mono font-bold text-blue-400 uppercase">3. Die 5 Allocore-Ebenen</span>
+                            <span class="text-slate-500">•</span>
+                            <span class="text-xs text-slate-300">Jedes Modul betrachtet sein Entwicklungsobjekt auf diesen 5 Ebenen</span>
+                        </div>
+                        <span class="text-[11px] font-mono text-slate-400">Ganzheitliche Diagnose</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+                        <div class="p-3 rounded-xl bg-dark-card border border-blue-500/30 hover:border-blue-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-mono text-xs text-blue-400 font-bold">Ebene 1</span>
+                                <span class="text-xs">📈</span>
+                            </div>
+                            <h5 class="font-bold text-white text-xs">Umsatz</h5>
+                            <p class="text-[11px] text-slate-400 mt-1">Wachstum, Erlöse, Marktdurchdringung &amp; Lead-Generierung.</p>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-dark-card border border-emerald-500/30 hover:border-emerald-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-mono text-xs text-emerald-400 font-bold">Ebene 2</span>
+                                <span class="text-xs">💰</span>
+                            </div>
+                            <h5 class="font-bold text-white text-xs">Gewinn</h5>
+                            <p class="text-[11px] text-slate-400 mt-1">Margen, Rentabilität, Kapitaleffizienz &amp; ROCE.</p>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-dark-card border border-purple-500/30 hover:border-purple-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-mono text-xs text-purple-400 font-bold">Ebene 3</span>
+                                <span class="text-xs">⚙️</span>
+                            </div>
+                            <h5 class="font-bold text-white text-xs">Ordnung</h5>
+                            <p class="text-[11px] text-slate-400 mt-1">Prozesse, Governance, Rollen, SOPs &amp; Skalierbarkeit.</p>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-dark-card border border-amber-500/30 hover:border-amber-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-mono text-xs text-amber-400 font-bold">Ebene 4</span>
+                                <span class="text-xs">👑</span>
+                            </div>
+                            <h5 class="font-bold text-white text-xs">Einfluss</h5>
+                            <p class="text-[11px] text-slate-400 mt-1">Marktposition, Brand Authority, Vertrauen &amp; Preissetzungsmacht.</p>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-dark-card border border-rose-500/30 hover:border-rose-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-mono text-xs text-rose-400 font-bold">Ebene 5</span>
+                                <span class="text-xs">🏛️</span>
+                            </div>
+                            <h5 class="font-bold text-white text-xs">Vermächtnis</h5>
+                            <p class="text-[11px] text-slate-400 mt-1">Nachhaltigkeit, Generationsfähigkeit &amp; Inhaber-Unabhängigkeit.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The 9 Standard Building Blocks of AMF 1.1 -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-blue-400 font-bold">Die 9 Standard-Bausteine jedes Moduls (AMF 1.1)</h4>
+                            <span class="text-[11px] text-slate-400">Verbindliche Struktur für jedes Allocore-Modul vor der Implementierung</span>
+                        </div>
+                        <span class="text-xs font-mono font-bold text-slate-300">Baustein 01 bis 09</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                        <!-- Block 1 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-blue-400">01. Entwicklungsobjekt</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Fokus</span>
+                            </div>
+                            <strong class="text-white block text-sm">Was soll entwickelt werden?</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Klare Definition: Unternehmen, Unternehmer, Marke, Vertrieb, Führung, Nachfolge oder Unternehmensgruppe.
+                            </p>
+                        </div>
+
+                        <!-- Block 2 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-emerald-400">02. Zieldefinition</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Messbar</span>
+                            </div>
+                            <strong class="text-white block text-sm">Wann gilt es als erfolgreich?</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Beispiel Marke: Nicht nur „Reichweite“, sondern Wiedererkennung, Vertrauen und echte Preissetzungsmacht.
+                            </p>
+                        </div>
+
+                        <!-- Block 3 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-purple-400">03. 5 Allocore-Ebenen</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Dimensionen</span>
+                            </div>
+                            <strong class="text-white block text-sm">Mehrdimensionale Betrachtung</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Systematische Diagnose über: Umsatz, Gewinn, Ordnung, Einfluss und Vermächtnis.
+                            </p>
+                        </div>
+
+                        <!-- Block 4 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-amber-400">04. Strukturiertes Audit</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Reifegrad</span>
+                            </div>
+                            <strong class="text-white block text-sm">Kernfragen &amp; Kriterien</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Gewichtete Kernfragen, Definitionen und Bewertungskriterien pro Ebene zur Ermittlung des Reifegrad-Deltas.
+                            </p>
+                        </div>
+
+                        <!-- Block 5 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-blue-400">05. KPI-System</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Messregel</span>
+                            </div>
+                            <strong class="text-white block text-sm">Keine Frage ohne Messregel</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Jede Kennzahl definiert Name, Definition, Datenquelle, Zielwert, Ist-Wert und Trend-Richtung.
+                            </p>
+                        </div>
+
+                        <!-- Block 6 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-purple-400">06. Werkzeuge (Tools)</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Lösungsbibl.</span>
+                            </div>
+                            <strong class="text-white block text-sm">Operative Befähigung</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Praxis-Tools: Wissen, Checklisten, Templates, Whitepaper, SaaS-Tools und KI-Funktionen.
+                            </p>
+                        </div>
+
+                        <!-- Block 7 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-emerald-400">07. Learnings (ALF)</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Erfahrung</span>
+                            </div>
+                            <strong class="text-white block text-sm">Empirische Rückkopplung</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Kognitiver Pfad: <code class="text-emerald-300 font-mono">Modul → Beobachtung → Learning → Prinzip</code>.
+                            </p>
+                        </div>
+
+                        <!-- Block 8 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-amber-400">08. Review-Zyklus (ARF)</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Regelkreis</span>
+                            </div>
+                            <strong class="text-white block text-sm">Regelmäßige Überprüfung</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Modul-Owner, Review-Rhythmus, nächste Prüfung und automatisierte Loop-Closure.
+                            </p>
+                        </div>
+
+                        <!-- Block 9 -->
+                        <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono font-bold text-rose-400">09. Versionierung</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Evolution</span>
+                            </div>
+                            <strong class="text-white block text-sm">Reifegrad-Zyklen</strong>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Klare Reifegrade: <code class="text-white font-mono">v0.1 Konzept → v0.2 Pilot → v1.0 Produktiv → v2.0 Skaliert</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Standard-Lebenszyklus eines Moduls (Visual Diagram) -->
+                <div class="p-4 rounded-xl bg-[#0b1329] border border-blue-500/30">
+                    <span class="text-xs font-mono font-bold text-blue-400 uppercase block mb-2">Standard-Lebenszyklus eines Moduls</span>
+                    <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
+                        <span class="px-2 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700">1. Beobachtung</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700">2. Problem erkannt</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700">3. Learning</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-blue-900/60 text-blue-200 border border-blue-500/40">4. Modul-Idee</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-blue-900/60 text-blue-200 border border-blue-500/40">5. AMF-Struktur</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-purple-900/60 text-purple-200 border border-purple-500/40">6. Audit</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-purple-900/60 text-purple-200 border border-purple-500/40">7. KPIs</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-emerald-900/60 text-emerald-200 border border-emerald-500/40">8. Werkzeuge</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-emerald-900/60 text-emerald-200 border border-emerald-500/40">9. Anwendung</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-amber-900/60 text-amber-200 border border-amber-500/40">10. Review</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-amber-900/60 text-amber-200 border border-amber-500/40">11. Verbesserung</span>
+                        <span class="text-blue-400">&rarr;</span>
+                        <span class="px-2 py-1 rounded bg-rose-900/60 text-rose-200 border border-rose-500/40">12. Neue Version</span>
                     </div>
                 </div>
 
@@ -897,9 +1153,16 @@
                     </div>
                 </div>
 
-                <!-- The 6 Canonical Pillars -->
+                <!-- The Canonical Application Modules (Anwendungen der Blaupause) -->
                 <div>
-                    <h4 class="text-xs font-mono uppercase text-blue-400 font-bold mb-3">Die sechs kanonischen Säulen der Holding</h4>
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-blue-400 font-bold">Aktive Anwendungsmodule der Holding</h4>
+                            <span class="text-[11px] text-slate-400">Praktische Implementierungen der AMF 1.1 Blaupause im System</span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-300 font-bold">{{ count($modules) }} Module aktiv</span>
+                    </div>
+
                     <div class="space-y-3">
                         @foreach ($modules as $mod)
                             @php
@@ -910,7 +1173,7 @@
                             <div class="p-4 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div class="space-y-1">
                                     <div class="flex items-center space-x-2">
-                                        <span class="font-mono text-xs text-blue-400 font-bold">Säule 0{{ $loop->iteration }}</span>
+                                        <span class="font-mono text-xs text-blue-400 font-bold">Modul 0{{ $loop->iteration }}</span>
                                         <span class="text-slate-500">•</span>
                                         <span class="font-bold text-white text-sm">{{ $mod->name }}</span>
                                         @if ($modAudit && $modAudit->overall_score !== null)
@@ -1110,14 +1373,21 @@
         </div>
     </div>
 
-    <!-- 8. MODULE CREATE MODAL (Develop New AMF Module) -->
+    <!-- 8. MODULE CREATE MODAL (AMF 1.1 — Neues Modul nach Blaupause entwickeln) -->
     <div id="moduleCreateModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <!-- Header -->
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-blue-400 uppercase">AMF Modulentwicklung</span>
-                    <h2 class="text-xl font-bold text-white mt-1">🧩 Neues Modul im AMF entwickeln</h2>
-                    <p class="text-xs text-slate-300 mt-1">Definieren Sie eine neue strategische Säule für Ihre Holding-Organisationsarchitektur.</p>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
+                            AMF 1.1 Modulfabrik
+                        </span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-purple-400 font-semibold">Standardisierte Blaupause</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mt-1">🧩 Neues Modul nach AMF 1.1 entwickeln</h2>
+                    <p class="text-xs text-slate-300 mt-0.5">Definieren Sie Entwicklungsobjekt, messbare Zieldefinition und Allocore-Ebene für eine neue Säule.</p>
                 </div>
                 <button onclick="closeModal('moduleCreateModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
             </div>
@@ -1125,45 +1395,75 @@
             <form method="POST" action="{{ route('actions.module.create') }}" class="p-6 overflow-y-auto space-y-4 text-sm">
                 @csrf
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
-                        Modulname <span class="text-rose-400">*</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        name="name" 
-                        required 
-                        placeholder="z. B. Digitale Transformation &amp; IT, Kundenerlebnis &amp; Service, Supply Chain" 
-                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
-                    >
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
-                        Strategische Ausrichtung &amp; Zweck <span class="text-rose-400">*</span>
-                    </label>
-                    <textarea 
-                        name="description" 
-                        rows="2" 
-                        required 
-                        placeholder="Welche dauerhafte Steuerungs- und Führungsaufgabe deckt dieses Modul ab?" 
-                        class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
-                    ></textarea>
-                </div>
-
+                <!-- Baustein 1: Entwicklungsobjekt -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
-                            Übergeordnetes Modul (Hierarchie)
+                            1. Entwicklungsobjekt <span class="text-rose-400">*</span>
                         </label>
                         <select 
-                            name="parent_id" 
+                            name="development_object" 
+                            required 
                             class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
                         >
-                            <option value="">-- Eigenständige Hauptsäule (Root) --</option>
-                            @foreach ($modules as $pMod)
-                                <option value="{{ $pMod->id }}">Untergeordnet zu: {{ $pMod->name }}</option>
-                            @endforeach
+                            <option value="Unternehmen">Unternehmen (Organisation &amp; Skalierung)</option>
+                            <option value="Unternehmer">Unternehmer (Führungskompetenz &amp; Rolle)</option>
+                            <option value="Marke" selected>Marke (Positionierung &amp; Preissetzungsmacht)</option>
+                            <option value="Vertrieb">Vertrieb (Pipeline, Abschluss &amp; Skalierung)</option>
+                            <option value="Führung">Führung (Teamautonomie &amp; Delegation)</option>
+                            <option value="Nachfolge">Nachfolge (Generationswechsel &amp; Übergabe)</option>
+                            <option value="Unternehmensgruppe">Unternehmensgruppe (Portfolio-Holding)</option>
+                            <option value="Individuell">Individuelles Entwicklungsobjekt</option>
+                        </select>
+                        <span class="text-[11px] text-slate-400 mt-0.5 block">Was genau soll methodisch entwickelt werden?</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Modulname <span class="text-rose-400">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            required 
+                            placeholder="z. B. Markenaufbau &amp; Marktdifferenzierung" 
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                        >
+                        <span class="text-[11px] text-slate-400 mt-0.5 block">Klarer Name des neuen Systemmoduls.</span>
+                    </div>
+                </div>
+
+                <!-- Baustein 2: Zieldefinition -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                        2. Messbare Zieldefinition (Wann gilt die Entwicklung als erfolgreich?) <span class="text-rose-400">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="target_title" 
+                        required 
+                        placeholder="z. B. Nicht nur Reichweite, sondern Wiedererkennung, Vertrauen und Preissetzungsmacht" 
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                    >
+                    <span class="text-[11px] text-slate-400 mt-0.5 block">Quantifizierbares oder qualitativ messbares Zielergebnis (nicht nur oberflächliche Metriken).</span>
+                </div>
+
+                <!-- Baustein 3: Die 5 Allocore-Ebenen & Reifegrad -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            3. Primäre Allocore-Ebene <span class="text-rose-400">*</span>
+                        </label>
+                        <select 
+                            name="allocore_level" 
+                            required 
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                        >
+                            <option value="Ebene 1: Umsatz">Ebene 1: Umsatz (Wachstum, Erlöse)</option>
+                            <option value="Ebene 2: Gewinn">Ebene 2: Gewinn (Margen, Rentabilität, ROCE)</option>
+                            <option value="Ebene 3: Ordnung">Ebene 3: Ordnung (Prozesse, SOPs, Governance)</option>
+                            <option value="Ebene 4: Einfluss" selected>Ebene 4: Einfluss (Marktposition, Brand Authority)</option>
+                            <option value="Ebene 5: Vermächtnis">Ebene 5: Vermächtnis (Nachhaltigkeit, Generation)</option>
                         </select>
                     </div>
 
@@ -1182,21 +1482,62 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
-                        Initialer Zielzustand (Strategischer Soll-Zustand)
-                    </label>
-                    <input 
-                        type="text" 
-                        name="target_title" 
-                        placeholder="z. B. Skalierbare und automatisierte Kernprozesse etabliert" 
-                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
-                    >
+                <!-- Baustein 9: Versionierung & Hierarchie -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            9. Initialer Reifegrad / Version (AMF 1.1)
+                        </label>
+                        <select 
+                            name="amf_version" 
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none font-mono text-xs"
+                        >
+                            <option value="v0.1 Konzept" selected>v0.1 Konzept (Initiale Definition &amp; Hypothesen)</option>
+                            <option value="v0.2 Erstes Audit">v0.2 Erstes Audit (Fragebogen &amp; Pilot-Auditierung)</option>
+                            <option value="v1.0 Produktiv">v1.0 Produktiv (Vollständige KPIs, SOPs &amp; Reviews)</option>
+                            <option value="v2.0 Skaliert">v2.0 Skaliert (Gruppenweit ausgerollt &amp; benchmarked)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Hierarchie (Adjazenz-Baum)
+                        </label>
+                        <select 
+                            name="parent_id" 
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                        >
+                            <option value="">-- Eigenständige Hauptsäule (Root) --</option>
+                            @foreach ($modules as $pMod)
+                                <option value="{{ $pMod->id }}">Untergeordnet zu: {{ $pMod->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
-                <div class="p-3.5 rounded-xl bg-blue-950/30 border border-blue-500/30 text-xs text-slate-300">
-                    <strong class="text-blue-400 font-bold block mb-1">💡 AMF-Governance-Hinweis:</strong>
-                    Nach dem Anlegen wird das Modul sofort in das Dashboard integriert. Sie können danach unmittelbar Reifegrad-Audits durchführen, KPIs verknüpfen und Leitprinzipien hinterlegen.
+                <!-- Strategische Beschreibung -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                        Strategische Ausrichtung &amp; Handlungsbedarf <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea 
+                        name="description" 
+                        rows="2" 
+                        required 
+                        placeholder="Welches Problem aus Beobachtung/Learning soll durch dieses Modul dauerhaft gelöst werden?" 
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none"
+                    ></textarea>
+                </div>
+
+                <!-- Principle AP-005 Callout in Modal -->
+                <div class="p-3.5 rounded-xl bg-blue-950/30 border border-blue-500/30 text-xs text-slate-300 space-y-1">
+                    <div class="flex items-center space-x-2 text-blue-400 font-bold">
+                        <span>💡</span>
+                        <span>Prinzip AP-005: Ein Modul ist kein Audit</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-relaxed">
+                        Nach dem Anlegen ist das Modul im Dashboard sofort aktiv. Das AMF ermöglicht es Ihnen, für diese Säule gezielt <strong class="text-white">Audit-Fragen</strong>, <strong class="text-white">KPIs („Keine Frage ohne Messregel“)</strong>, <strong class="text-white">Werkzeuge</strong> und <strong class="text-white">Review-Zyklen (ARF)</strong> zu verankern.
+                    </p>
                 </div>
 
                 <div class="pt-3 border-t border-dark-border flex justify-end space-x-3">
@@ -1211,7 +1552,7 @@
                         type="submit" 
                         class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition shadow-md shadow-blue-600/20"
                     >
-                        ✓ Modul im AMF anlegen &amp; aktivieren
+                        ✓ Modul nach AMF 1.1 anlegen
                     </button>
                 </div>
             </form>

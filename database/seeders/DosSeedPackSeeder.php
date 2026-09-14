@@ -213,6 +213,23 @@ class DosSeedPackSeeder extends Seeder
             );
         }
 
+        // AMF 1.1 Meta-Governance Principle AP-005
+        $ap005Principle = Principle::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'title' => 'Prinzip AP-005: Das Allocore-Modul-Prinzip'],
+            [
+                'statement'  => 'Ein Modul ist kein Audit. Ein Modul besteht aus: Audit, Messregeln, KPIs, Werkzeugen, Learnings und Reviews.',
+                'rationale'  => 'Das AMF (Allocore Module Framework) 1.1 ist die Modulfabrik von Allocore. Bevor Module entwickelt werden, definiert das AMF als standardisierte Blaupause, wie Module entstehen: 1. Entwicklungsobjekt, 2. messbare Zieldefinition, 3. die 5 Allocore-Ebenen (Umsatz, Gewinn, Ordnung, Einfluss, Vermächtnis), 4. Audit, 5. KPI-System, 6. Werkzeuge, 7. Learnings (ALF), 8. Review-Zyklus (ARF) und 9. Versionierung.',
+                'state'      => Active::class,
+                'version'    => 1,
+                'created_by' => $owner->id,
+            ]
+        );
+        $ap005Principle->linkTo(
+            $createdModules['unternehmensentwicklung'],
+            RelationType::Governs,
+            ['scope' => 'AMF 1.1 Meta-Blaupause für alle kanonischen Module']
+        );
+
         // -------------------------------------------------------------
         // MODULE 1: UNTERNEHMENSENTWICKLUNG
         // -------------------------------------------------------------
