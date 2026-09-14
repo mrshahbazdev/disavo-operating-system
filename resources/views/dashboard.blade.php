@@ -786,21 +786,69 @@
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6 text-sm">
+                <!-- AMF Operational Guide Banner -->
+                <div class="p-4 rounded-xl bg-blue-950/40 border border-blue-500/40 space-y-2">
+                    <div class="flex items-center space-x-2 text-xs font-mono font-bold text-blue-400 uppercase">
+                        <span>ℹ️</span>
+                        <span>Was ist das AMF (Allocore Module Framework)?</span>
+                    </div>
+                    <p class="text-xs text-slate-200 leading-relaxed">
+                        Das <strong class="text-white">AMF</strong> ist der operative Organisationsbauplan der Holding. Es unterteilt das Gesamtunternehmen in <strong class="text-white">6 kanonische Geschäftsbereiche (Säulen)</strong>, um systematische Entwicklung messbar und steuerbar zu machen:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-[11px] text-slate-300">
+                        <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
+                            <span class="text-blue-400 font-bold block mb-0.5">1. Zielzustand</span>
+                            Strategisch definierter Soll-Zustand (z. B. 90% Skalierbarkeit).
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
+                            <span class="text-emerald-400 font-bold block mb-0.5">2. Audit &amp; Reifegrad</span>
+                            Regelmäßige Fragebögen (1–5) messen den aktuellen Reifegrad.
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-dark-surface border border-dark-border">
+                            <span class="text-purple-400 font-bold block mb-0.5">3. KPIs &amp; Werkzeuge</span>
+                            Empirische Messwerte und praxiserprobte Arbeitsvorlagen.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The 6 Canonical Pillars -->
                 <div>
-                    <h4 class="text-xs font-mono uppercase text-blue-400 font-bold mb-3">Die sechs kanonischen Säulen</h4>
+                    <h4 class="text-xs font-mono uppercase text-blue-400 font-bold mb-3">Die sechs kanonischen Säulen der Holding</h4>
                     <div class="space-y-3">
                         @foreach ($modules as $mod)
-                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border flex items-center justify-between">
-                                <div>
+                            @php
+                                $modAudit = $mod->auditRuns->sortByDesc('completed_at')->first();
+                                $modKpi = $mod->kpis->first();
+                                $modReading = $modKpi?->latestReading();
+                            @endphp
+                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/50 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <div class="space-y-1">
                                     <div class="flex items-center space-x-2">
-                                        <span class="font-mono text-xs text-blue-400 font-bold">0{{ $loop->iteration }}.</span>
+                                        <span class="font-mono text-xs text-blue-400 font-bold">Säule 0{{ $loop->iteration }}</span>
+                                        <span class="text-slate-500">•</span>
                                         <span class="font-bold text-white text-sm">{{ $mod->name }}</span>
+                                        @if ($modAudit && $modAudit->overall_score !== null)
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
+                                                Reifegrad: {{ number_format($modAudit->overall_score, 0) }}%
+                                            </span>
+                                        @endif
                                     </div>
-                                    <p class="text-xs text-slate-300 mt-1">{{ $mod->description }}</p>
+                                    <p class="text-xs text-slate-300 leading-relaxed">{{ $mod->description }}</p>
                                 </div>
-                                <button onclick="closeModal('amfModal'); openModuleModal({{ $mod->id }})" class="px-3 py-1.5 rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-xs transition">
-                                    Inspizieren &rarr;
-                                </button>
+                                <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                                    <button 
+                                        onclick="closeModal('amfModal'); openModuleModal({{ $mod->id }})" 
+                                        class="px-3 py-1.5 rounded-lg bg-dark-surface hover:bg-dark-hover border border-dark-border text-slate-200 hover:text-white font-semibold text-xs transition whitespace-nowrap"
+                                    >
+                                        Details &rarr;
+                                    </button>
+                                    <button 
+                                        onclick="closeModal('amfModal'); openAuditModalForModule({{ $mod->id }})" 
+                                        class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-sm whitespace-nowrap"
+                                    >
+                                        📋 Audit starten
+                                    </button>
+                                </div>
                             </div>
                         @endforeach
                     </div>
