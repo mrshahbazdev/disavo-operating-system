@@ -20,51 +20,62 @@ Route::get('login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('login.post');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-// Authenticated Executive Dashboard
-Route::middleware('auth')->get('dashboard', function () {
-    $tenant = TenantContext::getTenant() ?? Tenant::first();
+use App\Http\Controllers\DashboardActionController;
 
-    $principles = rescue(fn () => \App\Domains\Knowledge\Models\Principle::withoutGlobalScopes()->get(), collect());
-    $learnings = rescue(fn () => \App\Domains\Knowledge\Models\Learning::withoutGlobalScopes()->get(), collect());
-    $observations = rescue(fn () => \App\Domains\Knowledge\Models\Observation::withoutGlobalScopes()->get(), collect());
-    $reviews = rescue(fn () => \App\Domains\Review\Models\Review::withoutGlobalScopes()->with(['items.module', 'improvements'])->get(), collect());
-    $auditTemplates = rescue(fn () => \App\Domains\Development\Models\AuditTemplate::withoutGlobalScopes()->with('questions')->get(), collect());
-    $edges = rescue(fn () => KnowledgeEdge::withoutGlobalScopes()->active()->get(), collect());
+// Authenticated Executive Dashboard & Actions
+Route::middleware('auth')->group(function () {
+    Route::get('dashboard', function () {
+        $tenant = TenantContext::getTenant() ?? Tenant::first();
 
-    $modules = rescue(function () use ($principles, $edges) {
-        return Module::withoutGlobalScopes()
-            ->with(['goals', 'kpis', 'tools', 'auditRuns.template'])
-            ->get()
-            ->map(function ($module) use ($principles, $edges) {
-                $governingPrincipleIds = $edges
-                    ->where('target_type', 'module')
-                    ->where('target_id', $module->id)
-                    ->where('relation', 'governs')
-                    ->pluck('source_id')
-                    ->all();
+        $principles = rescue(fn () => \App\Domains\Knowledge\Models\Principle::withoutGlobalScopes()->get(), collect());
+        $learnings = rescue(fn () => \App\Domains\Knowledge\Models\Learning::withoutGlobalScopes()->get(), collect());
+        $observations = rescue(fn () => \App\Domains\Knowledge\Models\Observation::withoutGlobalScopes()->get(), collect());
+        $reviews = rescue(fn () => \App\Domains\Review\Models\Review::withoutGlobalScopes()->with(['items.module', 'improvements'])->get(), collect());
+        $auditTemplates = rescue(fn () => \App\Domains\Development\Models\AuditTemplate::withoutGlobalScopes()->with('questions')->get(), collect());
+        $edges = rescue(fn () => KnowledgeEdge::withoutGlobalScopes()->active()->get(), collect());
 
-                $module->governing_principles = $principles->whereIn('id', $governingPrincipleIds)->values();
-                return $module;
-            });
-    }, collect());
+        $modules = rescue(function () use ($principles, $edges) {
+            return Module::withoutGlobalScopes()
+                ->with(['goals', 'kpis', 'tools', 'auditRuns.template'])
+                ->get()
+                ->map(function ($module) use ($principles, $edges) {
+                    $governingPrincipleIds = $edges
+                        ->where('target_type', 'module')
+                        ->where('target_id', $module->id)
+                        ->where('relation', 'governs')
+                        ->pluck('source_id')
+                        ->all();
 
-    $principlesCount = $principles->count();
-    $edgesCount = $edges->count();
-    $reviewsCount = $reviews->count();
+                    $module->governing_principles = $principles->whereIn('id', $governingPrincipleIds)->values();
+                    return $module;
+                });
+        }, collect());
 
-    return view('dashboard', compact(
-        'tenant',
-        'modules',
-        'principles',
-        'learnings',
-        'observations',
-        'reviews',
-        'auditTemplates',
-        'principlesCount',
-        'edgesCount',
-        'reviewsCount'
-    ));
-})->name('dashboard');
+        $principlesCount = $principles->count();
+        $edgesCount = $edges->count();
+        $reviewsCount = $reviews->count();
+
+        return view('dashboard', compact(
+            'tenant',
+            'modules',
+            'principles',
+            'learnings',
+            'observations',
+            'reviews',
+            'auditTemplates',
+            'principlesCount',
+            'edgesCount',
+            'reviewsCount'
+        ));
+    })->name('dashboard');
+
+    // Executive Actions
+    Route::post('actions/capture', [DashboardActionController::class, 'capture'])->name('actions.capture');
+    Route::post('actions/audit/submit', [DashboardActionController::class, 'submitAudit'])->name('actions.audit.submit');
+    Route::post('actions/kpi/record', [DashboardActionController::class, 'recordKpi'])->name('actions.kpi.record');
+    Route::post('actions/review/{review}/close', [DashboardActionController::class, 'closeReview'])->name('actions.review.close');
+    Route::post('actions/review/create', [DashboardActionController::class, 'createReview'])->name('actions.review.create');
+});
 
 
 
