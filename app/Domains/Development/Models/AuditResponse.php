@@ -13,13 +13,31 @@ class AuditResponse extends Model
         'audit_run_id',
         'audit_question_id',
         'score',
+        'status_symbol',
+        'binary_answer',
         'notes',
         'evidence',
     ];
 
     protected $casts = [
-        'score' => 'integer',
+        'score'         => 'integer',
+        'binary_answer' => 'boolean',
     ];
+
+    public function isUsable(): bool
+    {
+        return $this->status_symbol === 'usable' || $this->status_symbol === '✅';
+    }
+
+    public function needsImprovement(): bool
+    {
+        return $this->status_symbol === 'improvement' || $this->status_symbol === '⚠️';
+    }
+
+    public function isCriticalDefect(): bool
+    {
+        return $this->status_symbol === 'defect' || $this->status_symbol === '❌';
+    }
 
     public function run(): BelongsTo
     {

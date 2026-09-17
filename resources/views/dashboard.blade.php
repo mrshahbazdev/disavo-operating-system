@@ -108,6 +108,29 @@
     <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
 
+        @php
+            $latestCompletedAmar = $auditRuns->where('status', 'completed')->first(fn ($r) => $r->isAmar());
+            $activeFeatureBan = $latestCompletedAmar && $latestCompletedAmar->hasFeatureBan();
+        @endphp
+
+        @if ($activeFeatureBan)
+            <div class="p-4 rounded-xl bg-rose-950/90 border-2 border-rose-500 text-rose-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xl animate-pulse">
+                <div class="flex items-center space-x-3">
+                    <span class="w-9 h-9 rounded-xl bg-rose-500/30 text-rose-300 font-extrabold flex items-center justify-center text-lg">🚨</span>
+                    <div>
+                        <h4 class="text-sm font-extrabold uppercase tracking-wider text-rose-200">NEW FEATURE BAN AKTIV (AMAR Kybernetischer Regelkreis)</h4>
+                        <p class="text-xs text-rose-100 mt-0.5">
+                            Im letzten <strong>ALLOCORE MASTER AUDIT (AMAR)</strong> wurde festgestellt, dass Allocore noch nicht nachweisbar wertvoller für den Unternehmer geworden ist.
+                            <strong>Neue Feature-Entwicklung ist gesperrt</strong>, bis die dokumentierten Mängel aus dem Insight-Protokoll behoben sind!
+                        </p>
+                    </div>
+                </div>
+                <button onclick="openArfModal(); switchArfTab('history');" class="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition whitespace-nowrap">
+                    Mängelprotokoll ansehen &rarr;
+                </button>
+            </div>
+        @endif
+
         @if (session('success'))
             <div class="p-4 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-emerald-100 flex items-center justify-between shadow-xl">
                 <div class="flex items-center space-x-3">
@@ -1584,6 +1607,10 @@
                     </p>
                 </div>
                 <div class="flex items-center space-x-2">
+                    <button onclick="openAmarAuditModal()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-md shadow-blue-600/30 flex items-center space-x-1">
+                        <span>⚡</span>
+                        <span>AMAR Master-Audit</span>
+                    </button>
                     <button onclick="openAuditScheduleModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm flex items-center space-x-1">
                         <span>📅</span>
                         <span>Audit ansetzen</span>
@@ -1623,6 +1650,25 @@
                         <button onclick="openAuditScheduleModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
                             + Audit planen
                         </button>
+                    </div>
+
+                    <!-- AMAR Banner -->
+                    <div class="p-4 rounded-xl bg-gradient-to-r from-[#0d1b3e] to-[#1a153b] border border-blue-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+                        <div class="space-y-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 uppercase">Kanonisches Master-Audit</span>
+                                <span class="text-sm font-bold text-white">ALLOCORE MASTER AUDIT (AMAR)</span>
+                            </div>
+                            <p class="text-xs text-slate-300 max-w-2xl">
+                                Ganzheitliche Reifegradprüfung über alle 10 Allocore-Bereiche inklusive Unternehmer-Test, Insight-Protokoll und kybernetischem Regelkreis.
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2 shrink-0">
+                            <button onclick="openAmarAuditModal()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-md shadow-blue-600/30 flex items-center space-x-1.5 whitespace-nowrap">
+                                <span>⚡</span>
+                                <span>AMAR jetzt durchführen</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="space-y-3">
@@ -1718,14 +1764,33 @@
                                 $scoreColor = $score >= 80 ? 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' : ($score >= 60 ? 'text-amber-400 border-amber-500/40 bg-amber-500/10' : 'text-rose-400 border-rose-500/40 bg-rose-500/10');
                             @endphp
                             <div class="p-4 rounded-xl bg-dark-card border border-dark-border space-y-3">
-                                <div class="flex items-start justify-between gap-3">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                     <div>
-                                        <div class="flex items-center space-x-2">
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            @if ($cRun->isAmar())
+                                                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                                                    👑 AMAR Master-Audit
+                                                </span>
+                                            @endif
                                             <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold border {{ $scoreColor }}">
-                                                {{ $score }}% Reifegrad
+                                                {{ $score }}% {{ $cRun->isAmar() ? 'Allocore Value Score' : 'Reifegrad' }}
                                             </span>
-                                            <h5 class="font-bold text-white text-base">{{ $cRun->title ?: ($cRun->template ? $cRun->template->name : 'Reifegrad-Audit') }}</h5>
+                                            @if ($cRun->isAmar() && $cRun->hasFeatureBan())
+                                                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">
+                                                    🚨 Feature Ban aktiv
+                                                </span>
+                                            @elseif ($cRun->isAmar())
+                                                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                                    ✓ System wertvoller
+                                                </span>
+                                            @endif
+                                            @if ($cRun->entrepreneur_test_passed)
+                                                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                                    ✓ Unternehmer-Test
+                                                </span>
+                                            @endif
                                         </div>
+                                        <h5 class="font-bold text-white text-base mt-1">{{ $cRun->title ?: ($cRun->template ? $cRun->template->name : 'Reifegrad-Audit') }}</h5>
                                         <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-1.5 font-mono">
                                             @if ($cRun->module)
                                                 <span class="text-blue-400 font-semibold">Modul: {{ $cRun->module->name }}</span>
@@ -1735,8 +1800,23 @@
                                                 <span class="text-purple-300">Auditor: {{ $cRun->auditor->name }}</span>
                                                 <span>•</span>
                                             @endif
+                                            @if ($cRun->version)
+                                                <span class="text-slate-300">v{{ $cRun->version }}</span>
+                                                <span>•</span>
+                                            @endif
                                             <span>Abgeschlossen: {{ $cRun->completed_at ? $cRun->completed_at->format('d.m.Y H:i') : $cRun->created_at?->format('d.m.Y') }}</span>
                                         </div>
+                                    </div>
+                                    <div class="shrink-0 flex items-center space-x-2">
+                                        @if ($cRun->isAmar() || !empty($cRun->meta))
+                                            <button 
+                                                onclick="openAmarDetailModal({{ $cRun->id }})" 
+                                                class="px-3.5 py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600/50 text-blue-200 border border-blue-500/40 text-xs font-bold transition flex items-center space-x-1"
+                                            >
+                                                <span>🔍</span>
+                                                <span>AMAR-Protokoll ansehen</span>
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                                 @if ($cRun->responses && $cRun->responses->isNotEmpty())
@@ -2914,10 +2994,511 @@
         </div>
     </div>
 
+    <!-- 16. ALLOCORE MASTER AUDIT (AMAR) AUDIT CONDUCTOR MODAL -->
+    @php
+        $amarTemplate = $auditTemplates->first(fn ($t) => str_contains(strtolower($t->name), 'amar'));
+        $amarDefinitions = \App\Domains\Development\Services\AmarTemplateService::getDefinition();
+        $amarQuestionsByArea = $amarTemplate ? $amarTemplate->questions->groupBy('area') : collect();
+        $latestCompletedAmar = $auditRuns->first(fn ($r) => $r->isAmar() && $r->isCompleted());
+        $previousAmarScore = $latestCompletedAmar ? round((float) $latestCompletedAmar->score) : null;
+    @endphp
+    <div id="amarAuditModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-5xl w-full max-h-[95vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <!-- Modal Header -->
+            <div class="p-5 sm:p-6 border-b border-dark-border flex items-start justify-between bg-dark-card shrink-0">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40 uppercase">
+                            👑 Kanonisches Master-Audit
+                        </span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-emerald-400 font-semibold">Allocore Review Framework (ARF)</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-black text-white mt-1">ALLOCORE MASTER AUDIT (AMAR 1.0)</h2>
+                    <p class="text-xs text-slate-300 mt-1 max-w-3xl">
+                        Standardisiertes Qualitätsaudit über alle 10 Allocore-Bereiche inklusive Unternehmer-Test, Fehlerprotokollierung und kybernetischem Abschluss-Tor.
+                    </p>
+                </div>
+                <button onclick="closeModal('amarAuditModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <!-- Modal Sub-Navigation Bar -->
+            <div class="flex border-b border-dark-border bg-[#0d1322] px-6 pt-3 space-x-4 shrink-0 overflow-x-auto">
+                <button 
+                    type="button" 
+                    onclick="switchAmarTab('areas')" 
+                    id="amarTabBtnAreas" 
+                    class="pb-2.5 text-xs font-bold border-b-2 border-blue-500 text-blue-400 transition whitespace-nowrap flex items-center space-x-1.5"
+                >
+                    <span>📋</span>
+                    <span>10 Audit-Bereiche (Fragen)</span>
+                </button>
+                <button 
+                    type="button" 
+                    onclick="switchAmarTab('defects')" 
+                    id="amarTabBtnDefects" 
+                    class="pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap flex items-center space-x-1.5"
+                >
+                    <span>🚨</span>
+                    <span>Insight-Protokoll (<span id="amarDefectCountBadge">0</span>)</span>
+                </button>
+                <button 
+                    type="button" 
+                    onclick="switchAmarTab('cybernetics')" 
+                    id="amarTabBtnCybernetics" 
+                    class="pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap flex items-center space-x-1.5"
+                >
+                    <span>🔄</span>
+                    <span>Kybernetik &amp; Freigabe-Tor</span>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form method="POST" action="{{ route('actions.audit.submit') }}" id="amarForm" class="flex flex-col flex-grow overflow-hidden">
+                @csrf
+                <input type="hidden" name="module_id" value="{{ $amarTemplate ? $amarTemplate->module_id : ($modules->first()?->id ?? 1) }}">
+                <input type="hidden" name="audit_template_id" value="{{ $amarTemplate ? $amarTemplate->id : 1 }}">
+                <input type="hidden" name="audit_run_id" id="amarFormRunId" value="">
+
+                <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-6 text-xs">
+                    <!-- AUDIT INFORMATION HEADER CARD -->
+                    <div class="p-4 rounded-xl bg-dark-card border border-dark-border grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                        <div>
+                            <span class="text-slate-400 text-[11px] block">Audit-Datum:</span>
+                            <span class="text-white font-mono font-semibold">{{ now()->format('d.m.Y') }}</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 text-[11px] block">Auditor:</span>
+                            <span class="text-purple-300 font-semibold truncate block">{{ auth()->user()->name }}</span>
+                        </div>
+                        <div>
+                            <label class="text-slate-400 text-[11px] block">Version:</label>
+                            <input type="text" name="version" value="1.0" class="w-full px-2 py-1 rounded bg-dark-surface border border-dark-border text-white text-xs font-mono focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 text-[11px] block">Geprüfte Nutzerpfade:</label>
+                            <input type="number" name="user_paths_audited" value="1" min="1" class="w-full px-2 py-1 rounded bg-dark-surface border border-dark-border text-white text-xs font-mono focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 text-[11px] block">Geprüfte Tools:</label>
+                            <input type="number" name="tools_audited" value="{{ $modules->sum(fn($m) => $m->tools->count()) ?: 5 }}" min="0" class="w-full px-2 py-1 rounded bg-dark-surface border border-dark-border text-white text-xs font-mono focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 text-[11px] block">Vorheriger Score (%):</label>
+                            <input type="number" name="previous_score" value="{{ $previousAmarScore ?? '' }}" placeholder="z.B. 75" min="0" max="100" class="w-full px-2 py-1 rounded bg-dark-surface border border-dark-border text-white text-xs font-mono focus:border-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- MANDATORY ENTREPRENEUR TEST BANNER -->
+                    <div class="p-4 rounded-xl bg-purple-950/30 border border-purple-500/40 space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-base">👑</span>
+                            <h4 class="text-sm font-bold text-purple-300 uppercase tracking-wide">Der Unternehmer-Test (Mandatorisch)</h4>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Der Auditor absolviert einen <strong>vollständigen Nutzerpfad</strong>:
+                            <span class="font-mono text-purple-300">Registrierung &rarr; Audit &rarr; Ergebnis &rarr; Coach &rarr; Buch &rarr; Tool &rarr; Fortschritt</span>.
+                        </p>
+                        <p class="text-xs text-slate-200 font-semibold italic">
+                            „Würde ein Unternehmer nach 90 Minuten in Allocore sagen: ‚Das hat meinem Unternehmen wirklich geholfen.‘?“
+                        </p>
+                        <div class="pt-1">
+                            <label class="flex items-center space-x-2.5 cursor-pointer select-none">
+                                <input type="checkbox" name="entrepreneur_test_passed" value="1" required class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 bg-dark-surface border-dark-border">
+                                <span class="text-xs font-bold text-white">
+                                    Ich bestätige, dass ich den vollen 90-Minuten-Nutzerpfad absolviert habe und dieser Test bestanden ist.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- TAB 1: 10 AUDIT AREAS -->
+                    <div id="amarSectionAreas" class="space-y-6">
+                        @if ($amarTemplate && $amarTemplate->questions->isNotEmpty())
+                            @foreach ($amarDefinitions as $areaName => $areaDef)
+                                @php
+                                    $questionsInArea = $amarQuestionsByArea->get($areaName, collect());
+                                @endphp
+                                <div class="rounded-xl border border-dark-border bg-dark-card/60 overflow-hidden">
+                                    <!-- Area Header -->
+                                    <div class="p-4 bg-dark-card border-b border-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                        <div>
+                                            <div class="flex items-center space-x-2">
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
+                                                    {{ $areaName }}
+                                                </span>
+                                                <span class="text-slate-400 font-mono text-[11px]">({{ $questionsInArea->count() }} Fragen)</span>
+                                            </div>
+                                            <p class="text-xs text-slate-300 mt-1 font-medium">
+                                                🎯 <strong>Ziel:</strong> {{ $areaDef['goal'] }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Questions Container -->
+                                    <div class="p-4 space-y-4">
+                                        @php
+                                            $currentSection = null;
+                                        @endphp
+                                        @foreach ($questionsInArea as $q)
+                                            @if ($q->section_header && $q->section_header !== $currentSection)
+                                                @php $currentSection = $q->section_header; @endphp
+                                                <div class="pt-2 pb-1 border-b border-dark-border/60">
+                                                    <span class="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider">
+                                                        ▸ {{ $currentSection }}
+                                                    </span>
+                                                </div>
+                                            @endif
+
+                                            <div class="p-3.5 rounded-xl bg-dark-surface border border-dark-border space-y-2.5">
+                                                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                                                    <div class="space-y-0.5 flex-1">
+                                                        <div class="flex items-center space-x-2">
+                                                            <span class="text-xs font-bold text-white">{{ $q->question_text }}</span>
+                                                            @if ($q->isBinary())
+                                                                <span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                                                    Schlüsseltest
+                                                                </span>
+                                                            @else
+                                                                <span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-semibold bg-slate-800 text-slate-400">
+                                                                    Gewicht: {{ $q->weight }}
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                        @if ($q->guidance)
+                                                            <span class="text-[11px] text-slate-400 block">{{ $q->guidance }}</span>
+                                                        @endif
+                                                    </div>
+
+                                                    <!-- Usability Status Symbol Selector -->
+                                                    <div class="shrink-0 flex items-center space-x-1.5">
+                                                        <label class="cursor-pointer">
+                                                            <input type="radio" name="responses[{{ $q->id }}][status_symbol]" value="usable" checked class="sr-only peer">
+                                                            <span class="px-2 py-1 rounded text-xs border border-dark-border text-slate-400 peer-checked:bg-emerald-500/20 peer-checked:text-emerald-300 peer-checked:border-emerald-500/40 transition select-none inline-flex items-center space-x-1" title="Sofort nutzbar">
+                                                                <span>✅</span>
+                                                                <span class="text-[10px] font-semibold hidden sm:inline">Nutzbar</span>
+                                                            </span>
+                                                        </label>
+                                                        <label class="cursor-pointer">
+                                                            <input type="radio" name="responses[{{ $q->id }}][status_symbol]" value="improvement" class="sr-only peer">
+                                                            <span class="px-2 py-1 rounded text-xs border border-dark-border text-slate-400 peer-checked:bg-amber-500/20 peer-checked:text-amber-300 peer-checked:border-amber-500/40 transition select-none inline-flex items-center space-x-1" title="Verbesserungsbedarf">
+                                                                <span>⚠️</span>
+                                                                <span class="text-[10px] font-semibold hidden sm:inline">Bedarf</span>
+                                                            </span>
+                                                        </label>
+                                                        <label class="cursor-pointer">
+                                                            <input type="radio" name="responses[{{ $q->id }}][status_symbol]" value="defect" class="sr-only peer">
+                                                            <span class="px-2 py-1 rounded text-xs border border-dark-border text-slate-400 peer-checked:bg-rose-500/20 peer-checked:text-rose-300 peer-checked:border-rose-500/40 transition select-none inline-flex items-center space-x-1" title="Kritischer Mangel">
+                                                                <span>❌</span>
+                                                                <span class="text-[10px] font-semibold hidden sm:inline">Mangel</span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Score Input (Binary or 0-5 scale) -->
+                                                <div class="pt-2 border-t border-dark-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                                    @if ($q->isBinary())
+                                                        <div class="flex items-center space-x-4">
+                                                            <span class="text-xs text-slate-300 font-semibold">Testergebnis:</span>
+                                                            <label class="flex items-center space-x-1.5 cursor-pointer">
+                                                                <input type="radio" name="responses[{{ $q->id }}][binary_answer]" value="yes" checked class="w-3.5 h-3.5 text-emerald-500 focus:ring-emerald-500 bg-dark-card border-dark-border">
+                                                                <span class="text-xs font-bold text-emerald-400">JA (Erfüllt)</span>
+                                                            </label>
+                                                            <label class="flex items-center space-x-1.5 cursor-pointer">
+                                                                <input type="radio" name="responses[{{ $q->id }}][binary_answer]" value="no" class="w-3.5 h-3.5 text-rose-500 focus:ring-rose-500 bg-dark-card border-dark-border">
+                                                                <span class="text-xs font-bold text-rose-400">NEIN (Nicht erfüllt)</span>
+                                                            </label>
+                                                        </div>
+                                                    @else
+                                                        <div class="flex items-center space-x-2">
+                                                            <span class="text-[11px] text-slate-400">Bewertung:</span>
+                                                            <div class="flex items-center space-x-1">
+                                                                @foreach ([
+                                                                    0 => '0 - Nicht vorhanden',
+                                                                    1 => '1 - Schwer mangelhaft',
+                                                                    2 => '2 - Schwach',
+                                                                    3 => '3 - Akzeptabel',
+                                                                    4 => '4 - Gut',
+                                                                    5 => '5 - Exzellent',
+                                                                ] as $val => $label)
+                                                                    <label class="cursor-pointer">
+                                                                        <input type="radio" name="responses[{{ $q->id }}][score]" value="{{ $val }}" {{ $val === 4 ? 'checked' : '' }} class="sr-only peer">
+                                                                        <span class="w-7 h-7 rounded-lg border border-dark-border flex items-center justify-center font-mono font-bold text-xs text-slate-400 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-500 transition select-none hover:bg-dark-hover" title="{{ $label }}">
+                                                                            {{ $val }}
+                                                                        </span>
+                                                                    </label>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
+                                                    <div class="flex-1 max-w-sm">
+                                                        <input type="text" name="responses[{{ $q->id }}][notes]" placeholder="Optionale Anmerkung / Beobachtung..." class="w-full px-2.5 py-1.5 rounded-lg bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="p-8 text-center bg-dark-card rounded-xl border border-dark-border space-y-3">
+                                <span class="text-3xl">⚠️</span>
+                                <h4 class="text-white font-bold">Kanonisches AMAR-Template wird initialisiert...</h4>
+                                <p class="text-xs text-slate-400">Klicken Sie auf den Button unten, um das AMAR Master-Audit Template mit allen 10 Bereichen anzulegen.</p>
+                                <form method="POST" action="{{ route('actions.audit-template.ensure-amar') }}">
+                                    @csrf
+                                    <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition">
+                                        ⚡ AMAR-Template jetzt erstellen
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- TAB 2: INSIGHT PROTOCOL (DEFECT LOGGING) -->
+                    <div id="amarSectionDefects" class="space-y-4 hidden">
+                        <div class="p-4 rounded-xl bg-dark-card border border-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h4 class="text-sm font-bold text-white flex items-center space-x-2">
+                                    <span>🚨</span>
+                                    <span>Erkenntnis- &amp; Mängelprotokoll (Insight Protocol)</span>
+                                </h4>
+                                <p class="text-xs text-slate-300 mt-0.5">
+                                    Strukturierte Erfassung aller bei der Prüfung entdeckten Engpässe, Reibungen und Mängel inklusive Verantwortlichkeit und Hebelmaßnahme.
+                                </p>
+                            </div>
+                            <button type="button" onclick="addAmarDefectRow()" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition flex items-center space-x-1 shrink-0 shadow-sm">
+                                <span>+</span>
+                                <span>Mangel erfassen</span>
+                            </button>
+                        </div>
+
+                        <div id="amarDefectsContainer" class="space-y-4">
+                            <!-- Dynamic defect rows inserted here -->
+                        </div>
+
+                        <div id="amarDefectsEmptyState" class="p-8 text-center rounded-xl bg-dark-card/50 border border-dashed border-dark-border text-slate-400 space-y-2">
+                            <span class="text-2xl block">✓</span>
+                            <p class="font-semibold text-slate-300">Bisher keine spezifischen Mängel protokolliert.</p>
+                            <p class="text-[11px]">Klicken Sie auf <strong>„Mangel erfassen“</strong>, um Schwachstellen mit Schweregrad, Auswirkung und Lösungsmaßnahme zu dokumentieren.</p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: CYBERNETIC FEEDBACK & COMPLETION GATE -->
+                    <div id="amarSectionCybernetics" class="space-y-6 hidden">
+                        <div class="p-4 rounded-xl bg-dark-card border border-dark-border space-y-1">
+                            <h4 class="text-sm font-bold text-white flex items-center space-x-2">
+                                <span>🔄</span>
+                                <span>Kybernetische Feedback-Schleife (Cybernetic Reflection)</span>
+                            </h4>
+                            <p class="text-xs text-slate-300">
+                                Beantworten Sie die 6 Reflexionsfragen, um systemische Erkenntnisse zu sichern und den Regelkreis zu schließen.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    1. Welcher Bereich hat die höchste Hebelwirkung auf den Unternehmerwert?
+                                </label>
+                                <textarea name="cybernetic_feedback[highest_leverage]" rows="2" placeholder="Konkreter Bereich und Begründung..." class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"></textarea>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    2. Welche Tools müssen vereinfacht oder entfernt werden?
+                                </label>
+                                <textarea name="cybernetic_feedback[tools_to_simplify]" rows="2" placeholder="Komplexe Werkzeuge oder Überflüssiges..." class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"></textarea>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    3. Wo bricht der Nutzerpfad am ehesten ab?
+                                </label>
+                                <textarea name="cybernetic_feedback[user_path_dropout]" rows="2" placeholder="Größte Hürde oder Reibung im Flow..." class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"></textarea>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    4. Was war die überraschendste Erkenntnis des Audits?
+                                </label>
+                                <textarea name="cybernetic_feedback[surprising_insight]" rows="2" placeholder="Unerwartete Beobachtung..." class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"></textarea>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    5. Welcher Engpass bremst Allocore aktuell am meisten?
+                                </label>
+                                <textarea name="cybernetic_feedback[main_bottleneck]" rows="2" placeholder="Limitierender Faktor (Theory of Constraints)..." class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"></textarea>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    6. Welche 3 Maßnahmen haben oberste Priorität bis zum nächsten Audit?
+                                </label>
+                                <textarea name="cybernetic_feedback[top_priorities]" rows="2" placeholder="1. ...&#10;2. ...&#10;3. ..." class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- FINAL COMPLETION GATE (NEW FEATURE BAN TRIGGER) -->
+                        <div class="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-[#151b2e] to-slate-900 border-2 border-blue-500/50 shadow-xl space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <span class="text-2xl">⚖️</span>
+                                <div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                                        Abschluss-Tor (Kybernetische Freigabe)
+                                    </span>
+                                    <h3 class="text-base font-bold text-white mt-1">
+                                        Ist Allocore für einen Unternehmer heute wertvoller als vor dem letzten Audit?
+                                    </h3>
+                                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                                        <strong>Stopp-Regel:</strong> Falls <strong>NEIN</strong>, wird ein systemweiter 
+                                        <span class="text-rose-400 font-bold font-mono">NEW FEATURE BAN</span> verhängt.
+                                        Es dürfen keine neuen Module oder Funktionen begonnen werden, bis die identifizierten Engpässe behoben sind.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                                <label class="flex-1 p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-950/20 hover:bg-emerald-950/40 cursor-pointer transition flex items-center space-x-3">
+                                    <input type="radio" name="cybernetic_feedback[more_valuable_today]" value="yes" checked class="w-4 h-4 text-emerald-500 focus:ring-emerald-500 bg-dark-card border-dark-border">
+                                    <div>
+                                        <span class="text-xs font-extrabold text-emerald-400 block">✓ JA – System ist wertvoller</span>
+                                        <span class="text-[11px] text-slate-300">Erkenntnisse &amp; Verbesserungen greifen. Weiterentwicklung freigegeben.</span>
+                                    </div>
+                                </label>
+
+                                <label class="flex-1 p-3.5 rounded-xl border border-rose-500/40 bg-rose-950/20 hover:bg-rose-950/40 cursor-pointer transition flex items-center space-x-3">
+                                    <input type="radio" name="cybernetic_feedback[more_valuable_today]" value="no" class="w-4 h-4 text-rose-500 focus:ring-rose-500 bg-dark-card border-dark-border">
+                                    <div>
+                                        <span class="text-xs font-extrabold text-rose-400 block">🚨 NEIN – Stop &amp; Fix</span>
+                                        <span class="text-[11px] text-slate-300">Löst sofortigen <strong>New Feature Ban</strong> aus! Vorrang für Fehlerbehebung.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="p-4 border-t border-dark-border bg-dark-card flex items-center justify-between shrink-0">
+                    <div class="flex items-center space-x-2 text-slate-400 text-xs">
+                        <span>💡</span>
+                        <span class="hidden sm:inline">Alle 10 Bereiche werden gewichtet zum Allocore Value Score verdichtet.</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button type="button" onclick="closeModal('amarAuditModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">
+                            Abbrechen
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition shadow-lg shadow-blue-600/30 flex items-center space-x-1.5">
+                            <span>👑</span>
+                            <span>Master-Audit einreichen &amp; bewerten</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 17. AMAR DETAIL INSPECTOR MODAL -->
+    <div id="amarDetailModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-4xl w-full max-h-[94vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <!-- Header -->
+            <div class="p-5 sm:p-6 border-b border-dark-border flex items-start justify-between bg-dark-card shrink-0">
+                <div class="space-y-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40 uppercase">
+                            👑 AMAR Auswertung
+                        </span>
+                        <span class="text-slate-500">•</span>
+                        <span id="admDate" class="text-xs font-mono text-slate-400"></span>
+                    </div>
+                    <h2 id="admTitle" class="text-xl sm:text-2xl font-black text-white"></h2>
+                    <p id="admSubtitle" class="text-xs text-slate-300"></p>
+                </div>
+                <button onclick="closeModal('amarDetailModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-6 text-xs">
+                <!-- SCORE & GATES HERO CARD -->
+                <div class="p-5 rounded-2xl bg-gradient-to-r from-[#0d162e] via-[#141b38] to-[#0d162e] border border-blue-500/40 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center items-center">
+                    <div class="space-y-1">
+                        <span class="text-[11px] font-mono uppercase text-slate-400">Allocore Value Score</span>
+                        <div class="flex items-center justify-center space-x-1">
+                            <span id="admScoreValue" class="text-4xl sm:text-5xl font-black text-white font-mono"></span>
+                            <span class="text-xl font-bold text-blue-400">%</span>
+                        </div>
+                        <div id="admScoreDelta" class="text-[11px] font-mono text-slate-400"></div>
+                    </div>
+
+                    <div class="space-y-1.5 sm:border-x sm:border-dark-border sm:px-4">
+                        <span class="text-[11px] font-mono uppercase text-slate-400">Unternehmer-Test</span>
+                        <div id="admEntrepreneurTestBadge" class="inline-block px-3 py-1.5 rounded-xl font-mono text-xs font-bold"></div>
+                        <p class="text-[10px] text-slate-400 leading-tight">90-Minuten-Vollpfad: Reg &rarr; Audit &rarr; Coach &rarr; Tool</p>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <span class="text-[11px] font-mono uppercase text-slate-400">Kybernetischer Status</span>
+                        <div id="admFeatureBanBadge" class="inline-block px-3 py-1.5 rounded-xl font-mono text-xs font-bold"></div>
+                        <p id="admFeatureBanHint" class="text-[10px] text-slate-400 leading-tight"></p>
+                    </div>
+                </div>
+
+                <!-- 10-AREA BREAKDOWN BARS -->
+                <div class="p-4 rounded-xl bg-dark-card border border-dark-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-bold text-white flex items-center space-x-2">
+                            <span>📊</span>
+                            <span>Ergebnis nach den 10 Allocore-Bereichen</span>
+                        </h4>
+                        <span class="text-[11px] font-mono text-slate-400">Gleichmäßig gewichtet (0-100%)</span>
+                    </div>
+
+                    <div id="admAreaScoresContainer" class="space-y-2.5 pt-1">
+                        <!-- Dynamic area bars -->
+                    </div>
+                </div>
+
+                <!-- INSIGHT PROTOCOLS / DEFECTS -->
+                <div class="p-4 rounded-xl bg-dark-card border border-dark-border space-y-3">
+                    <h4 class="text-sm font-bold text-white flex items-center space-x-2">
+                        <span>🚨</span>
+                        <span>Dokumentierte Mängel &amp; Erkenntnisse (Insight Protocol)</span>
+                    </h4>
+                    <div id="admDefectsContainer" class="space-y-2.5">
+                        <!-- Dynamic defect cards -->
+                    </div>
+                </div>
+
+                <!-- CYBERNETIC FEEDBACK ANSWERS -->
+                <div class="p-4 rounded-xl bg-dark-card border border-dark-border space-y-3">
+                    <h4 class="text-sm font-bold text-white flex items-center space-x-2">
+                        <span>🔄</span>
+                        <span>Kybernetische Reflexion &amp; Maßnahmen</span>
+                    </h4>
+                    <div id="admCyberFeedbackContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <!-- Dynamic cyber feedback items -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end shrink-0">
+                <button type="button" onclick="closeModal('amarDetailModal')" class="px-5 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-bold text-slate-200 transition">
+                    Schließen
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- CLIENT-SIDE JAVASCRIPT FOR INTERACTIVITY -->
     <script>
         const MODULES_DATA = @json($modules);
         const AUDIT_TEMPLATES_DATA = @json($auditTemplates);
+        const ALL_AUDIT_RUNS_DATA = @json($auditRuns);
 
         function openUserModal() {
             openModal('userModal');
@@ -3636,12 +4217,308 @@
         function openAmfModal() { openModal('amfModal'); }
         function openArfModal() { openModal('arfModal'); }
 
+        // AMAR MASTER AUDIT CONDUCTOR & INSPECTOR
+        function switchAmarTab(tab) {
+            const secAreas = document.getElementById('amarSectionAreas');
+            const secDefects = document.getElementById('amarSectionDefects');
+            const secCyber = document.getElementById('amarSectionCybernetics');
+
+            const btnAreas = document.getElementById('amarTabBtnAreas');
+            const btnDefects = document.getElementById('amarTabBtnDefects');
+            const btnCyber = document.getElementById('amarTabBtnCybernetics');
+
+            if (!secAreas || !secDefects || !secCyber) return;
+
+            secAreas.classList.add('hidden');
+            secDefects.classList.add('hidden');
+            secCyber.classList.add('hidden');
+
+            btnAreas.className = 'pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap flex items-center space-x-1.5';
+            btnDefects.className = 'pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap flex items-center space-x-1.5';
+            btnCyber.className = 'pb-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition whitespace-nowrap flex items-center space-x-1.5';
+
+            if (tab === 'defects') {
+                secDefects.classList.remove('hidden');
+                btnDefects.className = 'pb-2.5 text-xs font-bold border-b-2 border-amber-500 text-amber-400 transition whitespace-nowrap flex items-center space-x-1.5';
+            } else if (tab === 'cybernetics') {
+                secCyber.classList.remove('hidden');
+                btnCyber.className = 'pb-2.5 text-xs font-bold border-b-2 border-blue-500 text-blue-400 transition whitespace-nowrap flex items-center space-x-1.5';
+            } else {
+                secAreas.classList.remove('hidden');
+                btnAreas.className = 'pb-2.5 text-xs font-bold border-b-2 border-blue-500 text-blue-400 transition whitespace-nowrap flex items-center space-x-1.5';
+            }
+        }
+
+        function openAmarAuditModal(runId = null) {
+            closeModal('arfModal');
+            if (runId) {
+                document.getElementById('amarFormRunId').value = runId;
+            } else {
+                document.getElementById('amarFormRunId').value = '';
+            }
+            switchAmarTab('areas');
+            openModal('amarAuditModal');
+        }
+
+        function addAmarDefectRow() {
+            const container = document.getElementById('amarDefectsContainer');
+            const emptyState = document.getElementById('amarDefectsEmptyState');
+            if (!container) return;
+
+            const idx = container.querySelectorAll('.amar-defect-row').length;
+            if (emptyState) emptyState.classList.add('hidden');
+
+            const row = document.createElement('div');
+            row.className = 'amar-defect-row p-4 rounded-xl bg-dark-card border border-dark-border space-y-3';
+            row.innerHTML = `
+                <div class="flex items-center justify-between border-b border-dark-border pb-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 uppercase">
+                            Mangel #${idx + 1}
+                        </span>
+                        <span class="text-xs font-bold text-white">Strukturierte Mängelerfassung</span>
+                    </div>
+                    <button type="button" onclick="removeAmarDefectRow(this)" class="text-xs text-slate-400 hover:text-rose-400 transition" title="Mangel entfernen">✕ Entfernen</button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Bereich (Area):</label>
+                        <select name="insight_protocols[${idx}][area]" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                            <option value="AREA 1: ONBOARDING">AREA 1: ONBOARDING</option>
+                            <option value="AREA 2: AUDIT">AREA 2: AUDIT</option>
+                            <option value="AREA 3: EVALUATION">AREA 3: EVALUATION</option>
+                            <option value="AREA 4: AI COACH">AREA 4: AI COACH</option>
+                            <option value="AREA 5: BOOKS">AREA 5: BOOKS</option>
+                            <option value="AREA 6: TOOL RECOMMENDATIONS">AREA 6: TOOL RECOMMENDATIONS</option>
+                            <option value="AREA 7: TOOL AUDIT">AREA 7: TOOL AUDIT</option>
+                            <option value="AREA 8: IMPLEMENTATION">AREA 8: IMPLEMENTATION</option>
+                            <option value="AREA 9: PROGRESS">AREA 9: PROGRESS</option>
+                            <option value="AREA 10: ENTHUSIASM">AREA 10: ENTHUSIASM</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Problem (Kurzbeschreibung):</label>
+                        <input type="text" name="insight_protocols[${idx}][problem]" required placeholder="z.B. Abbruch bei Tool-Auswahl" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Schweregrad (1 bis 10):</label>
+                        <select name="insight_protocols[${idx}][severity]" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                            <option value="1">1 (Kosmetisch)</option>
+                            <option value="2">2</option>
+                            <option value="3">3 (Gering)</option>
+                            <option value="4">4</option>
+                            <option value="5" selected>5 (Spürbare Reibung)</option>
+                            <option value="6">6</option>
+                            <option value="7">7 (Hohe Reibung)</option>
+                            <option value="8">8 (Schwerer Abbruch)</option>
+                            <option value="9">9 (Kritisch)</option>
+                            <option value="10">10 (Systemblocker)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Genaue Beobachtung:</label>
+                        <textarea name="insight_protocols[${idx}][observation]" rows="2" placeholder="Was genau ist passiert?" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Auswirkung auf Nutzer:</label>
+                        <textarea name="insight_protocols[${idx}][impact]" rows="2" placeholder="Verwirrung, Verzögerung, Frustration..." class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Verbesserungsmaßnahme:</label>
+                        <input type="text" name="insight_protocols[${idx}][action]" placeholder="Konkreter Fix..." class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Verantwortlich:</label>
+                        <input type="text" name="insight_protocols[${idx}][responsible]" placeholder="z.B. Product / Dev" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Messgröße / KPI:</label>
+                        <input type="text" name="insight_protocols[${idx}][metric]" placeholder="z.B. Abschlussquote > 80%" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+            updateAmarDefectBadge();
+        }
+
+        function removeAmarDefectRow(btn) {
+            const container = document.getElementById('amarDefectsContainer');
+            const emptyState = document.getElementById('amarDefectsEmptyState');
+            if (!container) return;
+
+            btn.closest('.amar-defect-row').remove();
+            const remaining = container.querySelectorAll('.amar-defect-row');
+            if (remaining.length === 0 && emptyState) {
+                emptyState.classList.remove('hidden');
+            }
+            updateAmarDefectBadge();
+        }
+
+        function updateAmarDefectBadge() {
+            const container = document.getElementById('amarDefectsContainer');
+            const badge = document.getElementById('amarDefectCountBadge');
+            if (!container || !badge) return;
+            const count = container.querySelectorAll('.amar-defect-row').length;
+            badge.innerText = count;
+        }
+
+        function openAmarDetailModal(runId) {
+            runId = parseInt(runId);
+            const run = ALL_AUDIT_RUNS_DATA.find(r => r.id === runId);
+            if (!run) return;
+
+            const title = run.title || (run.template ? run.template.name : 'ALLOCORE MASTER AUDIT');
+            document.getElementById('admTitle').innerText = title;
+            
+            const auditorName = run.auditor ? run.auditor.name : 'System';
+            const modName = run.module ? run.module.name : 'Allocore System';
+            const version = run.version || run.meta?.version || '1.0';
+            document.getElementById('admSubtitle').innerText = `Auditor: ${auditorName} • Modul: ${modName} • Version: v${version}`;
+            
+            const dateStr = run.completed_at ? new Date(run.completed_at).toLocaleDateString('de-DE') : (run.created_at ? new Date(run.created_at).toLocaleDateString('de-DE') : '');
+            document.getElementById('admDate').innerText = `Durchgeführt am ${dateStr}`;
+
+            const scoreVal = Math.round(run.score || 0);
+            document.getElementById('admScoreValue').innerText = scoreVal;
+
+            const prevScore = run.previous_score ?? run.meta?.previous_score;
+            const deltaEl = document.getElementById('admScoreDelta');
+            if (prevScore !== null && prevScore !== undefined && prevScore !== '') {
+                const diff = scoreVal - Math.round(prevScore);
+                const sign = diff >= 0 ? '+' : '';
+                deltaEl.innerText = `Vorheriges Audit: ${Math.round(prevScore)}% (${sign}${diff}%)`;
+                deltaEl.className = diff >= 0 ? 'text-[11px] font-mono text-emerald-400' : 'text-[11px] font-mono text-rose-400';
+            } else {
+                deltaEl.innerText = 'Erstes Referenz-Audit';
+                deltaEl.className = 'text-[11px] font-mono text-slate-400';
+            }
+
+            const entPassed = run.entrepreneur_test_passed ?? run.meta?.entrepreneur_test_passed;
+            const entBadge = document.getElementById('admEntrepreneurTestBadge');
+            if (entPassed) {
+                entBadge.innerText = '✓ Bestanden';
+                entBadge.className = 'inline-block px-3 py-1.5 rounded-xl font-mono text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40';
+            } else {
+                entBadge.innerText = '⚠️ Nicht bestätigt';
+                entBadge.className = 'inline-block px-3 py-1.5 rounded-xl font-mono text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+            }
+
+            const featureBan = run.new_feature_ban ?? run.meta?.new_feature_ban;
+            const banBadge = document.getElementById('admFeatureBanBadge');
+            const banHint = document.getElementById('admFeatureBanHint');
+            if (featureBan) {
+                banBadge.innerText = '🚨 FEATURE BAN AKTIV';
+                banBadge.className = 'inline-block px-3 py-1.5 rounded-xl font-mono text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse';
+                banHint.innerText = 'Keine neuen Module/Features bis Mängel behoben sind';
+            } else {
+                banBadge.innerText = '✓ System wertvoller';
+                banBadge.className = 'inline-block px-3 py-1.5 rounded-xl font-mono text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+                banHint.innerText = 'Weiterentwicklung uneingeschränkt freigegeben';
+            }
+
+            const areaContainer = document.getElementById('admAreaScoresContainer');
+            areaContainer.innerHTML = '';
+            const areaScores = run.meta?.area_scores || {};
+            const areaEntries = Object.entries(areaScores);
+            if (areaEntries.length > 0) {
+                areaEntries.forEach(([area, pct]) => {
+                    const barColor = pct >= 80 ? 'bg-emerald-500' : (pct >= 60 ? 'bg-amber-500' : 'bg-rose-500');
+                    const textColor = pct >= 80 ? 'text-emerald-400' : (pct >= 60 ? 'text-amber-400' : 'text-rose-400');
+                    const row = document.createElement('div');
+                    row.className = 'space-y-1';
+                    row.innerHTML = `
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-slate-200">${escapeHtml(area)}</span>
+                            <span class="font-mono font-bold ${textColor}">${pct}%</span>
+                        </div>
+                        <div class="w-full h-2 rounded-full bg-dark-surface overflow-hidden">
+                            <div class="${barColor} h-full transition-all duration-300" style="width: ${pct}%"></div>
+                        </div>
+                    `;
+                    areaContainer.appendChild(row);
+                });
+            } else {
+                areaContainer.innerHTML = '<p class="text-slate-400 text-xs italic">Keine Bereichsaufschlüsselung in den Metadaten gefunden.</p>';
+            }
+
+            const defectsContainer = document.getElementById('admDefectsContainer');
+            defectsContainer.innerHTML = '';
+            const defects = run.meta?.insight_protocols || [];
+            if (Array.isArray(defects) && defects.length > 0) {
+                defects.forEach((d, idx) => {
+                    const sev = parseInt(d.severity || 5);
+                    const sevColor = sev >= 8 ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : (sev >= 5 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-blue-500/20 text-blue-300 border-blue-500/40');
+                    const card = document.createElement('div');
+                    card.className = 'p-3.5 rounded-xl bg-dark-surface border border-dark-border space-y-2';
+                    card.innerHTML = `
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${sevColor} border">
+                                        Schweregrad ${sev}/10
+                                    </span>
+                                    <span class="text-xs font-bold text-white">${escapeHtml(d.problem || 'Mangel #' + (idx + 1))}</span>
+                                </div>
+                                <span class="text-[11px] font-mono text-blue-400 mt-0.5 block">${escapeHtml(d.area || 'Allgemein')}</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 font-mono">Verantw.: <strong class="text-slate-200">${escapeHtml(d.responsible || '–')}</strong></span>
+                        </div>
+                        ${d.observation ? `<p class="text-xs text-slate-300"><strong class="text-slate-400">Beobachtung:</strong> ${escapeHtml(d.observation)}</p>` : ''}
+                        ${d.impact ? `<p class="text-xs text-slate-300"><strong class="text-slate-400">Auswirkung:</strong> ${escapeHtml(d.impact)}</p>` : ''}
+                        ${d.action ? `<div class="p-2.5 rounded-lg bg-dark-card border border-dark-border text-xs"><strong class="text-emerald-400">Maßnahme:</strong> ${escapeHtml(d.action)} ${d.metric ? `<span class="text-slate-400">(Messgröße: ${escapeHtml(d.metric)})</span>` : ''}</div>` : ''}
+                    `;
+                    defectsContainer.appendChild(card);
+                });
+            } else {
+                defectsContainer.innerHTML = '<p class="text-slate-400 text-xs italic">Keine spezifischen Mängel protokolliert. Sämtliche Prüfbereiche im Sollzustand.</p>';
+            }
+
+            const cyberContainer = document.getElementById('admCyberFeedbackContainer');
+            cyberContainer.innerHTML = '';
+            const cyber = run.meta?.cybernetic_feedback || {};
+            const cyberLabels = {
+                highest_leverage: '1. Höchste Hebelwirkung auf Unternehmerwert',
+                tools_to_simplify: '2. Tools zu vereinfachen / entfernen',
+                user_path_dropout: '3. Häufigster Nutzerpfad-Abbruch',
+                surprising_insight: '4. Überraschendste Erkenntnis',
+                main_bottleneck: '5. Aktuell größter Engpass',
+                top_priorities: '6. Top 3 Prioritäten bis zum nächsten Audit'
+            };
+
+            let hasCyber = false;
+            Object.entries(cyberLabels).forEach(([key, label]) => {
+                const ans = cyber[key];
+                if (ans) {
+                    hasCyber = true;
+                    const item = document.createElement('div');
+                    item.className = 'p-3 rounded-xl bg-dark-surface border border-dark-border space-y-1';
+                    item.innerHTML = `
+                        <span class="text-[11px] font-bold text-slate-400 block">${escapeHtml(label)}</span>
+                        <p class="text-xs text-slate-200 whitespace-pre-wrap">${escapeHtml(ans)}</p>
+                    `;
+                    cyberContainer.appendChild(item);
+                }
+            });
+
+            if (!hasCyber) {
+                cyberContainer.innerHTML = '<p class="text-slate-400 text-xs italic col-span-2">Keine kybernetischen Reflexionseinträge vorhanden.</p>';
+            }
+
+            closeModal('arfModal');
+            openModal('amarDetailModal');
+        }
+
         const ALL_SYSTEM_MODALS = [
             'moduleModal', 'captureModal', 'auditModal', 'kpiModal',
             'reviewCreateModal', 'alfModal', 'amfModal', 'arfModal',
             'userModal', 'moduleCreateModal', 'profileModal',
             'auditDesignerModal', 'auditScheduleModal', 'toolDesignerModal',
-            'toolViewerModal', 'learningPromoteModal', 'learningSynthesizeModal'
+            'toolViewerModal', 'learningPromoteModal', 'learningSynthesizeModal',
+            'amarAuditModal', 'amarDetailModal'
         ];
 
         let highestModalZ = 50;

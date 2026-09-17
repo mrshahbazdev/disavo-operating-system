@@ -35,7 +35,11 @@ Route::middleware('auth')->group(function () {
         $observations = rescue(fn () => \App\Domains\Knowledge\Models\Observation::withoutGlobalScopes()->get(), collect());
         $reviews = rescue(fn () => \App\Domains\Review\Models\Review::withoutGlobalScopes()->with(['items.module', 'improvements'])->get(), collect());
         $auditTemplates = rescue(fn () => \App\Domains\Development\Models\AuditTemplate::withoutGlobalScopes()->with(['questions', 'module'])->get(), collect());
-        $auditRuns = rescue(fn () => \App\Domains\Development\Models\AuditRun::withoutGlobalScopes()->with(['module', 'template.questions', 'auditor', 'responses'])->orderByDesc('created_at')->get(), collect());
+        if ($tenant && !$auditTemplates->contains(fn ($t) => str_contains(strtolower($t->name), 'amar'))) {
+            rescue(fn () => app(\App\Domains\Development\Services\AmarTemplateService::class)->ensureAmarTemplate($tenant));
+            $auditTemplates = rescue(fn () => \App\Domains\Development\Models\AuditTemplate::withoutGlobalScopes()->with(['questions', 'module'])->get(), collect());
+        }
+        $auditRuns = rescue(fn () => \App\Domains\Development\Models\AuditRun::withoutGlobalScopes()->with(['module', 'template.questions', 'auditor', 'responses.question'])->orderByDesc('created_at')->get(), collect());
         $users = rescue(fn () => \App\Models\User::all(), collect());
         $edges = rescue(fn () => KnowledgeEdge::withoutGlobalScopes()->active()->get(), collect());
 
@@ -85,6 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::post('actions/user/create', [DashboardActionController::class, 'addUser'])->name('actions.user.create');
     Route::post('actions/module/create', [DashboardActionController::class, 'createModule'])->name('actions.module.create');
     Route::post('actions/audit-template/create', [DashboardActionController::class, 'createAuditTemplate'])->name('actions.audit-template.create');
+    Route::post('actions/audit-template/ensure-amar', [DashboardActionController::class, 'ensureAmar'])->name('actions.audit-template.ensure-amar');
     Route::post('actions/audit-run/schedule', [DashboardActionController::class, 'scheduleAuditRun'])->name('actions.audit-run.schedule');
     Route::post('actions/tool/create', [DashboardActionController::class, 'createTool'])->name('actions.tool.create');
     Route::post('actions/alf/synthesize', [DashboardActionController::class, 'synthesizeLearning'])->name('actions.alf.synthesize');

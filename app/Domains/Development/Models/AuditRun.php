@@ -27,20 +27,59 @@ class AuditRun extends DosModel implements KnowledgeNode
         'module_id',
         'audit_template_id',
         'title',
+        'version',
         'conducted_by',
         'due_date',
         'cadence',
         'status',
         'overall_score',
+        'user_paths_audited',
+        'tools_audited',
+        'previous_score',
+        'entrepreneur_test_passed',
+        'new_feature_ban',
         'notes',
+        'meta',
         'completed_at',
     ];
 
     protected $casts = [
-        'overall_score' => 'float',
-        'due_date'      => 'date',
-        'completed_at'  => 'datetime',
+        'overall_score'            => 'float',
+        'previous_score'           => 'float',
+        'due_date'                 => 'date',
+        'completed_at'             => 'datetime',
+        'entrepreneur_test_passed' => 'boolean',
+        'new_feature_ban'          => 'boolean',
+        'meta'                     => 'array',
+        'user_paths_audited'       => 'integer',
+        'tools_audited'            => 'integer',
     ];
+
+    public function isAmar(): bool
+    {
+        $name = strtolower($this->template?->name ?? $this->title ?? '');
+        return str_contains($name, 'amar') || str_contains($name, 'master audit');
+    }
+
+    public function getAreaScores(): array
+    {
+        return $this->meta['area_scores'] ?? [];
+    }
+
+    public function getInsightProtocols(): array
+    {
+        return $this->meta['insight_protocols'] ?? [];
+    }
+
+    public function getCyberneticFeedback(): array
+    {
+        return $this->meta['cybernetic_feedback'] ?? [];
+    }
+
+    public function hasFeatureBan(): bool
+    {
+        return (bool) $this->new_feature_ban;
+    }
 
     public function isScheduled(): bool
     {
@@ -60,6 +99,11 @@ class AuditRun extends DosModel implements KnowledgeNode
     public function getAuditorIdAttribute(): ?int
     {
         return $this->conducted_by;
+    }
+
+    public function getScoreAttribute(): ?float
+    {
+        return $this->overall_score;
     }
 
     public function nodeType(): NodeType

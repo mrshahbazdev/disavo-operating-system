@@ -11,6 +11,9 @@ class AuditQuestion extends Model
 {
     protected $fillable = [
         'audit_template_id',
+        'area',
+        'type',
+        'section_header',
         'question_text',
         'guidance',
         'weight',
@@ -23,6 +26,16 @@ class AuditQuestion extends Model
         'max_score' => 'integer',
         'order'     => 'integer',
     ];
+
+    public function isBinary(): bool
+    {
+        return $this->type === 'binary';
+    }
+
+    public function isRating(): bool
+    {
+        return $this->type === 'rating';
+    }
 
     public function template(): BelongsTo
     {

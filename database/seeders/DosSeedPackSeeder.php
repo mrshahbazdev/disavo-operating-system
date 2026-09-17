@@ -922,5 +922,9 @@ class DosSeedPackSeeder extends Seeder
             'due_date'       => now()->addDays(30)->toDateString(),
             'status'         => \App\Domains\Review\Models\Improvement::STATUS_PENDING,
         ]);
+
+        // Seed Canonical ALLOCORE MASTER AUDIT (AMAR) Template
+        app(\App\Domains\Development\Services\AmarTemplateService::class)
+            ->ensureAmarTemplate($tenant, $createdModules['unternehmensentwicklung'] ?? null);
     }
 }

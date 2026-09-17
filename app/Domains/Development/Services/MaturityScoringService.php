@@ -32,10 +32,13 @@ class MaturityScoringService
 
             $weight = max(1, (int) $question->weight);
             $maxScore = max(1, (int) $question->max_score);
-            $actualScore = min($maxScore, max(0, (int) $response->score));
 
-            // Normalized percentage (0.0 to 1.0) for this question
-            $percentage = $actualScore / $maxScore;
+            if ($question->isBinary()) {
+                $percentage = $response->binary_answer ? 1.0 : 0.0;
+            } else {
+                $actualScore = min($maxScore, max(0, (int) $response->score));
+                $percentage = $actualScore / $maxScore;
+            }
 
             $totalWeightedScore += ($percentage * $weight);
             $totalWeight += $weight;
@@ -46,6 +49,63 @@ class MaturityScoringService
         }
 
         return round(($totalWeightedScore / $totalWeight) * 100, 2);
+    }
+
+    /**
+     * Calculate individual area scores for multi-area audits like AMAR.
+     *
+     * @return array<string, array{score: float, total_questions: int, completed: int}>
+     */
+    public function calculateAreaScores(AuditRun $run): array
+    {
+        $responses = $run->responses()->with('question')->get();
+        $areaMap = [];
+
+        foreach ($responses as $response) {
+            $question = $response->question;
+            if (!$question || empty($question->area)) {
+                continue;
+            }
+
+            $area = $question->area;
+            if (!isset($areaMap[$area])) {
+                $areaMap[$area] = [
+                    'weighted_score'  => 0.0,
+                    'total_weight'    => 0,
+                    'total_questions' => 0,
+                    'completed'       => 0,
+                ];
+            }
+
+            $weight = max(1, (int) $question->weight);
+            $maxScore = max(1, (int) $question->max_score);
+
+            if ($question->isBinary()) {
+                $percentage = $response->binary_answer ? 1.0 : 0.0;
+            } else {
+                $actualScore = min($maxScore, max(0, (int) $response->score));
+                $percentage = $actualScore / $maxScore;
+            }
+
+            $areaMap[$area]['weighted_score'] += ($percentage * $weight);
+            $areaMap[$area]['total_weight'] += $weight;
+            $areaMap[$area]['total_questions']++;
+            $areaMap[$area]['completed']++;
+        }
+
+        $result = [];
+        foreach ($areaMap as $area => $data) {
+            $score = $data['total_weight'] > 0
+                ? round(($data['weighted_score'] / $data['total_weight']) * 100, 2)
+                : 0.0;
+            $result[$area] = [
+                'score'           => $score,
+                'total_questions' => $data['total_questions'],
+                'completed'       => $data['completed'],
+            ];
+        }
+
+        return $result;
     }
 
     /**

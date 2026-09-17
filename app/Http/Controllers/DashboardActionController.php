@@ -87,12 +87,23 @@ class DashboardActionController extends Controller
         ScoreAudit $scoreAction
     ): RedirectResponse {
         $validated = $request->validate([
-            'audit_run_id'      => 'nullable|exists:audit_runs,id',
-            'module_id'         => 'required|exists:modules,id',
-            'audit_template_id' => 'required|exists:audit_templates,id',
-            'responses'         => 'required|array',
-            'responses.*.score' => 'required|integer|min:1|max:5',
-            'responses.*.notes' => 'nullable|string',
+            'audit_run_id'               => 'nullable|exists:audit_runs,id',
+            'module_id'                  => 'required|exists:modules,id',
+            'audit_template_id'          => 'required|exists:audit_templates,id',
+            'version'                    => 'nullable|string|max:50',
+            'user_paths_audited'         => 'nullable|integer|min:0',
+            'tools_audited'              => 'nullable|integer|min:0',
+            'previous_score'             => 'nullable|numeric|min:0|max:100',
+            'entrepreneur_test_passed'   => 'nullable',
+            'new_feature_ban'            => 'nullable',
+            'responses'                  => 'required|array',
+            'responses.*.score'          => 'nullable|integer|min:0|max:5',
+            'responses.*.binary_answer'  => 'nullable',
+            'responses.*.status_symbol'  => 'nullable|string|max:50',
+            'responses.*.notes'          => 'nullable|string',
+            'insight_protocols'          => 'nullable|array',
+            'cybernetic_feedback'        => 'nullable|array',
+            'quotas'                     => 'nullable|array',
         ]);
 
         $user = $request->user();
@@ -109,11 +120,49 @@ class DashboardActionController extends Controller
             $run = $runAction->handle($module, $template, $user);
         }
 
-        $scoredRun = $scoreAction->handle($run, $validated['responses']);
+        // Cybernetic gate check:
+        // "Is Allocore more valuable to an entrepreneur today than it was before the last audit? YES / NO"
+        // If answered NO, trigger New Feature Ban!
+        $cyberFeedback = $validated['cybernetic_feedback'] ?? [];
+        $moreValuable = $cyberFeedback['more_valuable_today'] ?? null;
+        $featureBanTriggered = false;
+
+        if ($moreValuable !== null) {
+            $val = is_string($moreValuable) ? strtolower(trim($moreValuable)) : $moreValuable;
+            if ($val === 'no' || $val === 'nein' || $val === false || $val === '0' || $val === 0) {
+                $featureBanTriggered = true;
+            }
+        }
+
+        $newFeatureBan = !empty($validated['new_feature_ban']) || $featureBanTriggered;
+
+        $extraMeta = [
+            'version'                  => $validated['version'] ?? '1.0',
+            'user_paths_audited'       => isset($validated['user_paths_audited']) ? (int) $validated['user_paths_audited'] : 1,
+            'tools_audited'            => isset($validated['tools_audited']) ? (int) $validated['tools_audited'] : 0,
+            'previous_score'           => isset($validated['previous_score']) && $validated['previous_score'] !== '' ? (float) $validated['previous_score'] : null,
+            'entrepreneur_test_passed' => !empty($validated['entrepreneur_test_passed']),
+            'new_feature_ban'          => $newFeatureBan,
+            'insight_protocols'        => $validated['insight_protocols'] ?? [],
+            'cybernetic_feedback'      => $cyberFeedback,
+            'quotas'                   => $validated['quotas'] ?? [],
+        ];
+
+        $scoredRun = $scoreAction->handle($run, $validated['responses'], $extraMeta);
+
+        if ($newFeatureBan) {
+            return redirect()->route('dashboard')->with(
+                'error',
+                "⚠️ Audit '{$template->name}' abgeschlossen ({$scoredRun->overall_score}%). DA DAS SYSTEM NICHT NACHWEISBAR WERTVOLLER GEWORDEN IST, WURDE DER 'NEW FEATURE BAN' AKTIVIERT! Fokus muss auf Mängelbeseitigung liegen."
+            );
+        }
+
+        $isAmar = str_contains(strtolower($template->name), 'amar') || str_contains(strtolower($template->name), 'master audit');
+        $label = $isAmar ? 'ALLOCORE MASTER AUDIT (AMAR)' : "Audit '{$template->name}'";
 
         return redirect()->route('dashboard')->with(
             'success',
-            "✓ Audit '{$template->name}' für {$module->name} erfolgreich durchgeführt! Reifegrad auf {$scoredRun->overall_score}% aktualisiert."
+            "✓ {$label} erfolgreich abgeschlossen! Allocore Value Score: {$scoredRun->overall_score}%."
         );
     }
 
@@ -722,6 +771,22 @@ class DashboardActionController extends Controller
         return redirect()->route('dashboard')->with(
             'success',
             "✓ Grundsatz '{$principle->title}' erfolgreich als verbindliches Prinzip institutionalisiert{$modMsg}!"
+        );
+    }
+
+    /**
+     * 13. Ensure Canonical AMAR Template: Instantiates or updates the 10-Area Allocore Master Audit.
+     */
+    public function ensureAmar(
+        Request $request,
+        \App\Domains\Development\Services\AmarTemplateService $service
+    ): RedirectResponse {
+        $tenant = TenantContext::getTenant() ?? Tenant::first();
+        $template = $service->ensureAmarTemplate($tenant);
+
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ Master-Vorlage '{$template->name}' mit {$template->questions->count()} Fragen über alle 10 Allocore-Bereiche bereitgestellt!"
         );
     }
 }
