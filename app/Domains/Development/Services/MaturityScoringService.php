@@ -70,6 +70,7 @@ class MaturityScoringService
 
         $latestGoal = $module->goals()
             ->orderByDesc('version')
+            ->orderByDesc('id')
             ->first();
 
         $currentScore = $latestAudit?->overall_score ? (float) $latestAudit->overall_score : 0.0;

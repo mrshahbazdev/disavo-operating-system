@@ -172,11 +172,37 @@
                     </p>
                 </div>
 
-                <!-- Executive Quick Action Buttons -->
+                <!-- Executive Framework & Action Buttons -->
                 <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+                    <!-- Core 3 Framework Hubs -->
+                    <button 
+                        onclick="openAmfModal()"
+                        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-md shadow-blue-600/30 transition flex items-center space-x-1.5 border border-blue-400/30"
+                    >
+                        <span>🛠️</span>
+                        <span>AMF Tool-Studio</span>
+                    </button>
+
+                    <button 
+                        onclick="openArfModal()"
+                        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md shadow-emerald-600/30 transition flex items-center space-x-1.5 border border-emerald-400/30"
+                    >
+                        <span>🎯</span>
+                        <span>ARF Audit-Center</span>
+                    </button>
+
+                    <button 
+                        onclick="openAlfModal()"
+                        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-xs shadow-md shadow-purple-600/30 transition flex items-center space-x-1.5 border border-purple-400/30"
+                    >
+                        <span>🧠</span>
+                        <span>ALF Prinzipienschmiede</span>
+                    </button>
+
+                    <!-- Fast Actions -->
                     <button 
                         onclick="openCaptureModal()"
-                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/20 hover:shadow-blue-500/30 transition flex items-center justify-center space-x-2"
+                        class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition flex items-center space-x-1.5"
                     >
                         <span>⚡</span>
                         <span>Quick Capture</span>
@@ -184,39 +210,23 @@
 
                     <button 
                         onclick="openAuditModal()"
-                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 hover:shadow-emerald-500/30 transition flex items-center justify-center space-x-2"
+                        class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition flex items-center space-x-1.5"
                     >
                         <span>📋</span>
-                        <span>Conduct Audit</span>
-                    </button>
-
-                    <button 
-                        onclick="openKpiModal()"
-                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-600/20 hover:shadow-purple-500/30 transition flex items-center justify-center space-x-2"
-                    >
-                        <span>📈</span>
-                        <span>Record KPI</span>
+                        <span>Audit starten</span>
                     </button>
 
                     <button 
                         onclick="openReviewCreateModal()"
-                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-dark-hover hover:bg-slate-700 text-slate-200 border border-dark-border font-bold text-xs transition flex items-center justify-center space-x-2"
+                        class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition flex items-center space-x-1.5"
                     >
                         <span>🔄</span>
-                        <span>New Review</span>
-                    </button>
-
-                    <button 
-                        onclick="openUserModal()"
-                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/20 hover:shadow-indigo-500/30 transition flex items-center justify-center space-x-2"
-                    >
-                        <span>👥</span>
-                        <span>Add Team Member</span>
+                        <span>Review ansetzen</span>
                     </button>
 
                     <button 
                         onclick="openModuleCreateModal()"
-                        class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/20 hover:shadow-blue-500/30 transition flex items-center justify-center space-x-2"
+                        class="px-3.5 py-2.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 font-bold text-xs transition flex items-center space-x-1.5"
                     >
                         <span>🧩</span>
                         <span>Modul entwickeln</span>
@@ -585,7 +595,10 @@
 
                 <!-- Operational Tools -->
                 <div>
-                    <h4 class="text-xs font-mono uppercase text-amber-400 font-bold mb-2">4. Operational Tools &amp; Standard Operating Procedures</h4>
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-xs font-mono uppercase text-amber-400 font-bold">4. Operational Tools &amp; Standard Operating Procedures</h4>
+                        <button id="mModalAddToolBtn" class="text-xs font-bold text-amber-400 hover:underline">+ Neues Werkzeug entwerfen</button>
+                    </div>
                     <div id="mModalTools" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                 </div>
 
@@ -667,6 +680,7 @@
                 @csrf
                 <input type="hidden" name="module_id" id="auditFormModuleId" value="">
                 <input type="hidden" name="audit_template_id" id="auditFormTemplateId" value="">
+                <input type="hidden" name="audit_run_id" id="auditFormRunId" value="">
 
                 <div class="p-6 overflow-y-auto space-y-5">
                     <div>
@@ -859,38 +873,185 @@
         </div>
     </div>
 
-    <!-- 6. ALF INSPECTION MODAL -->
+    <!-- 6. ALF INSPECTION MODAL (Prinzipienschmiede & Lernrahmen) -->
     <div id="alfModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-purple-400 uppercase">Framework-Detailansicht</span>
-                    <h2 class="text-2xl font-bold text-white mt-1">ALF — Allgemeiner Lernrahmen</h2>
-                    <p class="text-xs text-slate-300 mt-1">Kognitive Nachvollziehbarkeit: Beobachtungen &rarr; Erkenntnisse &rarr; Learnings &rarr; Prinzipien</p>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase">ALF Prinzipienschmiede</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-purple-400 font-semibold">Kognitive Pipeline</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mt-1">🧠 ALF — Allgemeiner Lernrahmen</h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Der 4-Stufen-Weg vom Alltagsproblem zur verbindlichen Unternehmensregel: 
+                        <strong class="text-white">Beobachtung &rarr; Erkenntnis (Learning) &rarr; Validierung &rarr; Prinzip (Principle)</strong>
+                    </p>
                 </div>
-                <button onclick="closeModal('alfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+                <div class="flex items-center space-x-2">
+                    <button onclick="closeModal('alfModal'); openCaptureModal();" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center space-x-1">
+                        <span>⚡</span>
+                        <span>Beobachtung erfassen</span>
+                    </button>
+                    <button onclick="closeModal('alfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+                </div>
             </div>
 
-            <div class="p-6 overflow-y-auto space-y-6 text-sm">
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <h4 class="text-xs font-mono uppercase text-purple-400 font-bold">Aktive Prinzipien ({{ $principlesCount }})</h4>
-                        <button onclick="closeModal('alfModal'); openCaptureModal();" class="text-xs font-bold text-purple-400 hover:underline">+ Neue Beobachtung</button>
+            <!-- Pipeline Tabs / Navigation -->
+            <div class="px-6 pt-3 bg-dark-card/60 border-b border-dark-border flex space-x-4 text-xs font-semibold overflow-x-auto">
+                <button onclick="switchAlfTab('principles')" id="alfTabBtnPrinciples" class="pb-3 border-b-2 border-purple-500 text-purple-400 font-bold transition flex items-center space-x-1.5">
+                    <span>👑</span>
+                    <span>Aktive Prinzipien ({{ $principlesCount }})</span>
+                </button>
+                <button onclick="switchAlfTab('learnings')" id="alfTabBtnLearnings" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5">
+                    <span>💡</span>
+                    <span>Erkenntnisse (Learnings: {{ $learnings->count() }})</span>
+                </button>
+                <button onclick="switchAlfTab('observations')" id="alfTabBtnObservations" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5">
+                    <span>👁️</span>
+                    <span>Beobachtungs-Pool (Observations: {{ $observations->count() }})</span>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 text-sm flex-1">
+                <!-- 1. PRINCIPLES VIEW -->
+                <div id="alfSectionPrinciples" class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-purple-400 font-bold">Verbindliche Handlungsregeln ({{ $principlesCount }})</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Von Stewards ratifizierte Grundsätze, die operative Module und Entscheidungen steuern.</p>
+                        </div>
                     </div>
                     <div class="space-y-3">
                         @forelse ($principles as $principle)
-                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border">
-                                <div class="flex items-center justify-between">
-                                    <h5 class="font-bold text-white text-sm">{{ $principle->title }}</h5>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold">v{{ $principle->version }} • {{ $principle->state }}</span>
+                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border hover:border-purple-500/40 transition">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <h5 class="font-bold text-white text-base flex items-center space-x-2">
+                                            <span>⚖️</span>
+                                            <span>{{ $principle->title }}</span>
+                                        </h5>
+                                        <div class="mt-1 flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-400">
+                                            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold">v{{ $principle->version }} • {{ $principle->state }}</span>
+                                            @if ($principle->created_at)
+                                                <span>• Erfasst: {{ $principle->created_at->format('d.m.Y') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="text-xs text-slate-200 mt-2 italic">&ldquo;{{ $principle->statement }}&rdquo;</p>
+                                <div class="p-3 rounded-lg bg-dark-surface border border-dark-border/60 mt-3 text-xs text-slate-200 italic leading-relaxed">
+                                    &ldquo;{{ $principle->statement }}&rdquo;
+                                </div>
                                 @if ($principle->rationale)
-                                    <p class="text-xs text-slate-400 mt-1 font-sans">Rationale: {{ $principle->rationale }}</p>
+                                    <p class="text-xs text-slate-400 mt-2 pl-1"><strong class="text-slate-300">Rationale:</strong> {{ $principle->rationale }}</p>
                                 @endif
                             </div>
                         @empty
-                            <p class="text-xs text-slate-500">Keine Prinzipien erfasst.</p>
+                            <div class="p-8 rounded-xl bg-dark-card border border-dark-border text-center text-slate-400 text-xs">
+                                <p class="text-base font-bold text-slate-300">Noch keine Prinzipien erfasst.</p>
+                                <p class="mt-1">Nutzen Sie den Beobachtungs-Pool oder validierte Learnings, um die ersten Unternehmensgrundsätze zu schmieden.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- 2. LEARNINGS VIEW -->
+                <div id="alfSectionLearnings" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-amber-400 font-bold">Verdichtete Erkenntnisse (Learnings: {{ $learnings->count() }})</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Erfahrungen aus Audits, Reviews und Alltag. Validieren und zum Prinzip erheben:</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        @forelse ($learnings as $learning)
+                            @php
+                                $stateStr = is_object($learning->state) ? $learning->state->name() : (string) $learning->state;
+                                $isValidated = str_contains(strtolower($stateStr), 'validated');
+                                $isDraft = str_contains(strtolower($stateStr), 'draft');
+                                $isPromoted = str_contains(strtolower($stateStr), 'promoted');
+                            @endphp
+                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border space-y-3">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase {{ $isPromoted ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : ($isValidated ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30') }}">
+                                                {{ $stateStr }}
+                                            </span>
+                                            <h5 class="font-bold text-white text-sm">{{ $learning->title }}</h5>
+                                        </div>
+                                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">{{ $learning->summary }}</p>
+                                        @if ($learning->rationale)
+                                            <p class="text-[11px] text-slate-400 mt-1 italic pl-1">Rationale: {{ $learning->rationale }}</p>
+                                        @endif
+                                    </div>
+                                    <div class="flex flex-col gap-2 shrink-0">
+                                        @if ($isDraft)
+                                            <form method="POST" action="{{ route('actions.alf.validate') }}">
+                                                @csrf
+                                                <input type="hidden" name="learning_id" value="{{ $learning->id }}">
+                                                <button type="submit" class="w-full px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm whitespace-nowrap">
+                                                    ✓ Validieren
+                                                </button>
+                                            </form>
+                                        @endif
+                                        @if (!$isPromoted)
+                                            <button 
+                                                onclick="openPromoteLearningModal({{ $learning->id }}, '{{ addslashes($learning->title) }}', '{{ addslashes($learning->summary) }}')"
+                                                class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition shadow-sm whitespace-nowrap"
+                                            >
+                                                👑 Zum Prinzip erheben
+                                            </button>
+                                        @else
+                                            <span class="text-[11px] font-mono text-purple-400 font-bold px-2 py-1 text-center">✓ Prinzip aktiv</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-8 rounded-xl bg-dark-card border border-dark-border text-center text-slate-400 text-xs">
+                                <p class="text-base font-bold text-slate-300">Noch keine Learnings erfasst.</p>
+                                <p class="mt-1">Verdichten Sie Beobachtungen aus dem Beobachtungs-Pool oder schließen Sie Reviews ab, um automatisch Learnings zu generieren.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- 3. OBSERVATIONS VIEW -->
+                <div id="alfSectionObservations" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-blue-400 font-bold">Beobachtungs-Pool (Observations: {{ $observations->count() }})</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Reale Vorkommnisse und Erkenntnis-Quellen. Verdichten Sie ein Vorkommnis zum Learning:</p>
+                        </div>
+                        <button onclick="closeModal('alfModal'); openCaptureModal();" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition">
+                            + Neue Beobachtung
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        @forelse ($observations as $obs)
+                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                <div class="space-y-1">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-blue-400 font-bold">👁️</span>
+                                        <h5 class="font-bold text-white text-sm">{{ $obs->title }}</h5>
+                                        <span class="text-[11px] text-slate-500 font-mono">{{ $obs->created_at?->format('d.m.Y H:i') }}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed">{{ $obs->content }}</p>
+                                </div>
+                                <button 
+                                    onclick="openSynthesizeLearningModal({{ $obs->id }}, '{{ addslashes($obs->title) }}', '{{ addslashes($obs->content) }}')"
+                                    class="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition whitespace-nowrap shrink-0"
+                                >
+                                    💡 Zu Erkenntnis verdichten
+                                </button>
+                            </div>
+                        @empty
+                            <div class="p-8 rounded-xl bg-dark-card border border-dark-border text-center text-slate-400 text-xs">
+                                <p class="text-base font-bold text-slate-300">Keine Beobachtungen vorhanden.</p>
+                                <p class="mt-1">Erfassen Sie reale Praxiserfahrungen mit dem Schnell-Erfassen-Button.</p>
+                            </div>
                         @endforelse
                     </div>
                 </div>
@@ -922,18 +1083,38 @@
                 </div>
                 <div class="flex items-center space-x-2">
                     <button 
+                        onclick="openToolDesignerModal()" 
+                        class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition shadow-sm flex items-center space-x-1.5"
+                    >
+                        <span>🛠️</span>
+                        <span>Neues Werkzeug</span>
+                    </button>
+                    <button 
                         onclick="closeModal('amfModal'); openModuleCreateModal();" 
-                        class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center space-x-1.5"
+                        class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center space-x-1.5"
                     >
                         <span>+</span>
-                        <span>Neues Modul entwickeln</span>
+                        <span>Neues Modul</span>
                     </button>
                     <button onclick="closeModal('amfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
                 </div>
             </div>
 
+            <!-- AMF Navigation Tabs -->
+            <div class="px-6 pt-3 bg-dark-card/60 border-b border-dark-border flex space-x-4 text-xs font-semibold overflow-x-auto">
+                <button onclick="switchAmfTab('blueprint')" id="amfTabBtnBlueprint" class="pb-3 border-b-2 border-blue-500 text-blue-400 font-bold transition flex items-center space-x-1.5">
+                    <span>🏭</span>
+                    <span>Standard-Blaupause (9 Bausteine)</span>
+                </button>
+                <button onclick="switchAmfTab('studio')" id="amfTabBtnStudio" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5">
+                    <span>🛠️</span>
+                    <span>Werkzeug-Studio ({{ $modules->pluck('tools')->flatten()->count() }} Tools)</span>
+                </button>
+            </div>
+
             <!-- Modal Body (Scrollable) -->
-            <div class="p-6 overflow-y-auto space-y-6 text-sm">
+            <div class="p-6 overflow-y-auto space-y-6 text-sm flex-1">
+                <div id="amfSectionBlueprint" class="space-y-6">
 
                 <!-- AMF Purpose & Meta-Factory Banner -->
                 <div class="p-5 rounded-2xl bg-[#0d1527] border border-blue-500/40 space-y-3">
@@ -1322,6 +1503,63 @@
                         @endforeach
                     </div>
                 </div>
+                </div>
+
+                <!-- AMF TOOL-STUDIO TAB -->
+                <div id="amfSectionStudio" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-amber-400 font-bold">Operative Werkzeuge &amp; Standard Operating Procedures</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Praxisnahe Hilfsmittel (Checklisten, SOPs, Vorlagen, KI-Prompts) geordnet nach Entwicklungsmodulen:</p>
+                        </div>
+                        <button onclick="openToolDesignerModal()" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition">
+                            + Neues Werkzeug entwerfen
+                        </button>
+                    </div>
+
+                    @php
+                        $allTools = $modules->pluck('tools')->flatten();
+                    @endphp
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        @forelse ($allTools as $tool)
+                            @php
+                                $toolMod = $modules->firstWhere('id', $tool->module_id);
+                            @endphp
+                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border hover:border-amber-500/40 transition flex flex-col justify-between space-y-3">
+                                <div>
+                                    <div class="flex items-center justify-between gap-2 mb-1.5">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold truncate">
+                                            {{ $toolMod ? $toolMod->name : 'Modul' }}
+                                        </span>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                            {{ $tool->type }}
+                                        </span>
+                                    </div>
+                                    <h5 class="font-bold text-white text-sm">{{ $tool->name }}</h5>
+                                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">{{ $tool->description }}</p>
+                                </div>
+                                <div class="pt-2 border-t border-dark-border/60 flex justify-end">
+                                    <button 
+                                        onclick="closeModal('amfModal'); openToolViewer({{ $tool->id }})"
+                                        class="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center space-x-1.5"
+                                    >
+                                        <span>⚡</span>
+                                        <span>Öffnen / Ausführen &rarr;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-2 p-8 rounded-xl bg-dark-card border border-dark-border text-center text-slate-400 text-xs">
+                                <p class="text-base font-bold text-slate-300">Noch keine Werkzeuge erfasst.</p>
+                                <p class="mt-1">Entwerfen Sie operative Checklisten, SOPs oder Prompts für Ihre Module.</p>
+                                <button onclick="openToolDesignerModal()" class="mt-3 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition shadow-sm inline-block">
+                                    + Jetzt Werkzeug anlegen
+                                </button>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
             </div>
 
             <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end">
@@ -1330,99 +1568,285 @@
         </div>
     </div>
 
-    <!-- 8. ARF INSPECTION MODAL (Reviews & Automated Loop Closure) -->
+    <!-- 8. ARF INSPECTION MODAL (Audit-Center & Reviews) -->
     <div id="arfModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
             <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
                 <div>
-                    <span class="text-xs font-mono font-bold text-emerald-400 uppercase">Framework-Detailansicht</span>
-                    <h2 class="text-2xl font-bold text-white mt-1">ARF — Allocore Review Framework</h2>
-                    <p class="text-xs text-slate-300 mt-1">Strategische Review-Zyklen &amp; automatisierte Regelkreis-Schließung (Review &rarr; Learning)</p>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase">ARF Audit-Center &amp; Reviews</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-emerald-400 font-semibold">Kontinuierliche Verbesserung</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mt-1">🎯 ARF — Allocore Review Framework</h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Spezielle Audits entwerfen, terminieren, zuweisen und Reifegrade systematisch monitoren.
+                    </p>
                 </div>
-                <button onclick="closeModal('arfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+                <div class="flex items-center space-x-2">
+                    <button onclick="openAuditScheduleModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm flex items-center space-x-1">
+                        <span>📅</span>
+                        <span>Audit ansetzen</span>
+                    </button>
+                    <button onclick="openAuditDesignerModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition flex items-center space-x-1">
+                        <span>🛠️</span>
+                        <span>Audit entwerfen</span>
+                    </button>
+                    <button onclick="closeModal('arfModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+                </div>
             </div>
 
-            <div class="p-6 overflow-y-auto space-y-6 text-sm">
-                <!-- Loop Closure Explanation Banner -->
-                <div class="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40">
-                    <h4 class="text-xs font-mono font-bold text-emerald-400 uppercase mb-1">Automatisierte Regelkreis-Schließung:</h4>
-                    <p class="text-xs text-slate-200 mt-1">
-                        Sobald ein Review als <strong class="text-white font-bold">Closed</strong> markiert wird, führt DOS <code class="font-mono text-emerald-300">CloseReview</code> &rarr; <code class="font-mono text-emerald-300">SpawnLearningFromReview</code> aus.
-                    </p>
-                    <p class="text-xs text-slate-400 mt-1">
-                        Dies erzeugt automatisch eine neue Entwurfs-Erkenntnis (<code class="text-slate-200">Draft Learning</code>) in ALF, verknüpft über die Kante <code class="font-mono text-emerald-300">Review -(generates)-&gt; Learning</code>.
-                    </p>
-                </div>
+            <!-- ARF Navigation Tabs -->
+            <div class="px-6 pt-3 bg-dark-card/60 border-b border-dark-border flex space-x-4 text-xs font-semibold overflow-x-auto">
+                <button onclick="switchArfTab('scheduled')" id="arfTabBtnScheduled" class="pb-3 border-b-2 border-emerald-500 text-emerald-400 font-bold transition flex items-center space-x-1.5">
+                    <span>📅</span>
+                    <span>Geplante Audits ({{ $auditRuns->where('status', 'scheduled')->count() }})</span>
+                </button>
+                <button onclick="switchArfTab('history')" id="arfTabBtnHistory" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5">
+                    <span>📈</span>
+                    <span>Reifegrad-Historie ({{ $auditRuns->where('status', 'completed')->count() }})</span>
+                </button>
+                <button onclick="switchArfTab('reviews')" id="arfTabBtnReviews" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5">
+                    <span>🔄</span>
+                    <span>Strategische Reviews ({{ $reviews->count() }})</span>
+                </button>
+            </div>
 
-                <!-- Reviews List -->
-                <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <h4 class="text-xs font-mono uppercase text-slate-300 font-bold">Erfasste strategische Reviews ({{ $reviews->count() }})</h4>
-                        <button onclick="closeModal('arfModal'); openReviewCreateModal();" class="text-xs font-bold text-emerald-400 hover:underline">+ Neues Review ansetzen</button>
+            <div class="p-6 overflow-y-auto space-y-6 text-sm flex-1">
+                <!-- TAB 1: SCHEDULED AUDITS -->
+                <div id="arfSectionScheduled" class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-emerald-400 font-bold">Geplante &amp; Wiederkehrende Reifegrad-Prüfungen</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Zugewiesene Audits mit Fristen und Rhythmus zur kontinuierlichen Selbstkontrolle:</p>
+                        </div>
+                        <button onclick="openAuditScheduleModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+                            + Audit planen
+                        </button>
                     </div>
 
                     <div class="space-y-3">
-                        @forelse ($reviews as $review)
-                            <div class="p-5 rounded-xl bg-dark-card border border-dark-border">
-                                <div class="flex items-start justify-between">
+                        @php
+                            $scheduledRuns = $auditRuns->where('status', 'scheduled');
+                        @endphp
+                        @forelse ($scheduledRuns as $run)
+                            @php
+                                $isOverdue = $run->due_date && $run->due_date->isPast();
+                            @endphp
+                            <div class="p-4 rounded-xl bg-dark-card border {{ $isOverdue ? 'border-rose-500/50' : 'border-dark-border' }} hover:border-emerald-500/40 transition space-y-3">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                     <div>
-                                        <h5 class="font-bold text-white text-base">{{ $review->title }}</h5>
-                                        <span class="text-xs text-slate-400 font-mono">Periode: {{ $review->period }} • Datum: {{ $review->review_date?->format('d.m.Y') }}</span>
-                                    </div>
-                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase {{ $review->status === 'closed' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30' }}">
-                                        {{ $review->status }}
-                                    </span>
-                                </div>
-                                <p class="text-xs text-slate-200 mt-2">{{ $review->summary }}</p>
-
-                                @if ($review->items && $review->items->isNotEmpty())
-                                    <div class="mt-3 pt-3 border-t border-dark-border/60">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-[11px] font-mono text-amber-400 font-bold uppercase">Zugeordnete Audit-Fragen &amp; Untersuchungsschwerpunkte ({{ $review->items->count() }}):</span>
+                                        <div class="flex items-center space-x-2">
+                                            @if ($isOverdue)
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                                                    ⚠️ Überfällig
+                                                </span>
+                                            @else
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                                    Geplant
+                                                </span>
+                                            @endif
+                                            <h5 class="font-bold text-white text-base">{{ $run->title ?: ($run->template ? $run->template->name : 'Reifegrad-Audit') }}</h5>
                                         </div>
-                                        <div class="space-y-1.5">
-                                            @foreach ($review->items as $item)
-                                                <div class="p-2.5 rounded-lg bg-dark-surface/80 border border-dark-border/80 flex items-start justify-between gap-2 text-xs">
-                                                    <div class="space-y-0.5">
-                                                        <div class="flex items-center space-x-2">
-                                                            @if ($item->module)
-                                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
-                                                                    {{ $item->module->name }}
-                                                                </span>
-                                                            @else
-                                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-700 text-slate-300 font-semibold">
-                                                                    Übergreifend
-                                                                </span>
-                                                            @endif
-                                                            <span class="text-white font-medium">{{ $item->topic }}</span>
-                                                        </div>
-                                                        @if ($item->notes)
-                                                            <p class="text-[11px] text-slate-400 italic pl-1">{{ $item->notes }}</p>
-                                                        @endif
-                                                    </div>
-                                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">
-                                                        {{ $item->status }}
+                                        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-1.5 font-mono">
+                                            @if ($run->module)
+                                                <span class="text-blue-400 font-semibold">Modul: {{ $run->module->name }}</span>
+                                                <span>•</span>
+                                            @endif
+                                            @if ($run->auditor)
+                                                <span class="text-purple-300">Prüfer: {{ $run->auditor->name }}</span>
+                                                <span>•</span>
+                                            @endif
+                                            @if ($run->cadence)
+                                                <span class="text-amber-400">Rhythmus: {{ ucfirst($run->cadence) }}</span>
+                                                <span>•</span>
+                                            @endif
+                                            @if ($run->due_date)
+                                                <span class="{{ $isOverdue ? 'text-rose-400 font-bold' : 'text-slate-300' }}">
+                                                    Fällig: {{ $run->due_date->format('d.m.Y') }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        @if ($run->notes)
+                                            <p class="text-xs text-slate-300 mt-2 italic bg-dark-surface/60 p-2 rounded-lg border border-dark-border/60">
+                                                Hinweise: {{ $run->notes }}
+                                            </p>
+                                        @endif
+                                    </div>
+                                    <div class="shrink-0">
+                                        <button 
+                                            onclick="startScheduledAudit({{ $run->id }}, {{ $run->module_id }}, {{ $run->audit_template_id }})"
+                                            class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 whitespace-nowrap flex items-center space-x-1.5"
+                                        >
+                                            <span>📋</span>
+                                            <span>Audit jetzt durchführen &rarr;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-8 rounded-xl bg-dark-card border border-dark-border text-center text-slate-400 text-xs">
+                                <p class="text-base font-bold text-slate-300">Keine anstehenden Audits terminiert.</p>
+                                <p class="mt-1">Setzen Sie Ihr erstes Audit an, um Selbstkontrollen automatisiert zu überwachen.</p>
+                                <button onclick="openAuditScheduleModal()" class="mt-3 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm inline-block">
+                                    + Jetzt Audit ansetzen
+                                </button>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- TAB 2: AUDIT HISTORY & CONTINUOUS IMPROVEMENT -->
+                <div id="arfSectionHistory" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-mono uppercase text-blue-400 font-bold">Reifegrad-Historie &amp; Kontinuierliche Selbstkontrolle</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Ergebnisse abgeschlossener Audits mit automatischer Reifegrad-Messung:</p>
+                        </div>
+                        <button onclick="openAuditDesignerModal()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition">
+                            + Spezial-Audit entwerfen
+                        </button>
+                    </div>
+
+                    <div class="space-y-3">
+                        @php
+                            $completedRuns = $auditRuns->where('status', 'completed');
+                        @endphp
+                        @forelse ($completedRuns as $cRun)
+                            @php
+                                $score = $cRun->overall_score ?? 0;
+                                $scoreColor = $score >= 80 ? 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' : ($score >= 60 ? 'text-amber-400 border-amber-500/40 bg-amber-500/10' : 'text-rose-400 border-rose-500/40 bg-rose-500/10');
+                            @endphp
+                            <div class="p-4 rounded-xl bg-dark-card border border-dark-border space-y-3">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold border {{ $scoreColor }}">
+                                                {{ $score }}% Reifegrad
+                                            </span>
+                                            <h5 class="font-bold text-white text-base">{{ $cRun->title ?: ($cRun->template ? $cRun->template->name : 'Reifegrad-Audit') }}</h5>
+                                        </div>
+                                        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-1.5 font-mono">
+                                            @if ($cRun->module)
+                                                <span class="text-blue-400 font-semibold">Modul: {{ $cRun->module->name }}</span>
+                                                <span>•</span>
+                                            @endif
+                                            @if ($cRun->auditor)
+                                                <span class="text-purple-300">Auditor: {{ $cRun->auditor->name }}</span>
+                                                <span>•</span>
+                                            @endif
+                                            <span>Abgeschlossen: {{ $cRun->completed_at ? $cRun->completed_at->format('d.m.Y H:i') : $cRun->created_at?->format('d.m.Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if ($cRun->responses && $cRun->responses->isNotEmpty())
+                                    <div class="pt-2 border-t border-dark-border/60">
+                                        <span class="text-[11px] font-mono text-slate-400 font-bold uppercase block mb-1.5">Beantwortete Fragen ({{ $cRun->responses->count() }}):</span>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                            @foreach ($cRun->responses as $resp)
+                                                <div class="p-2 rounded-lg bg-dark-surface border border-dark-border/80 flex items-center justify-between">
+                                                    <span class="text-slate-300 truncate mr-2">{{ $resp->question ? $resp->question->question_text : 'Frage' }}</span>
+                                                    <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-slate-800 text-emerald-400 shrink-0">
+                                                        {{ $resp->score }}/5
                                                     </span>
                                                 </div>
                                             @endforeach
                                         </div>
                                     </div>
                                 @endif
-
-                                @if ($review->status !== 'closed')
-                                    <div class="mt-4 pt-3 border-t border-dark-border flex justify-end">
-                                        <form method="POST" action="{{ route('actions.review.close', $review->id) }}" onsubmit="const btn = this.querySelector('button[type=submit]'); if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Wird abgeschlossen...'; }">
-                                            @csrf
-                                            <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                                                ✓ Review abschließen &amp; Regelkreis auslösen
-                                            </button>
-                                        </form>
-                                    </div>
-                                @endif
                             </div>
                         @empty
-                            <p class="text-xs text-slate-500">Keine Reviews erfasst.</p>
+                            <div class="p-8 rounded-xl bg-dark-card border border-dark-border text-center text-slate-400 text-xs">
+                                <p class="text-base font-bold text-slate-300">Noch keine abgeschlossenen Audits.</p>
+                                <p class="mt-1">Führen Sie Audits durch, um Reifegrade und Verbesserungstrends festzuhalten.</p>
+                            </div>
                         @endforelse
+                    </div>
+                </div>
+
+                <!-- TAB 3: STRATEGIC REVIEWS -->
+                <div id="arfSectionReviews" class="space-y-4 hidden">
+                    <!-- Loop Closure Explanation Banner -->
+                    <div class="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40">
+                        <h4 class="text-xs font-mono font-bold text-emerald-400 uppercase mb-1">Automatisierte Regelkreis-Schließung:</h4>
+                        <p class="text-xs text-slate-200 mt-1">
+                            Sobald ein Review als <strong class="text-white font-bold">Closed</strong> markiert wird, führt DOS <code class="font-mono text-emerald-300">CloseReview</code> &rarr; <code class="font-mono text-emerald-300">SpawnLearningFromReview</code> aus.
+                        </p>
+                        <p class="text-xs text-slate-400 mt-1">
+                            Dies erzeugt automatisch eine neue Entwurfs-Erkenntnis (<code class="text-slate-200">Draft Learning</code>) in ALF, verknüpft über die Kante <code class="font-mono text-emerald-300">Review -(generates)-&gt; Learning</code>.
+                        </p>
+                    </div>
+
+                    <!-- Reviews List -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-xs font-mono uppercase text-slate-300 font-bold">Erfasste strategische Reviews ({{ $reviews->count() }})</h4>
+                            <button onclick="closeModal('arfModal'); openReviewCreateModal();" class="text-xs font-bold text-emerald-400 hover:underline">+ Neues Review ansetzen</button>
+                        </div>
+
+                        <div class="space-y-3">
+                            @forelse ($reviews as $review)
+                                <div class="p-5 rounded-xl bg-dark-card border border-dark-border">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <h5 class="font-bold text-white text-base">{{ $review->title }}</h5>
+                                            <span class="text-xs text-slate-400 font-mono">Periode: {{ $review->period }} • Datum: {{ $review->review_date?->format('d.m.Y') }}</span>
+                                        </div>
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase {{ $review->status === 'closed' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30' }}">
+                                            {{ $review->status }}
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-slate-200 mt-2">{{ $review->summary }}</p>
+
+                                    @if ($review->items && $review->items->isNotEmpty())
+                                        <div class="mt-3 pt-3 border-t border-dark-border/60">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-[11px] font-mono text-amber-400 font-bold uppercase">Zugeordnete Audit-Fragen &amp; Untersuchungsschwerpunkte ({{ $review->items->count() }}):</span>
+                                            </div>
+                                            <div class="space-y-1.5">
+                                                @foreach ($review->items as $item)
+                                                    <div class="p-2.5 rounded-lg bg-dark-surface/80 border border-dark-border/80 flex items-start justify-between gap-2 text-xs">
+                                                        <div class="space-y-0.5">
+                                                            <div class="flex items-center space-x-2">
+                                                                @if ($item->module)
+                                                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
+                                                                        {{ $item->module->name }}
+                                                                    </span>
+                                                                @else
+                                                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-700 text-slate-300 font-semibold">
+                                                                        Übergreifend
+                                                                    </span>
+                                                                @endif
+                                                                <span class="text-white font-medium">{{ $item->topic }}</span>
+                                                            </div>
+                                                            @if ($item->notes)
+                                                                <p class="text-[11px] text-slate-400 italic pl-1">{{ $item->notes }}</p>
+                                                            @endif
+                                                        </div>
+                                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">
+                                                            {{ $item->status }}
+                                                        </span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @if ($review->status !== 'closed')
+                                        <div class="mt-4 pt-3 border-t border-dark-border flex justify-end">
+                                            <form method="POST" action="{{ route('actions.review.close', $review->id) }}" onsubmit="const btn = this.querySelector('button[type=submit]'); if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Wird abgeschlossen...'; }">
+                                                @csrf
+                                                <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                                                    ✓ Review abschließen &amp; Regelkreis auslösen
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                            @empty
+                                <p class="text-xs text-slate-500">Keine Reviews erfasst.</p>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2040,6 +2464,456 @@
         </div>
     </div>
 
+    <!-- 10. AUDIT DESIGNER MODAL (ARF Custom Audit Builder) -->
+    <div id="auditDesignerModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">ARF Audit-Designer</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-blue-400 font-semibold">Spezial-Audit entwerfen</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mt-1">🎯 Spezial-Audit entwerfen</h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Erstellen Sie ein maßgeschneidertes Prüfverfahren mit individuellen Fragen, Gewichtungen und Reifegrad-Skalen.
+                    </p>
+                </div>
+                <button onclick="closeModal('auditDesignerModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <form method="POST" action="{{ route('actions.audit-template.create') }}" class="flex flex-col flex-grow overflow-hidden">
+                @csrf
+                <div class="p-6 overflow-y-auto space-y-4 flex-1 text-xs">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Zugeordnetes Modul <span class="text-slate-500 font-normal">(Optional für modulübergreifende Audits)</span>
+                        </label>
+                        <select name="module_id" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none">
+                            <option value="">(Kein Modul / Übergreifendes Holding-Audit)</option>
+                            @foreach ($modules as $mod)
+                                <option value="{{ $mod->id }}">{{ $mod->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Name des Audits <span class="text-rose-400">*</span>
+                        </label>
+                        <input type="text" name="name" required placeholder="z.B. Marken-Konsistenz & Positionierungs-Audit" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-blue-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Beschreibung &amp; Prüfziel
+                        </label>
+                        <textarea name="description" rows="2" placeholder="Zweck des Audits und Zielzustand, der bewertet wird..." class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-blue-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- Dynamic Questions Container -->
+                    <div class="pt-2 border-t border-dark-border/80">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h4 class="font-mono text-emerald-400 font-bold uppercase text-[11px]">Audit-Fragen &amp; Kriterien (1-5 Skala)</h4>
+                                <p class="text-slate-400 text-[11px]">Fügen Sie spezifische Fragestellungen mit Gewichtung hinzu:</p>
+                            </div>
+                            <button type="button" onclick="addCustomAuditQuestionRow()" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition flex items-center space-x-1">
+                                <span>+</span>
+                                <span>Frage hinzufügen</span>
+                            </button>
+                        </div>
+
+                        <div id="customAuditQuestionsContainer" class="space-y-3">
+                            <div class="custom-question-row p-3.5 rounded-xl bg-dark-card border border-dark-border space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-mono text-emerald-400 font-semibold row-number">Frage 01</span>
+                                    <button type="button" onclick="removeCustomAuditQuestionRow(this)" class="text-xs text-slate-500 hover:text-rose-400 transition" title="Frage entfernen">✕</button>
+                                </div>
+                                <div>
+                                    <input type="text" name="questions[0][question_text]" required placeholder="Konkrete Audit-Frage eingeben..." class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="text-[11px] text-slate-400 block mb-0.5">Gewichtung (1 bis 5):</label>
+                                        <select name="questions[0][weight]" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                                            <option value="1">1 (Niedrig)</option>
+                                            <option value="2">2 (Mittel)</option>
+                                            <option value="3" selected>3 (Standard)</option>
+                                            <option value="4">4 (Hoch)</option>
+                                            <option value="5">5 (Kritisch)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="text-[11px] text-slate-400 block mb-0.5">Bewertungshinweis (1 = Min, 5 = Max):</label>
+                                        <input type="text" name="questions[0][guidance]" placeholder="z.B. 1=keine Dokumentation, 5=vollständig institutionalisiert" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('auditDesignerModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">Abbrechen</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition shadow-md shadow-blue-600/20">
+                        ✓ Spezial-Audit speichern
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 11. AUDIT SCHEDULER MODAL (ARF Schedule & Assignment) -->
+    <div id="auditScheduleModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase">ARF Audit-Scheduler</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-emerald-400 font-semibold">Terminieren &amp; Zuweisen</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mt-1">📅 Audit ansetzen &amp; zuweisen</h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Legen Sie Verantwortlichkeiten, Rhythmus und Fristen für kontinuierliche Überprüfungen fest.
+                    </p>
+                </div>
+                <button onclick="closeModal('auditScheduleModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <form method="POST" action="{{ route('actions.audit-run.schedule') }}" class="flex flex-col flex-grow overflow-hidden">
+                @csrf
+                <div class="p-6 overflow-y-auto space-y-4 flex-1 text-xs">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Modul auswählen <span class="text-rose-400">*</span>
+                        </label>
+                        <select name="module_id" id="scheduleModalModuleSelect" required onchange="onScheduleModuleChanged(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-emerald-500 focus:outline-none">
+                            @foreach ($modules as $mod)
+                                <option value="{{ $mod->id }}">{{ $mod->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Audit-Vorlage (Template) <span class="text-rose-400">*</span>
+                        </label>
+                        <select name="audit_template_id" id="scheduleModalTemplateSelect" required class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-emerald-500 focus:outline-none">
+                            @foreach ($auditTemplates as $tpl)
+                                <option value="{{ $tpl->id }}" data-module-id="{{ $tpl->module_id }}">
+                                    {{ $tpl->name }} {{ $tpl->module ? '(' . $tpl->module->name . ')' : '(Übergreifend)' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Prüfer / Auditor <span class="text-rose-400">*</span>
+                            </label>
+                            <select name="auditor_id" required class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                                @foreach ($users as $u)
+                                    <option value="{{ $u->id }}" {{ $u->id === auth()->id() ? 'selected' : '' }}>
+                                        {{ $u->name }} ({{ $u->email }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Rhythmus (Kadenz)
+                            </label>
+                            <select name="cadence" class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                                <option value="one_time">Einmalig</option>
+                                <option value="monthly">Monatlich</option>
+                                <option value="quarterly" selected>Quartalsweise (Standard)</option>
+                                <option value="semi_annual">Halbjährlich</option>
+                                <option value="annual">Jährlich</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Fälligkeitsdatum
+                            </label>
+                            <input type="date" name="due_date" value="{{ now()->addDays(14)->format('Y-m-d') }}" class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none font-mono">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Titel / Bezeichnung
+                            </label>
+                            <input type="text" name="title" placeholder="z.B. Q4 Reifegrad-Prüfung" class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Prüfhinweise &amp; Schwerpunkte
+                        </label>
+                        <textarea name="notes" rows="2" placeholder="Besondere Fokus-Themen oder Prüfungsvorgaben für den Auditor..." class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('auditScheduleModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">Abbrechen</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition shadow-md shadow-emerald-600/20">
+                        ✓ Audit ansetzen &amp; zuweisen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 12. TOOL DESIGNER MODAL (AMF Tool-Studio) -->
+    <div id="toolDesignerModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">AMF Tool-Studio</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-amber-400 font-semibold">Operatives Werkzeug</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mt-1">🛠️ Werkzeug entwerfen</h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Erstellen Sie operative Checklisten, Standard Operating Procedures (SOPs), Vorlagen oder KI-Prompts für Ihre Module.
+                    </p>
+                </div>
+                <button onclick="closeModal('toolDesignerModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <form method="POST" action="{{ route('actions.tool.create') }}" class="flex flex-col flex-grow overflow-hidden">
+                @csrf
+                <div class="p-6 overflow-y-auto space-y-4 flex-1 text-xs">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Zielmodul auswählen <span class="text-rose-400">*</span>
+                        </label>
+                        <select name="module_id" id="toolDesignerModuleSelect" required class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
+                            @foreach ($modules as $mod)
+                                <option value="{{ $mod->id }}">{{ $mod->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Name des Werkzeugs <span class="text-rose-400">*</span>
+                            </label>
+                            <input type="text" name="name" required placeholder="z.B. Brand Launch Checkliste" class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                                Typ des Werkzeugs <span class="text-rose-400">*</span>
+                            </label>
+                            <select name="type" id="toolTypeSelect" onchange="onToolTypeChanged(this.value)" class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none">
+                                <option value="checklist">Interaktive Checkliste</option>
+                                <option value="sop">SOP / Leitfaden (Markdown)</option>
+                                <option value="template">Dokument- / Vertragsvorlage</option>
+                                <option value="prompt">KI-Prompt (System-Prompt)</option>
+                                <option value="saas">SaaS / Web-Tool Link</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Kurzbeschreibung &amp; Anwendungszweck
+                        </label>
+                        <textarea name="description" rows="2" placeholder="Wann und wie wird dieses Werkzeug operativ angewendet?" class="w-full px-3 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-bold text-slate-300 uppercase" id="toolContentLabel">
+                                Inhalt (Punkte zeilenweise eingeben)
+                            </label>
+                            <span class="text-[11px] text-slate-400" id="toolContentHint">1 Zeile = 1 Checklistenpunkt</span>
+                        </div>
+                        <textarea name="content" id="toolContentInput" rows="6" placeholder="1. Erste Anforderung prüfen&#10;2. Dokumentation ablegen&#10;3. Freigabe durch Geschäftsleitung einholen" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none font-mono leading-relaxed"></textarea>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('toolDesignerModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">Abbrechen</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white transition shadow-md shadow-amber-600/20">
+                        ✓ Werkzeug aktivieren
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 13. TOOL VIEWER MODAL (Interactive Tool Runner) -->
+    <div id="toolViewerModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span id="tvBadgeType" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">Checkliste</span>
+                        <span class="text-slate-500">•</span>
+                        <span id="tvBadgeModule" class="text-xs font-mono text-blue-400 font-semibold">Markenaufbau</span>
+                    </div>
+                    <h2 id="tvTitle" class="text-xl font-bold text-white mt-1">Werkzeug</h2>
+                    <p id="tvDescription" class="text-xs text-slate-300 mt-1"></p>
+                </div>
+                <button onclick="closeModal('toolViewerModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-4 flex-1 text-xs">
+                <!-- Progress bar for checklists -->
+                <div id="tvProgressContainer" class="p-3.5 rounded-xl bg-dark-card border border-dark-border hidden">
+                    <div class="flex items-center justify-between text-xs font-mono mb-1.5">
+                        <span class="text-slate-300 font-semibold">Erledigungsgrad:</span>
+                        <span id="tvProgressText" class="text-emerald-400 font-bold">0% (0/0)</span>
+                    </div>
+                    <div class="w-full bg-dark-surface h-2 rounded-full overflow-hidden border border-dark-border/60">
+                        <div id="tvProgressBar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div id="tvContent" class="space-y-3"></div>
+            </div>
+
+            <div class="p-4 border-t border-dark-border bg-dark-card flex justify-between items-center">
+                <div id="tvActionButtons"></div>
+                <button onclick="closeModal('toolViewerModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-white transition">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 14. PROMOTE LEARNING TO PRINCIPLE MODAL (ALF) -->
+    <div id="learningPromoteModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase">ALF Stufe 4</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-purple-400 font-semibold">Prinzipienschmiede</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mt-1">👑 Erkenntnis zum Prinzip erheben</h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Formulieren Sie eine unverrückbare Handlungsregel und weisen Sie das gesteuerte Modul zu.
+                    </p>
+                </div>
+                <button onclick="closeModal('learningPromoteModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <form method="POST" action="{{ route('actions.alf.promote') }}" class="flex flex-col flex-grow overflow-hidden">
+                @csrf
+                <input type="hidden" name="learning_id" id="promoteFormLearningId" value="">
+
+                <div class="p-6 overflow-y-auto space-y-4 flex-1 text-xs">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Name des Prinzips <span class="text-rose-400">*</span>
+                        </label>
+                        <input type="text" name="title" id="promoteFormTitle" required class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-purple-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Verbindlicher Grundsatz (Statement) <span class="text-rose-400">*</span>
+                        </label>
+                        <textarea name="statement" id="promoteFormStatement" required rows="3" placeholder="Der Grundsatz in einem prägnanten Satz formuliert..." class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-purple-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Begründung &amp; Entstehungsursache (Rationale)
+                        </label>
+                        <textarea name="rationale" rows="2" placeholder="Warum gilt dieses Prinzip? Welche Praxiserfahrung liegt zugrunde?" class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-purple-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Gesteuertes Modul (Governs-Relation) <span class="text-slate-500 font-normal">(Optional)</span>
+                        </label>
+                        <select name="target_module_id" class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-purple-500 focus:outline-none">
+                            <option value="">(Kein Modul / Übergreifendes Prinzip)</option>
+                            @foreach ($modules as $mod)
+                                <option value="{{ $mod->id }}">{{ $mod->name }}</option>
+                            @endforeach
+                        </select>
+                        <span class="text-[11px] text-slate-400 mt-1 block">Verknüpft die semantische Kante <code class="text-purple-300 font-mono">Principle -(governs)-&gt; Module</code> im Wissensgraphen.</span>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('learningPromoteModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">Abbrechen</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white transition shadow-md shadow-purple-600/20">
+                        👑 Als Prinzip ratifizieren
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 15. SYNTHESIZE OBSERVATION TO LEARNING MODAL (ALF) -->
+    <div id="learningSynthesizeModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-surface border border-dark-border rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="p-6 border-b border-dark-border flex items-start justify-between bg-dark-card">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">ALF Stufe 2</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-xs font-mono text-amber-400 font-semibold">Erkenntnisgewinnung</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mt-1">💡 Zu Erkenntnis verdichten</h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Verdichten Sie eine rohe Beobachtung zu einem systematischen Learning-Draft.
+                    </p>
+                </div>
+                <button onclick="closeModal('learningSynthesizeModal')" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition font-bold">✕</button>
+            </div>
+
+            <form method="POST" action="{{ route('actions.alf.synthesize') }}" class="flex flex-col flex-grow overflow-hidden">
+                @csrf
+                <input type="hidden" name="observation_id" id="synthFormObsId" value="">
+
+                <div class="p-6 overflow-y-auto space-y-4 flex-1 text-xs">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Titel der Erkenntnis <span class="text-rose-400">*</span>
+                        </label>
+                        <input type="text" name="title" id="synthFormTitle" required class="w-full px-3.5 py-2.5 rounded-xl bg-dark-card border border-dark-border text-white text-sm focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Zusammenfassung der Erkenntnis (Summary) <span class="text-rose-400">*</span>
+                        </label>
+                        <textarea name="summary" id="synthFormSummary" required rows="3" placeholder="Was haben wir gelernt? Welches Muster wurde erkannt?" class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
+                            Kontext &amp; Begründung (Rationale)
+                        </label>
+                        <textarea name="rationale" rows="2" placeholder="Ausgangslage und Ursachenanalyse..." class="w-full px-3.5 py-2 rounded-xl bg-dark-card border border-dark-border text-white text-xs focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-dark-border bg-dark-card flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('learningSynthesizeModal')" class="px-4 py-2 rounded-xl bg-dark-hover hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">Abbrechen</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white transition shadow-md shadow-amber-600/20">
+                        💡 Als Entwurf erfassen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- CLIENT-SIDE JAVASCRIPT FOR INTERACTIVITY -->
     <script>
         const MODULES_DATA = @json($modules);
@@ -2196,16 +3070,32 @@
             const tools = module.tools || [];
             if (tools.length > 0) {
                 toolsContainer.innerHTML = tools.map(t => `
-                    <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-white text-xs">${t.name}</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 text-blue-300 uppercase font-bold">${t.type || 'Tool'}</span>
+                    <div class="p-3.5 rounded-xl bg-dark-card border border-dark-border flex flex-col justify-between space-y-2">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-white text-xs">${t.name}</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase font-bold">${t.type || 'Tool'}</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mt-1 leading-relaxed">${t.description || ''}</p>
                         </div>
-                        <p class="text-xs text-slate-300 mt-1.5">${t.description || ''}</p>
+                        <div class="pt-2 border-t border-dark-border/60 flex justify-end">
+                            <button onclick="closeModal('moduleModal'); openToolViewer(${t.id})" class="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[11px] font-bold transition flex items-center space-x-1">
+                                <span>⚡</span>
+                                <span>Öffnen / Ausführen</span>
+                            </button>
+                        </div>
                     </div>
                 `).join('');
             } else {
-                toolsContainer.innerHTML = '<span class="text-xs text-slate-400 col-span-2">No operational tools attached yet.</span>';
+                toolsContainer.innerHTML = '<span class="text-xs text-slate-400 col-span-2">Keine operativen Werkzeuge verknüpft.</span>';
+            }
+
+            const addToolBtn = document.getElementById('mModalAddToolBtn');
+            if (addToolBtn) {
+                addToolBtn.onclick = function() {
+                    closeModal('moduleModal');
+                    openToolDesignerModal(module.id);
+                };
             }
 
             // 5. Audits
@@ -2239,16 +3129,33 @@
         }
 
         function openAuditModalForModule(moduleId) {
+            const runIdInput = document.getElementById('auditFormRunId');
+            if (runIdInput) runIdInput.value = '';
             document.getElementById('auditModuleSelect').value = moduleId;
             onAuditModuleChanged(moduleId);
             openModal('auditModal');
         }
 
-        function onAuditModuleChanged(moduleId) {
+        function startScheduledAudit(runId, moduleId, templateId) {
+            closeModal('arfModal');
+            const runIdInput = document.getElementById('auditFormRunId');
+            if (runIdInput) runIdInput.value = runId;
+            document.getElementById('auditModuleSelect').value = moduleId;
+            onAuditModuleChanged(moduleId, templateId);
+            openModal('auditModal');
+        }
+
+        function onAuditModuleChanged(moduleId, forceTemplateId = null) {
             moduleId = parseInt(moduleId);
             document.getElementById('auditFormModuleId').value = moduleId;
 
-            let template = AUDIT_TEMPLATES_DATA.find(t => t.module_id === moduleId);
+            let template = null;
+            if (forceTemplateId) {
+                template = AUDIT_TEMPLATES_DATA.find(t => t.id === parseInt(forceTemplateId));
+            }
+            if (!template) {
+                template = AUDIT_TEMPLATES_DATA.find(t => t.module_id === moduleId);
+            }
             if (!template && AUDIT_TEMPLATES_DATA.length > 0) {
                 template = AUDIT_TEMPLATES_DATA[0];
             }
@@ -2295,6 +3202,380 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        // AMF TAB SWITCHER
+        function switchAmfTab(tab) {
+            const secBlueprint = document.getElementById('amfSectionBlueprint');
+            const secStudio = document.getElementById('amfSectionStudio');
+            const btnBlueprint = document.getElementById('amfTabBtnBlueprint');
+            const btnStudio = document.getElementById('amfTabBtnStudio');
+
+            if (!secBlueprint || !secStudio) return;
+
+            if (tab === 'studio') {
+                secBlueprint.classList.add('hidden');
+                secStudio.classList.remove('hidden');
+                btnBlueprint.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+                btnStudio.className = 'pb-3 border-b-2 border-amber-500 text-amber-400 font-bold transition flex items-center space-x-1.5';
+            } else {
+                secBlueprint.classList.remove('hidden');
+                secStudio.classList.add('hidden');
+                btnBlueprint.className = 'pb-3 border-b-2 border-blue-500 text-blue-400 font-bold transition flex items-center space-x-1.5';
+                btnStudio.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+            }
+        }
+
+        // ALF TAB SWITCHER
+        function switchAlfTab(tab) {
+            const secPrinciples = document.getElementById('alfSectionPrinciples');
+            const secLearnings = document.getElementById('alfSectionLearnings');
+            const secObs = document.getElementById('alfSectionObservations');
+
+            const btnPrinciples = document.getElementById('alfTabBtnPrinciples');
+            const btnLearnings = document.getElementById('alfTabBtnLearnings');
+            const btnObs = document.getElementById('alfTabBtnObservations');
+
+            if (!secPrinciples || !secLearnings || !secObs) return;
+
+            secPrinciples.classList.add('hidden');
+            secLearnings.classList.add('hidden');
+            secObs.classList.add('hidden');
+
+            btnPrinciples.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+            btnLearnings.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+            btnObs.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+
+            if (tab === 'learnings') {
+                secLearnings.classList.remove('hidden');
+                btnLearnings.className = 'pb-3 border-b-2 border-amber-500 text-amber-400 font-bold transition flex items-center space-x-1.5';
+            } else if (tab === 'observations') {
+                secObs.classList.remove('hidden');
+                btnObs.className = 'pb-3 border-b-2 border-blue-500 text-blue-400 font-bold transition flex items-center space-x-1.5';
+            } else {
+                secPrinciples.classList.remove('hidden');
+                btnPrinciples.className = 'pb-3 border-b-2 border-purple-500 text-purple-400 font-bold transition flex items-center space-x-1.5';
+            }
+        }
+
+        // ARF TAB SWITCHER
+        function switchArfTab(tab) {
+            const secScheduled = document.getElementById('arfSectionScheduled');
+            const secHistory = document.getElementById('arfSectionHistory');
+            const secReviews = document.getElementById('arfSectionReviews');
+
+            const btnScheduled = document.getElementById('arfTabBtnScheduled');
+            const btnHistory = document.getElementById('arfTabBtnHistory');
+            const btnReviews = document.getElementById('arfTabBtnReviews');
+
+            if (!secScheduled || !secHistory || !secReviews) return;
+
+            secScheduled.classList.add('hidden');
+            secHistory.classList.add('hidden');
+            secReviews.classList.add('hidden');
+
+            btnScheduled.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+            btnHistory.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+            btnReviews.className = 'pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center space-x-1.5';
+
+            if (tab === 'history') {
+                secHistory.classList.remove('hidden');
+                btnHistory.className = 'pb-3 border-b-2 border-blue-500 text-blue-400 font-bold transition flex items-center space-x-1.5';
+            } else if (tab === 'reviews') {
+                secReviews.classList.remove('hidden');
+                btnReviews.className = 'pb-3 border-b-2 border-emerald-500 text-emerald-400 font-bold transition flex items-center space-x-1.5';
+            } else {
+                secScheduled.classList.remove('hidden');
+                btnScheduled.className = 'pb-3 border-b-2 border-emerald-500 text-emerald-400 font-bold transition flex items-center space-x-1.5';
+            }
+        }
+
+        // CUSTOM AUDIT DESIGNER
+        function openAuditDesignerModal() {
+            closeModal('arfModal');
+            openModal('auditDesignerModal');
+        }
+
+        function addCustomAuditQuestionRow() {
+            const container = document.getElementById('customAuditQuestionsContainer');
+            if (!container) return;
+            const rows = container.querySelectorAll('.custom-question-row');
+            const idx = rows.length;
+            const numStr = (idx + 1) < 10 ? `0${idx + 1}` : `${idx + 1}`;
+
+            const row = document.createElement('div');
+            row.className = 'custom-question-row p-3.5 rounded-xl bg-dark-card border border-dark-border space-y-2';
+            row.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-mono text-emerald-400 font-semibold row-number">Frage ${numStr}</span>
+                    <button type="button" onclick="removeCustomAuditQuestionRow(this)" class="text-xs text-slate-500 hover:text-rose-400 transition" title="Frage entfernen">✕</button>
+                </div>
+                <div>
+                    <input type="text" name="questions[${idx}][question_text]" required placeholder="Konkrete Audit-Frage eingeben..." class="w-full px-3 py-2 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Gewichtung (1 bis 5):</label>
+                        <select name="questions[${idx}][weight]" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                            <option value="1">1 (Niedrig)</option>
+                            <option value="2">2 (Mittel)</option>
+                            <option value="3" selected>3 (Standard)</option>
+                            <option value="4">4 (Hoch)</option>
+                            <option value="5">5 (Kritisch)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">Bewertungshinweis (1 = Min, 5 = Max):</label>
+                        <input type="text" name="questions[${idx}][guidance]" placeholder="z.B. 1=keine Dokumentation, 5=vollständig institutionalisiert" class="w-full px-2.5 py-1.5 rounded-lg bg-dark-surface border border-dark-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeCustomAuditQuestionRow(btn) {
+            const container = document.getElementById('customAuditQuestionsContainer');
+            if (!container) return;
+            const rows = container.querySelectorAll('.custom-question-row');
+            if (rows.length <= 1) {
+                const input = rows[0].querySelector('input[name$="[question_text]"]');
+                if (input) input.value = '';
+                return;
+            }
+            btn.closest('.custom-question-row').remove();
+            const remaining = container.querySelectorAll('.custom-question-row');
+            remaining.forEach((r, i) => {
+                const badge = r.querySelector('.row-number');
+                if (badge) {
+                    const idxStr = (i + 1) < 10 ? `0${i + 1}` : `${i + 1}`;
+                    badge.textContent = `Frage ${idxStr}`;
+                }
+                const textInput = r.querySelector('input[name*="[question_text]"]');
+                if (textInput) textInput.name = `questions[${i}][question_text]`;
+                const weightSelect = r.querySelector('select[name*="[weight]"]');
+                if (weightSelect) weightSelect.name = `questions[${i}][weight]`;
+                const guidanceInput = r.querySelector('input[name*="[guidance]"]');
+                if (guidanceInput) guidanceInput.name = `questions[${i}][guidance]`;
+            });
+        }
+
+        // AUDIT SCHEDULER
+        function openAuditScheduleModal(moduleId = null, templateId = null) {
+            closeModal('arfModal');
+            if (moduleId) {
+                document.getElementById('scheduleModalModuleSelect').value = moduleId;
+                onScheduleModuleChanged(moduleId);
+            }
+            if (templateId) {
+                document.getElementById('scheduleModalTemplateSelect').value = templateId;
+            }
+            openModal('auditScheduleModal');
+        }
+
+        function onScheduleModuleChanged(moduleId) {
+            moduleId = parseInt(moduleId);
+            const select = document.getElementById('scheduleModalTemplateSelect');
+            if (!select) return;
+            Array.from(select.options).forEach(opt => {
+                const optModId = opt.getAttribute('data-module-id');
+                if (!optModId || optModId == moduleId) {
+                    opt.style.display = '';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+            const firstVisible = Array.from(select.options).find(opt => opt.style.display !== 'none');
+            if (firstVisible) select.value = firstVisible.value;
+        }
+
+        // TOOL DESIGNER
+        function openToolDesignerModal(moduleId = null) {
+            closeModal('amfModal');
+            if (moduleId) {
+                document.getElementById('toolDesignerModuleSelect').value = moduleId;
+            }
+            openModal('toolDesignerModal');
+        }
+
+        function onToolTypeChanged(type) {
+            const label = document.getElementById('toolContentLabel');
+            const hint = document.getElementById('toolContentHint');
+            const input = document.getElementById('toolContentInput');
+            if (!label || !hint || !input) return;
+
+            if (type === 'checklist') {
+                label.innerText = 'Inhalt (Punkte zeilenweise eingeben)';
+                hint.innerText = '1 Zeile = 1 Checklistenpunkt';
+                input.placeholder = '1. Erste Anforderung prüfen\n2. Dokumentation ablegen\n3. Freigabe durch Geschäftsleitung einholen';
+            } else if (type === 'prompt') {
+                label.innerText = 'KI-Prompt / Anweisungsvorlage';
+                hint.innerText = 'Systematischer Prompt für LLM / Assistent';
+                input.placeholder = 'Du bist ein erfahrener Unternehmensberater. Analysiere das folgende Geschäftsmodell nach AMF 1.1...';
+            } else if (type === 'sop' || type === 'template') {
+                label.innerText = 'Standard Operating Procedure / Textvorlage';
+                hint.innerText = 'Markdown-Leitfaden oder Dokumententwurf';
+                input.placeholder = '# Standard Operating Procedure (SOP)\n\n## Ziel\nKlare Beschreibung des Prozesses...\n\n## Ablauf\n1. Schritt...';
+            } else {
+                label.innerText = 'Link / Ressourcen-URL';
+                hint.innerText = 'https://...';
+                input.placeholder = 'https://tool.allocontrol.de/...';
+            }
+        }
+
+        // TOOL VIEWER & RUNNER
+        const ALL_TOOLS_DATA = @json($modules->pluck('tools')->flatten());
+
+        function openToolViewer(toolId) {
+            toolId = parseInt(toolId);
+            const tool = ALL_TOOLS_DATA.find(t => t.id === toolId);
+            if (!tool) return;
+
+            let modName = 'Modul';
+            const mod = MODULES_DATA.find(m => m.id === tool.module_id);
+            if (mod) modName = mod.name;
+
+            document.getElementById('tvTitle').innerText = tool.name;
+            document.getElementById('tvBadgeModule').innerText = modName;
+            document.getElementById('tvBadgeType').innerText = (tool.type || 'Tool').toUpperCase();
+            document.getElementById('tvDescription').innerText = tool.description || 'Operatives Werkzeug nach AMF-Standard.';
+
+            const progressContainer = document.getElementById('tvProgressContainer');
+            const contentContainer = document.getElementById('tvContent');
+            const actionsContainer = document.getElementById('tvActionButtons');
+
+            contentContainer.innerHTML = '';
+            actionsContainer.innerHTML = '';
+
+            const content = tool.content || '';
+
+            if (tool.type === 'checklist') {
+                progressContainer.classList.remove('hidden');
+                const lines = content.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+                if (lines.length === 0) {
+                    contentContainer.innerHTML = '<p class="text-slate-400">Keine Checklisten-Punkte hinterlegt.</p>';
+                    updateChecklistProgress(0, 0);
+                } else {
+                    contentContainer.innerHTML = `
+                        <div class="space-y-2">
+                            ${lines.map((line) => `
+                                <label class="flex items-start space-x-3 p-3 rounded-xl bg-dark-card border border-dark-border hover:border-amber-500/40 cursor-pointer transition">
+                                    <input type="checkbox" onchange="calcChecklistProgress()" class="tool-checkbox mt-0.5 w-4 h-4 rounded text-amber-500 focus:ring-amber-500 bg-dark-surface border-dark-border">
+                                    <span class="text-slate-200 leading-relaxed text-xs select-none">${escapeHtml(line)}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                    calcChecklistProgress();
+                }
+            } else if (tool.type === 'prompt') {
+                progressContainer.classList.add('hidden');
+                contentContainer.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-xs text-slate-400 font-mono">
+                            <span>KI-System-Prompt / Anweisung:</span>
+                            <button onclick="copyToolText()" id="copyToolBtn" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold transition flex items-center space-x-1">
+                                <span>📋</span>
+                                <span>Kopieren</span>
+                            </button>
+                        </div>
+                        <pre id="toolTextToCopy" class="p-4 rounded-xl bg-slate-950 border border-dark-border text-emerald-300 font-mono text-xs whitespace-pre-wrap leading-relaxed">${escapeHtml(content)}</pre>
+                    </div>
+                `;
+            } else if (tool.type === 'saas') {
+                progressContainer.classList.add('hidden');
+                contentContainer.innerHTML = `
+                    <div class="p-6 rounded-xl bg-dark-card border border-dark-border text-center space-y-3">
+                        <span class="text-3xl">🌐</span>
+                        <h4 class="text-white font-bold">Externes Software-Werkzeug</h4>
+                        <p class="text-slate-300">${escapeHtml(tool.description || '')}</p>
+                        <a href="${escapeHtml(content)}" target="_blank" rel="noopener noreferrer" class="inline-block px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition shadow-md">
+                            Werkzeug im neuen Tab öffnen &rarr;
+                        </a>
+                    </div>
+                `;
+            } else {
+                // sop or template
+                progressContainer.classList.add('hidden');
+                contentContainer.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-xs text-slate-400 font-mono">
+                            <span>Dokumentation / Leitfaden:</span>
+                            <button onclick="copyToolText()" id="copyToolBtn" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold transition flex items-center space-x-1">
+                                <span>📋</span>
+                                <span>Inhalt kopieren</span>
+                            </button>
+                        </div>
+                        <div id="toolTextToCopy" class="p-4 rounded-xl bg-slate-900 border border-dark-border text-slate-200 text-xs whitespace-pre-wrap leading-relaxed">${escapeHtml(content)}</div>
+                    </div>
+                `;
+            }
+
+            openModal('toolViewerModal');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        function calcChecklistProgress() {
+            const checkboxes = document.querySelectorAll('.tool-checkbox');
+            const total = checkboxes.length;
+            let checked = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) checked++;
+            });
+            updateChecklistProgress(checked, total);
+        }
+
+        function updateChecklistProgress(checked, total) {
+            const bar = document.getElementById('tvProgressBar');
+            const text = document.getElementById('tvProgressText');
+            if (!bar || !text) return;
+            const pct = total === 0 ? 0 : Math.round((checked / total) * 100);
+            bar.style.width = `${pct}%`;
+            text.innerText = `${pct}% (${checked}/${total} erledigt)`;
+            if (pct === 100) {
+                bar.className = 'bg-emerald-400 h-full transition-all duration-300';
+                text.className = 'text-emerald-300 font-extrabold';
+            } else {
+                bar.className = 'bg-emerald-500 h-full transition-all duration-300';
+                text.className = 'text-emerald-400 font-bold';
+            }
+        }
+
+        function copyToolText() {
+            const el = document.getElementById('toolTextToCopy');
+            const btn = document.getElementById('copyToolBtn');
+            if (!el) return;
+            navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+                if (btn) {
+                    btn.innerHTML = '<span>✓</span><span>Kopiert!</span>';
+                    btn.className = 'px-2.5 py-1 rounded bg-emerald-600 text-white font-bold transition flex items-center space-x-1';
+                    setTimeout(() => {
+                        btn.innerHTML = '<span>📋</span><span>Kopieren</span>';
+                        btn.className = 'px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold transition flex items-center space-x-1';
+                    }, 2000);
+                }
+            });
+        }
+
+        // ALF MODAL LOGIC
+        function openPromoteLearningModal(learningId, title, summary) {
+            closeModal('alfModal');
+            document.getElementById('promoteFormLearningId').value = learningId;
+            document.getElementById('promoteFormTitle').value = title;
+            document.getElementById('promoteFormStatement').value = summary;
+            openModal('learningPromoteModal');
+        }
+
+        function openSynthesizeLearningModal(obsId, title, content) {
+            closeModal('alfModal');
+            document.getElementById('synthFormObsId').value = obsId;
+            document.getElementById('synthFormTitle').value = title;
+            document.getElementById('synthFormSummary').value = content;
+            openModal('learningSynthesizeModal');
         }
 
         function addReviewQuestionRow() {
@@ -2358,7 +3639,9 @@
         const ALL_SYSTEM_MODALS = [
             'moduleModal', 'captureModal', 'auditModal', 'kpiModal',
             'reviewCreateModal', 'alfModal', 'amfModal', 'arfModal',
-            'userModal', 'moduleCreateModal', 'profileModal'
+            'userModal', 'moduleCreateModal', 'profileModal',
+            'auditDesignerModal', 'auditScheduleModal', 'toolDesignerModal',
+            'toolViewerModal', 'learningPromoteModal', 'learningSynthesizeModal'
         ];
 
         let highestModalZ = 50;

@@ -29,6 +29,12 @@ class Tool extends DosModel implements KnowledgeNode
         'type',
         'url_or_path',
         'description',
+        'content',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     public function nodeType(): NodeType

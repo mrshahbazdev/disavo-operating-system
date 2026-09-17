@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
         $observations = rescue(fn () => \App\Domains\Knowledge\Models\Observation::withoutGlobalScopes()->get(), collect());
         $reviews = rescue(fn () => \App\Domains\Review\Models\Review::withoutGlobalScopes()->with(['items.module', 'improvements'])->get(), collect());
         $auditTemplates = rescue(fn () => \App\Domains\Development\Models\AuditTemplate::withoutGlobalScopes()->with(['questions', 'module'])->get(), collect());
+        $auditRuns = rescue(fn () => \App\Domains\Development\Models\AuditRun::withoutGlobalScopes()->with(['module', 'template.questions', 'auditor', 'responses'])->orderByDesc('created_at')->get(), collect());
+        $users = rescue(fn () => \App\Models\User::all(), collect());
         $edges = rescue(fn () => KnowledgeEdge::withoutGlobalScopes()->active()->get(), collect());
 
         $modules = rescue(function () use ($principles, $edges) {
@@ -66,6 +68,8 @@ Route::middleware('auth')->group(function () {
             'observations',
             'reviews',
             'auditTemplates',
+            'auditRuns',
+            'users',
             'principlesCount',
             'edgesCount',
             'reviewsCount'
@@ -80,6 +84,12 @@ Route::middleware('auth')->group(function () {
     Route::post('actions/review/create', [DashboardActionController::class, 'createReview'])->name('actions.review.create');
     Route::post('actions/user/create', [DashboardActionController::class, 'addUser'])->name('actions.user.create');
     Route::post('actions/module/create', [DashboardActionController::class, 'createModule'])->name('actions.module.create');
+    Route::post('actions/audit-template/create', [DashboardActionController::class, 'createAuditTemplate'])->name('actions.audit-template.create');
+    Route::post('actions/audit-run/schedule', [DashboardActionController::class, 'scheduleAuditRun'])->name('actions.audit-run.schedule');
+    Route::post('actions/tool/create', [DashboardActionController::class, 'createTool'])->name('actions.tool.create');
+    Route::post('actions/alf/synthesize', [DashboardActionController::class, 'synthesizeLearning'])->name('actions.alf.synthesize');
+    Route::post('actions/alf/validate', [DashboardActionController::class, 'validateLearning'])->name('actions.alf.validate');
+    Route::post('actions/alf/promote', [DashboardActionController::class, 'promoteLearning'])->name('actions.alf.promote');
     Route::post('actions/profile/update', [ProfileController::class, 'updateProfile'])->name('actions.profile.update');
     Route::post('actions/profile/password', [ProfileController::class, 'updatePassword'])->name('actions.profile.password');
 });

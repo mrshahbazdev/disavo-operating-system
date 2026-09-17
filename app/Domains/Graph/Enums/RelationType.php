@@ -21,7 +21,7 @@ enum RelationType: string
 
     // ARF — Improvement Flow
     case Evaluates   = 'evaluates';     // Review      → Module | Principle
-    case Generates   = 'generates';     // Review      → Learning
+    case Generates   = 'generates';     // Review | Observation → Learning
     case Supersedes  = 'supersedes';    // Principle   → Principle
     case Contradicts = 'contradicts';   // Learning    → Principle (Tension Signal)
 
@@ -44,7 +44,7 @@ enum RelationType: string
             self::Quantifies  => [NodeType::Kpi],
             self::Improves    => [NodeType::Tool],
             self::Evaluates   => [NodeType::Review],
-            self::Generates   => [NodeType::Review],
+            self::Generates   => [NodeType::Review, NodeType::Observation],
             self::Supersedes  => [NodeType::Principle],
             self::Contradicts => [NodeType::Learning],
             self::JustifiedBy => [NodeType::Decision],

@@ -8,15 +8,21 @@ use App\Domains\Development\Actions\RecordKpiReading;
 use App\Domains\Development\Actions\RunAudit;
 use App\Domains\Development\Actions\ScoreAudit;
 use App\Domains\Development\Models\AuditQuestion;
+use App\Domains\Development\Models\AuditRun;
 use App\Domains\Development\Models\AuditTemplate;
 use App\Domains\Development\Models\Goal;
 use App\Domains\Development\Models\Kpi;
 use App\Domains\Development\Models\Module;
 use App\Domains\Development\Models\Tool;
+use App\Domains\Graph\Enums\RelationType;
+use App\Domains\Knowledge\Actions\PromoteLearningToPrinciple;
+use App\Domains\Knowledge\Actions\ValidateLearning;
 use App\Domains\Knowledge\Models\Learning;
 use App\Domains\Knowledge\Models\Observation;
+use App\Domains\Knowledge\Models\Principle;
 use App\Domains\Knowledge\Models\Question;
 use App\Domains\Knowledge\States\Learning\Draft;
+use App\Domains\Knowledge\States\Learning\Validated;
 use App\Domains\Review\Actions\CloseReview;
 use App\Domains\Review\Models\Review;
 use App\Domains\Review\Models\ReviewItem;
@@ -81,6 +87,7 @@ class DashboardActionController extends Controller
         ScoreAudit $scoreAction
     ): RedirectResponse {
         $validated = $request->validate([
+            'audit_run_id'      => 'nullable|exists:audit_runs,id',
             'module_id'         => 'required|exists:modules,id',
             'audit_template_id' => 'required|exists:audit_templates,id',
             'responses'         => 'required|array',
@@ -92,12 +99,21 @@ class DashboardActionController extends Controller
         $module = Module::withoutGlobalScopes()->findOrFail($validated['module_id']);
         $template = AuditTemplate::withoutGlobalScopes()->findOrFail($validated['audit_template_id']);
 
-        $run = $runAction->handle($module, $template, $user);
+        if (!empty($validated['audit_run_id'])) {
+            $run = AuditRun::withoutGlobalScopes()->findOrFail($validated['audit_run_id']);
+            $run->update([
+                'conducted_by' => $user->id,
+                'status'       => AuditRun::STATUS_IN_PROGRESS,
+            ]);
+        } else {
+            $run = $runAction->handle($module, $template, $user);
+        }
+
         $scoredRun = $scoreAction->handle($run, $validated['responses']);
 
         return redirect()->route('dashboard')->with(
             'success',
-            "✓ Audit completed for {$module->name}! Maturity score updated to {$scoredRun->overall_score}%."
+            "✓ Audit '{$template->name}' für {$module->name} erfolgreich durchgeführt! Reifegrad auf {$scoredRun->overall_score}% aktualisiert."
         );
     }
 
@@ -463,6 +479,249 @@ class DashboardActionController extends Controller
         return redirect()->route('dashboard')->with(
             'success',
             "✓ Neues Modul '{$module->name}'{$objFeedback} nach AMF 1.1 Blaupause angelegt{$componentsMsg}."
+        );
+    }
+
+    /**
+     * 7. Create Custom Audit Template (ARF Audit Designer)
+     */
+    public function createAuditTemplate(Request $request): RedirectResponse
+    {
+        $tenant = TenantContext::getTenant() ?? Tenant::first();
+
+        $validated = $request->validate([
+            'module_id'   => 'nullable|exists:modules,id',
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'questions'   => 'required|array|min:1',
+            'weights'     => 'nullable|array',
+            'guidances'   => 'nullable|array',
+        ]);
+
+        $moduleId = $validated['module_id'] ?? Module::withoutGlobalScopes()->first()?->id;
+
+        $template = AuditTemplate::create([
+            'tenant_id'   => $tenant->id,
+            'module_id'   => $moduleId,
+            'name'        => $validated['name'],
+            'description' => $validated['description'] ?? 'Benutzerdefiniertes Spezial-Audit',
+        ]);
+
+        $qCount = 0;
+        foreach ($validated['questions'] as $idx => $item) {
+            if (is_array($item)) {
+                $qText = trim((string) ($item['question_text'] ?? ''));
+                $weight = isset($item['weight']) ? (int) $item['weight'] : 3;
+                $guidance = isset($item['guidance']) ? (string) $item['guidance'] : null;
+            } else {
+                $qText = trim((string) $item);
+                $weight = !empty($validated['weights'][$idx]) ? (int) $validated['weights'][$idx] : 3;
+                $guidance = !empty($validated['guidances'][$idx]) ? (string) $validated['guidances'][$idx] : null;
+            }
+
+            if ($qText === '') continue;
+
+            AuditQuestion::create([
+                'tenant_id'         => $tenant->id,
+                'audit_template_id' => $template->id,
+                'question_text'     => $qText,
+                'weight'            => max(1, $weight),
+                'order'             => $idx + 1,
+                'guidance'          => $guidance,
+            ]);
+            $qCount++;
+        }
+
+        $moduleName = $template->module ? $template->module->name : 'Holding';
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ Spezial-Audit '{$template->name}' mit {$qCount} Kernfragen für '{$moduleName}' erfolgreich im ARF designt!"
+        );
+    }
+
+    /**
+     * 8. Schedule & Assign Audit Run (ARF Scheduler)
+     */
+    public function scheduleAuditRun(Request $request): RedirectResponse
+    {
+        $tenant = TenantContext::getTenant() ?? Tenant::first();
+
+        if (!$request->has('conducted_by') && $request->has('auditor_id')) {
+            $request->merge(['conducted_by' => $request->input('auditor_id')]);
+        }
+
+        $validated = $request->validate([
+            'module_id'         => 'required|exists:modules,id',
+            'audit_template_id' => 'required|exists:audit_templates,id',
+            'title'             => 'nullable|string|max:255',
+            'conducted_by'      => 'required|exists:users,id',
+            'due_date'          => 'nullable|date',
+            'cadence'           => 'nullable|string|max:50',
+            'notes'             => 'nullable|string',
+        ]);
+
+        $template = AuditTemplate::withoutGlobalScopes()->findOrFail($validated['audit_template_id']);
+        $module = Module::withoutGlobalScopes()->findOrFail($validated['module_id']);
+        $auditor = User::findOrFail($validated['conducted_by']);
+
+        $title = $validated['title'] ?: "{$template->name} ({$module->name})";
+
+        AuditRun::create([
+            'tenant_id'         => $tenant->id,
+            'module_id'         => $module->id,
+            'audit_template_id' => $template->id,
+            'title'             => $title,
+            'conducted_by'      => $auditor->id,
+            'due_date'          => $validated['due_date'] ?? now()->addWeeks(2)->toDateString(),
+            'cadence'           => $validated['cadence'] ?? 'Einmalig',
+            'status'            => AuditRun::STATUS_SCHEDULED,
+            'notes'             => $validated['notes'] ?? null,
+        ]);
+
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ Audit '{$title}' erfolgreich terminiert und an {$auditor->name} zugewiesen!"
+        );
+    }
+
+    /**
+     * 9. Create / Design Tool for Module (AMF Tool Studio)
+     */
+    public function createTool(Request $request): RedirectResponse
+    {
+        $tenant = TenantContext::getTenant() ?? Tenant::first();
+
+        $validated = $request->validate([
+            'module_id'   => 'required|exists:modules,id',
+            'name'        => 'required|string|max:255',
+            'type'        => 'required|string|in:checklist,template,whitepaper,saas,ai_function,sop,prompt,tool',
+            'description' => 'nullable|string',
+            'url_or_path' => 'nullable|string|max:500',
+            'content'     => 'nullable|string',
+        ]);
+
+        $module = Module::withoutGlobalScopes()->findOrFail($validated['module_id']);
+
+        $tool = Tool::create([
+            'tenant_id'   => $tenant->id,
+            'module_id'   => $module->id,
+            'name'        => $validated['name'],
+            'type'        => $validated['type'],
+            'description' => $validated['description'] ?? "Operatives Werkzeug für {$module->name}",
+            'url_or_path' => $validated['url_or_path'] ?? '#',
+            'content'     => $validated['content'],
+            'is_active'   => true,
+        ]);
+
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ Werkzeug '{$tool->name}' ({$tool->type}) erfolgreich für Modul '{$module->name}' im AMF-Studio angelegt!"
+        );
+    }
+
+    /**
+     * 10. ALF Step 1: Synthesize an Observation into a Draft Learning
+     */
+    public function synthesizeLearning(Request $request): RedirectResponse
+    {
+        $tenant = TenantContext::getTenant() ?? Tenant::first();
+
+        $validated = $request->validate([
+            'observation_id' => 'nullable|exists:observations,id',
+            'title'          => 'required|string|max:255',
+            'summary'        => 'required|string',
+            'rationale'      => 'nullable|string',
+        ]);
+
+        $user = $request->user();
+
+        $learning = Learning::create([
+            'tenant_id'  => $tenant->id,
+            'title'      => $validated['title'],
+            'summary'    => $validated['summary'],
+            'rationale'  => $validated['rationale'] ?? 'Synthetisiert aus operativen Beobachtungen',
+            'created_by' => $user->id,
+            'state'      => Draft::class,
+        ]);
+
+        if (!empty($validated['observation_id'])) {
+            $obs = Observation::withoutGlobalScopes()->find($validated['observation_id']);
+            if ($obs) {
+                $obs->linkTo($learning, RelationType::Generates);
+            }
+        }
+
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ Neue Erkenntnis '{$learning->title}' in ALF als Entwurf angelegt. Bereit zur Validierung!"
+        );
+    }
+
+    /**
+     * 11. ALF Step 2: Validate a Draft Learning
+     */
+    public function validateLearning(Request $request, ValidateLearning $action): RedirectResponse
+    {
+        $validated = $request->validate([
+            'learning_id' => 'required|exists:learnings,id',
+        ]);
+
+        $learning = Learning::withoutGlobalScopes()->findOrFail($validated['learning_id']);
+        $user = $request->user();
+
+        $action->handle($learning, $user);
+
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ Erkenntnis '{$learning->title}' erfolgreich validiert! Kann nun zum verbindlichen Prinzip erhoben werden."
+        );
+    }
+
+    /**
+     * 12. ALF Step 3: Promote Validated Learning to a governing Principle
+     */
+    public function promoteLearning(Request $request, PromoteLearningToPrinciple $action): RedirectResponse
+    {
+        $validated = $request->validate([
+            'learning_id'      => 'required|exists:learnings,id',
+            'principle_title'  => 'nullable|string|max:255',
+            'title'            => 'nullable|string|max:255',
+            'statement'        => 'required|string',
+            'rationale'        => 'nullable|string',
+            'module_id'        => 'nullable|exists:modules,id',
+            'target_module_id' => 'nullable|exists:modules,id',
+        ]);
+
+        $learning = Learning::withoutGlobalScopes()->findOrFail($validated['learning_id']);
+        $user = $request->user();
+
+        if (!($learning->state instanceof Validated)) {
+            app(ValidateLearning::class)->handle($learning, $user);
+            $learning->refresh();
+        }
+
+        $principleTitle = $validated['principle_title'] ?? $validated['title'] ?? $learning->title;
+        $moduleId = $validated['module_id'] ?? $validated['target_module_id'] ?? null;
+
+        $principle = $action->handle(
+            learning: $learning,
+            steward: $user,
+            statement: $validated['statement'],
+            principleTitle: $principleTitle,
+            rationale: $validated['rationale'] ?? $learning->summary
+        );
+
+        if (!empty($moduleId)) {
+            $module = Module::withoutGlobalScopes()->find($moduleId);
+            if ($module) {
+                $principle->linkTo($module, RelationType::Governs);
+            }
+        }
+
+        $modMsg = !empty($module) ? " und steuert nun Modul '{$module->name}'" : '';
+        return redirect()->route('dashboard')->with(
+            'success',
+            "✓ Grundsatz '{$principle->title}' erfolgreich als verbindliches Prinzip institutionalisiert{$modMsg}!"
         );
     }
 }
